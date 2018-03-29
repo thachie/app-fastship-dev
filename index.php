@@ -4,6 +4,6 @@
 	<title></title>
 </head>
 <body>
-Hello Word!
+Hello World!
 </body>
 </html>
