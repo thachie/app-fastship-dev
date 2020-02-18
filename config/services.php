@@ -18,6 +18,11 @@ return [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),
     ],
+    
+    'mandrill' => [
+        'secret' => env('MAIL_SECRET'),
+    ],
+
 
     'ses' => [
         'key' => env('SES_KEY'),
