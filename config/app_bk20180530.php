@@ -121,12 +121,9 @@ return [
     |
     */
 
-    //'log' => env('APP_LOG', 'single'),
-    'log' => env('APP_LOG', 'daily'),
+    'log' => env('APP_LOG', 'single'),
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
-    
-    'log_max_files' => env('APP_LOG_MAX_FILES', 15),
 
     /*
     |--------------------------------------------------------------------------
@@ -182,9 +179,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
     	Stevebauman\Location\LocationServiceProvider::class,
-	    Maatwebsite\Excel\ExcelServiceProvider::class,
-        Hkonnet\LaravelEbay\EbayServiceProvider::class, 
-        App\Providers\FastshipServiceProvider::class,
 
     ],
 
@@ -236,10 +230,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
     	'Location' => Stevebauman\Location\Facades\Location::class,
-	'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'Ebay' => Hkonnet\LaravelEbay\Facade\Ebay::class,
-        'FT' => App\Lib\Translate\FastshipTranslate::class,
-	'Pusher' => Pusher\Pusher::class,
+
     ],
 
 ];

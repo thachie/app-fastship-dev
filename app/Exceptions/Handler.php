@@ -5,6 +5,8 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
+use Mail;
 
 class Handler extends ExceptionHandler
 {
@@ -44,7 +46,40 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        return parent::render($request, $exception);
+    	
+    	if ($exception instanceof TokenMismatchException){
+    		// Redirect to a form. Here is an example of how I handle mine
+    	    return redirect('/')->with('msg',"คุณไม่ได้ใช้งานหน้าจอนานเกินเวลาที่กำหนด กรุณาลองอีกครั้ง");
+    	}
+    	
+    	$data = array(
+    		"exception" => $exception,
+    	    "request" => $request,
+    	);
+    	$errors = json_decode($exception->getMessage());
+    	if(isset($errors->data)){
+    	    $msg = $errors->data;
+    	}else{
+    	    $msg = $data['exception']->getMessage();
+    	}
+    	if($msg != ""){
+        	Mail::send('email/error',$data,function($message) use ($data){
+        	    
+        	    $errors = json_decode($data['exception']->getMessage());
+        	    if(isset($errors->data)){
+        	        $msg = $errors->data;
+        	    }else{
+        	        $msg = $data['exception']->getMessage();
+        	    }
+        	    
+        	    $message->to(['thachie@tuff.co.th','oak@tuff.co.th']);
+        	    $message->from('error@fastship.co', 'FastShip Error Report');
+        	    $message->subject('FastShip - มีข้อผิดพลาดเกิดขึ้น : ' . $msg );
+        	});
+    	}
+    	
+    	return response()->view('errors/404', $data, 500);
+        //return parent::render($request, $exception);
     }
 
     /**
