@@ -292,7 +292,6 @@ Route::get('regenpass/{id?}','Customer\CustomerController@regenPass');
 
 Route::post('kbank/payment_completed','Payment\PaymentController@paymentCompleted');
 Route::post('kbank/payment_status/card','Payment\PaymentController@paymentStatusCard');
-//Route::post('kbank/payment_status/qr','Payment\PaymentController@paymentStatusQr');
 Route::get('kbank/qr/{code1}/{code2}','Payment\PaymentController@prepareQr');
 Route::get('kbank/inquiry/{charge_id?}','Payment\PaymentController@inquiryQR');
 Route::get('kbank/void/{charge_id?}','Payment\PaymentController@void');
