@@ -13,5 +13,10 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         //
+        'customer/add-channel',
+        'joinus',
+        'liff/*',
+        'kbank/*',
+        'checkout',
     ];
 }
