@@ -214,7 +214,7 @@ class PickupController extends Controller
         }else{
             $address_select = "old";
         }
-        alert($request->all());die();
+        //alert($request->all());die();
         //get api token
         Fastship::getToken($customerId);
         
@@ -402,7 +402,8 @@ class PickupController extends Controller
             'ScheduleDatetime' => $schedule,
             'Remark' => "",
         );
-
+        alert($createDetails);
+        die();
         //create pickup
         $response = FS_Pickup::create($createDetails);
         //$response = false;
