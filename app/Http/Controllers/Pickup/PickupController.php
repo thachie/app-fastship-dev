@@ -402,7 +402,8 @@ class PickupController extends Controller
             'ScheduleDatetime' => $schedule,
             'Remark' => "",
         );
-        alert($createDetails);
+        alert('<h2>ยอดชำระรายการ xxx รวม '.$createDetails['ShipmentDetail']['TotalShippingRate'].' บาท</h2>');
+        //alert($createDetails);
         die();
         //create pickup
         $response = FS_Pickup::create($createDetails);
