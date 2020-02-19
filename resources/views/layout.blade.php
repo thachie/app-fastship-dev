@@ -1,10 +1,4 @@
 <!doctype>
-<?php
-
-session()->put('customer.id', 4815);
-session()->put('customer.name', 'Potae JT');
-session()->put('customer.line', '');
-?>
 <html lang="en" class="no-js">
     <head>
     	
