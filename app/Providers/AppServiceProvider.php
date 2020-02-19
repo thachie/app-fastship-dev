@@ -21,11 +21,11 @@ class AppServiceProvider extends ServiceProvider
         //share country data
         //Fastship::getToken();
         //$countries = FS_Address::get_countries();
-    	/*$countryQuery = DB::table('country')->orderBy("CNTRY_NAME")->get();
+    	$countryQuery = DB::table('country')->orderBy("CNTRY_NAME")->get();
     	foreach ($countryQuery as $val) {
             $countries[$val->CNTRY_CODE] = $val->CNTRY_NAME;
-        }*/
-        $countries = 'THA';
+        }
+        //$countries = 'THA';
     	view()->share('countries', $countries);
     	
     	//share payment method data
