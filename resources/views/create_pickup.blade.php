@@ -3,7 +3,7 @@
 <div class="conter-wrapper">
 <?php if(sizeof($shipment_data) > 0): ?>
 	<div class="row">
-    	<div class="col-md-7 pad8"><h2>{!! FT::translate('create_pickup.heading') !!}</h2></div>
+    	<div class="col-md-7 pad8"><h2>{!! FT::translate('create_pickup.heading') !!} xxx</h2></div>
     	<div class="col-md-5 text-right">
         	<div class="bs-wizard dot-step" style="border-bottom:0;">
                 <div class="col-xs-4 bs-wizard-step complete">
