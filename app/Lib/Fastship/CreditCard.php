@@ -50,7 +50,7 @@ class FS_CreditCard extends FS_ApiResource
      * @param array|null $params
      * @param string|null $apiToken
      *
-     * @return Fastship_Get_Pickup_Rates Get the rates for a Pickup.
+     * @return Fastship_Get_Credit_Cards Get the rates for a Pickup.
      */
     public static function get_credit_cards($params = null, $apiToken = null)
     {
