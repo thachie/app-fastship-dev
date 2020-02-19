@@ -214,7 +214,7 @@ class PickupController extends Controller
         }else{
             $address_select = "old";
         }
-        
+        alert($request->all());die();
         //get api token
         Fastship::getToken($customerId);
         
