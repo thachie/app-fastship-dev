@@ -66,7 +66,7 @@ class AppServiceProvider extends ServiceProvider
     	$trafficTracker = new TrafficTracker(
 	        'localhost',
 	        'root',
-	        '59lAdf91XTaU',
+	        'Q6wphQ30tvgp',
 	        'fastship_app',
 	        'ttcpc',
     	    60
