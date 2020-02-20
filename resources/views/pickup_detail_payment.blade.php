@@ -85,6 +85,25 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
         		<div class="panel panel-primary">
                 	<div class="panel-heading">{!! FT::translate('pickup_detail.panel.heading1') !!} <?php echo $pickupID; ?></div>
                     <div class="panel-body">
+                    	<div class="row text-center">
+							<div class="col-6 col-md-6">
+						    	<h2>ยอดชำระ <span class="orange"><?php echo number_format($pickup['Amount'],0); ?></span> {!! FT::translate('unit.baht') !!}</h2>
+							</div>
+							<div class="col-6 col-md-3">
+								<form method="POST" action="https://app.fastship.co/kbank/payment_completed">
+					                <script type="text/javascript" src="https://kpaymentgateway.kasikornbank.com/ui/v2/kpayment.min.js"
+					                data-apikey="pkey_prod_321btQojbQkYbi9bjSTHRpt0T76CxYrHrkw"
+					                data-amount="{{ $pickup['Amount'] }}"
+					                data-currency="THB"
+					                data-payment-methods="qr"
+					                data-name="Fastship Co., Ltd."
+					                data-order-id="{{ $kbankOrderId }}"
+					                data-description="{{ 'Pickup # ' . $pickup['ID'] . ' - Pickup by ' . $pickup['PickupType'] }}"
+					                data-show-button="false" ></script>
+					                <input type="button" class="btn btn-success btn-lg" style="padding: 10px 100px;" role="button" value="Pay Now" onclick="KPayment.show()">
+					            </form>
+							</div>
+						</div>
                         
 	                        <div class=" well" style="margin-bottom:0px;">
 								<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.create_date') !!} : </div>
@@ -215,15 +234,17 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
             <div class="col-md-5"> 
             	<div class="panel panel-primary">
                 	<div class="panel-body">
-                		<h2>{!! FT::translate('label.status') !!}: <?php echo $PickupStatus; ?> (รอการชำระเงิน)</h2>
+                		<h2 style="margin-top: -15px;">{!! FT::translate('label.status') !!}: รอการชำระเงิน</h2>
+                		<!--<h2>{!! FT::translate('label.status') !!}: <?php echo $PickupStatus; ?> (รอการชำระเงิน)</h2>
                 		
-                		<h3>{!! FT::translate('label.pickup_id') !!} : <span style="color: #f15a22;"><?php echo $pickupID; ?></span></h3>
+                		<h3>{!! FT::translate('label.pickup_id') !!} : <span style="color: #f15a22;"><?php echo $pickupID; ?></span></h3>-->
+                		<div class="clearfix"></div>
 
                 		<div class="row text-center">
-							<div class="col-12 col-md-3 col-md-offset-3 text-md-right text-xs-center">
-						    	<h2>ยอดชำระ <span class="orange"><?php echo number_format($pickup['Amount'],0); ?></span> {!! FT::translate('unit.baht') !!}</h2>
+							<div class="col-6 col-md-6">
+						    	<h3>ยอดชำระ <span class="orange"><?php echo number_format($pickup['Amount'],0); ?></span> {!! FT::translate('unit.baht') !!}</h3>
 							</div>
-							<div class="col-12 col-md-3 text-md-left text-xs-center">
+							<div class="col-6 col-md-3">
 								<form method="POST" action="https://app.fastship.co/kbank/payment_completed">
 					                <script type="text/javascript" src="https://kpaymentgateway.kasikornbank.com/ui/v2/kpayment.min.js"
 					                data-apikey="pkey_prod_321btQojbQkYbi9bjSTHRpt0T76CxYrHrkw"
@@ -234,10 +255,17 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
 					                data-order-id="{{ $kbankOrderId }}"
 					                data-description="{{ 'Pickup # ' . $pickup['ID'] . ' - Pickup by ' . $pickup['PickupType'] }}"
 					                data-show-button="false" ></script>
-					                <input type="button" class="btn btn-success btn-lg" style="padding: 10px 100px;" role="button" value="Pay Now" onclick="KPayment.show()">
+					                <input type="button" class="btn btn-success btn-lg" style="padding: 10px 80px;" role="button" value="Pay Now" onclick="KPayment.show()">
 					            </form>
 							</div>
 						</div>
+						<div class="clearfix"></div>
+						<div class="row">
+					    	<div class="col-md-12 text-center">
+					    		<a href="{{url ('/payment_submission')}}" target="_blank"><i class="fa fa-bank"></i> โอนผ่านธนาคาร</a>
+					    	</div>
+					    </div>
+						<div class="clearfix"></div>
 	                    <!--<div class="timeline timeline-single-column">
 	                    	<div class="timeline-item <?php echo $step1[0]; ?>">
 	                            <div class="timeline-point timeline-point-default">
