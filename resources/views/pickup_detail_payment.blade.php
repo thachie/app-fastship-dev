@@ -192,11 +192,11 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
 			                ?> 
 			                </tbody>
                             </table>
-			                <div class="row text-center">
+			                <!--<div class="row text-center">
 			                    <div class="col-md-12"><h4>{!! FT::translate('pickup_detail.pickup_total') !!} <span class="orange"><?php echo number_format($pickup_data['Amount'],0); ?></span> {!! FT::translate('unit.baht') !!}</h4></div>
 								<a href="/pickup_detail_print/<?php echo $pickupID; ?>" target="_blank"><button type="submit" id="submit" name="submit" value="submit" class="btn btn-primary">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
 								<a href="/pickup_invoice_print/<?php echo $pickupID; ?>" target="_blank"><button type="submit" id="submit" name="submit" value="submit" class="btn btn-primary">{!! FT::translate('pickup_detail.button.print_invoice') !!}</button></a>
-			                </div>
+			                </div>-->
 			                <div class="clearfix"></div><br />
 			                
 			                <?php 
