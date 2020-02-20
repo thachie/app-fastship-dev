@@ -126,8 +126,9 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
 			
 								<?php endif; ?>
 							
-								<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.payment_method') !!} : </div>
-								<div class="col-xs-6 col-md-8 text-left"><?php echo $paymentMethod[$pickup_data['PaymentMethod']];?></div>
+								<!--<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.payment_method') !!} : </div>
+								<div class="col-xs-6 col-md-8 text-left"><?php echo $paymentMethod[$pickup_data['PaymentMethod']];?></div>-->
+
 								<div class="clearfix"></div>
 							
 								<?php if(isset($pickup_data['Remark']) && $pickup_data['Remark']): ?>
@@ -214,10 +215,30 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
             <div class="col-md-5"> 
             	<div class="panel panel-primary">
                 	<div class="panel-body">
-                		<h2>{!! FT::translate('label.status') !!}: <?php echo $PickupStatus; ?></h2>
+                		<h2>{!! FT::translate('label.status') !!}: <?php echo $PickupStatus; ?> (รอการชำระเงิน)</h2>
                 		
                 		<h3>{!! FT::translate('label.pickup_id') !!} : <span style="color: #f15a22;"><?php echo $pickupID; ?></span></h3>
-	                    <div class="timeline timeline-single-column">
+
+                		<div class="row text-center">
+							<div class="col-12 col-md-3 col-md-offset-3 text-md-right text-xs-center">
+						    	<h2>ยอดชำระ <span class="orange"><?php echo number_format($pickup['Amount'],0); ?></span> {!! FT::translate('unit.baht') !!}</h2>
+							</div>
+							<div class="col-12 col-md-3 text-md-left text-xs-center">
+								<form method="POST" action="https://app.fastship.co/kbank/payment_completed">
+					                <script type="text/javascript" src="https://kpaymentgateway.kasikornbank.com/ui/v2/kpayment.min.js"
+					                data-apikey="pkey_prod_321btQojbQkYbi9bjSTHRpt0T76CxYrHrkw"
+					                data-amount="{{ $pickup['Amount'] }}"
+					                data-currency="THB"
+					                data-payment-methods="qr"
+					                data-name="Fastship Co., Ltd."
+					                data-order-id="{{ $kbankOrderId }}"
+					                data-description="{{ 'Pickup # ' . $pickup['ID'] . ' - Pickup by ' . $pickup['PickupType'] }}"
+					                data-show-button="false" ></script>
+					                <input type="button" class="btn btn-success btn-lg" style="padding: 10px 100px;" role="button" value="Pay Now" onclick="KPayment.show()">
+					            </form>
+							</div>
+						</div>
+	                    <!--<div class="timeline timeline-single-column">
 	                    	<div class="timeline-item <?php echo $step1[0]; ?>">
 	                            <div class="timeline-point timeline-point-default">
 	                                <i class="fa <?php echo $step1[2]; ?>"></i>
@@ -315,9 +336,7 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
 	                                </div>
 	                            </div>
 	                        </div>
-	                        
-	                        
-	                    </div>
+	                    </div>-->
                     </div>
                 </div>
                 
