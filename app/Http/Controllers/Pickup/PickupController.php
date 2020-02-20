@@ -448,6 +448,61 @@ class PickupController extends Controller
         }
     }
 
+    //Feature Prepaid System
+    public function preparePickupDetailPayment($pickupId=null)
+    {
+        
+        //check customer login
+        if (session('customer.id') != null){
+            $customerId = session('customer.id');
+        }else{
+            return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+        }
+        
+        //265412
+        if(!empty($pickupId)){
+            //get api token
+            Fastship::getToken($customerId);
+            //get pickup by pickup_id
+            $response = FS_Pickup::get($pickupId);
+            
+            $isSeperateLabel = ($response['PickupType'] == "Drop_AtThaiPost" || $response['PickupType'] == "Pickup_AtKerry");
+            
+            if($isSeperateLabel){
+                $labels = FS_Pickup::getLabels($pickupId);
+            }else{
+                $labels = array();
+            }
+            if($response === false){
+                $pickupData = null;
+                $status = 'nopickupData';
+            }else{
+                $status = '';
+                $pickupData = $response;
+                $shipmentIds = $response['ShipmentDetail']['ShipmentIds'];
+                //alert($pickupData);
+                
+                foreach ($shipmentIds as $key => $shipid) {
+                    //$shipment_data[$key] = FS_Shipment::get($shipid);
+                    $pickupData['ShipmentDetail']['ShipmentIds'][$key] = FS_Shipment::get($shipid);
+                    //$arr[$key]['Weight'] = $shipment_data[$key]['ShipmentDetail']['Weight'];
+                    //$arr[$key]['ShippingRate'] = $shipment_data[$key]['ShipmentDetail']['ShippingRate'];
+                }
+                //alert($shipment_data);
+            }
+
+            $data = array(
+                'pickupID' => $pickupId, 
+                'pickup_data' => $pickupData, 
+                'status' => $status, 
+                'labels' => $labels,
+            );
+            return view('pickup_detail_payment',$data);
+        }else{
+            return 'Pickup id is null.';
+        }
+    }
+
     //public function preparePickupDetail($data)
     public function preparePickupDetail($pickupId=null)
     {
