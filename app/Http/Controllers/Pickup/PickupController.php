@@ -404,7 +404,7 @@ class PickupController extends Controller
         );
         alert('<h2>ยอดชำระรายการ xxx รวม '.$createDetails['ShipmentDetail']['TotalShippingRate'].' บาท</h2>');
         //alert($createDetails);
-        die();
+        //die();
         //create pickup
         $response = FS_Pickup::create($createDetails);
         //$response = false;
@@ -434,15 +434,16 @@ class PickupController extends Controller
             	'shipmentData' => $shipment_data,
             );
 
-            Mail::send('email/new_order',$data,function($message) use ($data){
+            /*Mail::send('email/new_order',$data,function($message) use ($data){
             	$message->to($data['email']);
             	$message->bcc(['thachie@tuff.co.th','oak@tuff.co.th']);
             	$message->from('cs@fastship.co', 'FastShip');
             	$message->subject('FastShip - ใบรับพัสดุหมายเลข '. $data['pickupId'] ." ถูกสร้างแล้ว");
-            });
+            });*/
             // ####
 
-            return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
+            //return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
+            return redirect('pickup_detail_payment/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
             
         }
     }
