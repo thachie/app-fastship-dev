@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 //login & register
-Route::get('login', function () {  return view('login2'); });
+Route::get('login', function () {  return view('login'); });
 Route::post('customer/login', 'Customer\CustomerController@login');
 Route::post('customer/register', 'Customer\CustomerController@register');
 Route::match(['get', 'post'], 'joinus', 'Customer\CustomerController@prepareRegister');
