@@ -46,8 +46,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        return parent::render($request, $exception);
     	
-    	if ($exception instanceof TokenMismatchException){
+    	/*if ($exception instanceof TokenMismatchException){
     		// Redirect to a form. Here is an example of how I handle mine
     	    return redirect('/')->with('msg',"คุณไม่ได้ใช้งานหน้าจอนานเกินเวลาที่กำหนด กรุณาลองอีกครั้ง");
     	}
@@ -78,7 +79,7 @@ class Handler extends ExceptionHandler
         	});
     	}
     	
-    	return response()->view('errors/404', $data, 500);
+    	return response()->view('errors/404', $data, 500);*/
         //return parent::render($request, $exception);
     }
 
