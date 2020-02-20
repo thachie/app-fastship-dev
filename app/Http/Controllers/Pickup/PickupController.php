@@ -402,7 +402,7 @@ class PickupController extends Controller
             'ScheduleDatetime' => $schedule,
             'Remark' => "",
         );
-        alert('<h2>ยอดชำระรายการ xxx รวม '.$createDetails['ShipmentDetail']['TotalShippingRate'].' บาท</h2>');
+        //alert('<h2>ยอดชำระรายการ xxx รวม '.$createDetails['ShipmentDetail']['TotalShippingRate'].' บาท</h2>');
         //alert($createDetails);
         //die();
         //create pickup
