@@ -194,8 +194,10 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                             </table>
 			                <div class="row text-center">
 			                    <div class="col-md-12"><h4>{!! FT::translate('pickup_detail.pickup_total') !!} <span class="orange"><?php echo number_format($pickup_data['Amount'],0); ?></span> {!! FT::translate('unit.baht') !!}</h4></div>
-								<a href="/pickup_detail_print/<?php echo $pickupID; ?>" target="_blank"><button type="submit" id="submit" name="submit" value="submit" class="btn btn-primary">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
-								<a href="/pickup_invoice_print/<?php echo $pickupID; ?>" target="_blank"><button type="submit" id="submit" name="submit" value="submit" class="btn btn-primary">{!! FT::translate('pickup_detail.button.print_invoice') !!}</button></a>
+			                    <?php if ($pickup_data['Status'] != 'Pending') { ?>
+									<a href="/pickup_detail_print/<?php echo $pickupID; ?>" target="_blank"><button type="submit" id="submit" name="submit" value="submit" class="btn btn-primary">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
+									<a href="/pickup_invoice_print/<?php echo $pickupID; ?>" target="_blank"><button type="submit" id="submit" name="submit" value="submit" class="btn btn-primary">{!! FT::translate('pickup_detail.button.print_invoice') !!}</button></a>
+								<?php }?>
 			                </div>
 			                <div class="clearfix"></div><br />
 			                
@@ -215,109 +217,132 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
             	<div class="panel panel-primary">
                 	<div class="panel-body">
                 		<h2>{!! FT::translate('label.status') !!}: <?php echo $PickupStatus; ?></h2>
-                		
                 		<h3>{!! FT::translate('label.pickup_id') !!} : <span style="color: #f15a22;"><?php echo $pickupID; ?></span></h3>
-	                    <div class="timeline timeline-single-column">
-	                    	<div class="timeline-item <?php echo $step1[0]; ?>">
-	                            <div class="timeline-point timeline-point-default">
-	                                <i class="fa <?php echo $step1[2]; ?>"></i>
-	                            </div>
-	                            <div class="timeline-event upgrade <?php echo $step1[1]; ?>">
-	                                <div class="timeline-heading">
-	                                    <h4>{!! FT::translate('pickup_detail.track.step1') !!} <?php echo date("d/m/Y H:i:s",strtotime($pickup_data['CreateDate']['date']));?></h4>
-	                                </div>
-	                                <div class="timeline-body">
-	                                <?php if($pickup_data['PickupType'] == "Pickup_AtHome"):?>
-	                                    <p>{!! FT::translate('pickup_detail.track.step1_1') !!}</p>
-	                                <?php else: ?>
-	                                	<p>{!! FT::translate('pickup_detail.track.step1_2') !!}</p>
-	                                <?php endif;?>
-	                                </div>
-	                                <div class="timeline-footer">
-	                                    
-	                                </div>
-	                            </div>
-	                        </div>
-	                        <?php if($pickup_data['PickupType'] == "Pickup_AtHome"):?>
-	                        <div class="timeline-item <?php echo $step2[0]; ?>">
-	                            <div class="timeline-point timeline-point-default">
-	                                <i class="fa <?php echo $step2[2]; ?>"></i>
-	                            </div>
-	                            <div class="timeline-event upgrade <?php echo $step2[1]; ?>">
-	                                <div class="timeline-heading">
-	                                    <h4>{!! FT::translate('pickup_detail.track.step2') !!} <?php echo date("d/m/Y H:i:s",strtotime($pickup_data['ScheduleDate']));?></h4>
-	                                    
-	                                </div>
-	                                <div class="timeline-body">
-	                                	<p><?php echo $pickup_data['PickupAddress']['Firstname'];?></p>
-	                                    <p><?php echo $pickup_data['PickupAddress']['AddressLine1'];?>
-						                	<?php echo $pickup_data['PickupAddress']['AddressLine2'];?>
-						                	<?php echo $pickup_data['PickupAddress']['City'];?>
-						                	<?php echo $pickup_data['PickupAddress']['State'];?>
-						                	<?php echo $pickup_data['PickupAddress']['Postcode'];?>
-						                	Thailand</p>
-	                                    <p class="text-right"></p>
-	                                </div>
-	                                <div class="timeline-footer">
-	                                    
-	                                </div>
-	                            </div>
-	                        </div>
-	                        <?php endif; ?>
-	                        
-	                        <div class="timeline-item <?php echo $step3[0]; ?>">
-	                            <div class="timeline-point timeline-point-default">
-	                                <i class="fa <?php echo $step3[2]; ?>"></i>
-	                            </div>
-	                            <div class="timeline-event upgrade <?php echo $step3[1]; ?>">
-	                                <div class="timeline-heading">
-	                                    <h4>{!! FT::translate('pickup_detail.track.step3') !!}</h4>
-	                                </div>
-	                                <div class="timeline-body">
-	                                    <p>{!! FT::translate('pickup_detail.track.step3_1') !!}</p>
-	                                </div>
-	                                <div class="timeline-footer">
-	                                    
-	                                </div>
-	                            </div>
-	                        </div>
-	                        
-	                        <div class="timeline-item <?php echo $step4[0]; ?>">
-	                            <div class="timeline-point timeline-point-default">
-	                                <i class="fa <?php echo $step4[2]; ?>"></i>
-	                            </div>
-	                            <div class="timeline-event upgrade <?php echo $step4[1]; ?>">
-	                                <div class="timeline-heading">
-	                                    <h4>{!! FT::translate('pickup_detail.track.step4') !!}</h4>
-	                                </div>
-	                                <div class="timeline-body">
-	                                    <p><?php echo $paymentMethod[$pickup_data['PaymentMethod']]; ?> {!! FT::translate('pickup_detail.track.step4_1') !!} <?php echo number_format($pickup_data['Amount'],0); ?> {!! FT::translate('unit.baht') !!}</p>
-	                                </div>
-	                                <div class="timeline-footer">
-	
-	                                </div>
-	                            </div>
-	                        </div>
-	                        
-	                        <div class="timeline-item <?php echo $step5[0]; ?>">
-	                            <div class="timeline-point timeline-point-default">
-	                                <i class="fa <?php echo $step5[2]; ?>"></i>
-	                            </div>
-	                            <div class="timeline-event upgrade <?php echo $step5[1]; ?>">
-	                                <div class="timeline-heading">
-	                                    <h4>{!! FT::translate('pickup_detail.track.step5') !!}</h4>
-	                                </div>
-	                                <div class="timeline-body">
-	                                    <p></p>
-	                                </div>
-	                                <div class="timeline-footer">
-	
-	                                </div>
-	                            </div>
-	                        </div>
-	                        
-	                        
-	                    </div>
+                		<?php if ($pickup_data['Status'] == 'Pending') { ?>
+                			<div class="timeline timeline-single-column">
+                				<div class="timeline-item">
+		                            <div class="timeline-point timeline-point-default">
+		                                <i class="fa"></i>
+		                            </div>
+		                            <div class="timeline-event upgrade">
+		                                <div class="timeline-heading">
+		                                    <h4>รอชำระเงิน</h4>
+		                                </div>
+		                                <div class="timeline-body">
+		                                    <a href="{{ url('/pickup_detail_payment/'.$pickupID)}}" >กดไปหน้าชำระเงิน</a>
+		                                </div>
+		                                <!--<div class="timeline-body">
+		                                <?php if($pickup_data['PickupType'] == "Pickup_AtHome"):?>
+		                                    <p>{!! FT::translate('pickup_detail.track.step1_1') !!}</p>
+		                                <?php else: ?>
+		                                	<p>{!! FT::translate('pickup_detail.track.step1_2') !!}</p>
+		                                <?php endif;?>
+		                                </div>-->
+		                                <div class="timeline-footer"></div>
+		                            </div>
+		                        </div>
+                			</div>
+                		<?php }else{ ?>
+		                    <div class="timeline timeline-single-column">
+		                    	<div class="timeline-item <?php echo $step1[0]; ?>">
+		                            <div class="timeline-point timeline-point-default">
+		                                <i class="fa <?php echo $step1[2]; ?>"></i>
+		                            </div>
+		                            <div class="timeline-event upgrade <?php echo $step1[1]; ?>">
+		                                <div class="timeline-heading">
+		                                    <h4>{!! FT::translate('pickup_detail.track.step1') !!} <?php echo date("d/m/Y H:i:s",strtotime($pickup_data['CreateDate']['date']));?></h4>
+		                                </div>
+		                                <div class="timeline-body">
+		                                <?php if($pickup_data['PickupType'] == "Pickup_AtHome"):?>
+		                                    <p>{!! FT::translate('pickup_detail.track.step1_1') !!}</p>
+		                                <?php else: ?>
+		                                	<p>{!! FT::translate('pickup_detail.track.step1_2') !!}</p>
+		                                <?php endif;?>
+		                                </div>
+		                                <div class="timeline-footer">
+		                                    
+		                                </div>
+		                            </div>
+		                        </div>
+		                        <?php if($pickup_data['PickupType'] == "Pickup_AtHome"):?>
+		                        <div class="timeline-item <?php echo $step2[0]; ?>">
+		                            <div class="timeline-point timeline-point-default">
+		                                <i class="fa <?php echo $step2[2]; ?>"></i>
+		                            </div>
+		                            <div class="timeline-event upgrade <?php echo $step2[1]; ?>">
+		                                <div class="timeline-heading">
+		                                    <h4>{!! FT::translate('pickup_detail.track.step2') !!} <?php echo date("d/m/Y H:i:s",strtotime($pickup_data['ScheduleDate']));?></h4>
+		                                    
+		                                </div>
+		                                <div class="timeline-body">
+		                                	<p><?php echo $pickup_data['PickupAddress']['Firstname'];?></p>
+		                                    <p><?php echo $pickup_data['PickupAddress']['AddressLine1'];?>
+							                	<?php echo $pickup_data['PickupAddress']['AddressLine2'];?>
+							                	<?php echo $pickup_data['PickupAddress']['City'];?>
+							                	<?php echo $pickup_data['PickupAddress']['State'];?>
+							                	<?php echo $pickup_data['PickupAddress']['Postcode'];?>
+							                	Thailand</p>
+		                                    <p class="text-right"></p>
+		                                </div>
+		                                <div class="timeline-footer">
+		                                    
+		                                </div>
+		                            </div>
+		                        </div>
+		                        <?php endif; ?>
+		                        
+		                        <div class="timeline-item <?php echo $step3[0]; ?>">
+		                            <div class="timeline-point timeline-point-default">
+		                                <i class="fa <?php echo $step3[2]; ?>"></i>
+		                            </div>
+		                            <div class="timeline-event upgrade <?php echo $step3[1]; ?>">
+		                                <div class="timeline-heading">
+		                                    <h4>{!! FT::translate('pickup_detail.track.step3') !!}</h4>
+		                                </div>
+		                                <div class="timeline-body">
+		                                    <p>{!! FT::translate('pickup_detail.track.step3_1') !!}</p>
+		                                </div>
+		                                <div class="timeline-footer">
+		                                    
+		                                </div>
+		                            </div>
+		                        </div>
+		                        
+		                        <div class="timeline-item <?php echo $step4[0]; ?>">
+		                            <div class="timeline-point timeline-point-default">
+		                                <i class="fa <?php echo $step4[2]; ?>"></i>
+		                            </div>
+		                            <div class="timeline-event upgrade <?php echo $step4[1]; ?>">
+		                                <div class="timeline-heading">
+		                                    <h4>{!! FT::translate('pickup_detail.track.step4') !!}</h4>
+		                                </div>
+		                                <div class="timeline-body">
+		                                    <p><?php echo $paymentMethod[$pickup_data['PaymentMethod']]; ?> {!! FT::translate('pickup_detail.track.step4_1') !!} <?php echo number_format($pickup_data['Amount'],0); ?> {!! FT::translate('unit.baht') !!}</p>
+		                                </div>
+		                                <div class="timeline-footer">
+		
+		                                </div>
+		                            </div>
+		                        </div>
+		                        
+		                        <div class="timeline-item <?php echo $step5[0]; ?>">
+		                            <div class="timeline-point timeline-point-default">
+		                                <i class="fa <?php echo $step5[2]; ?>"></i>
+		                            </div>
+		                            <div class="timeline-event upgrade <?php echo $step5[1]; ?>">
+		                                <div class="timeline-heading">
+		                                    <h4>{!! FT::translate('pickup_detail.track.step5') !!}</h4>
+		                                </div>
+		                                <div class="timeline-body">
+		                                    <p></p>
+		                                </div>
+		                                <div class="timeline-footer">
+		
+		                                </div>
+		                            </div>
+		                        </div>
+		                    </div>
+	                    <?php }?>
                     </div>
                 </div>
                 

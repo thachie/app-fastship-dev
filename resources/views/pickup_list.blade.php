@@ -39,8 +39,15 @@ $limit = 20;
                         		<td><?php echo number_format($pickup['Amount']); ?></td>
                         		<td><?php echo $pickup['TotalShipment']; ?></td>
                         		<td>
-                        			<a href="/pickup_detail_print/<?php echo $pickup['ID']; ?>" target="_blank"><button type="button" class="btn btn-info btn-sm">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
-									<a href="/pickup_invoice_print/<?php echo $pickup['ID']; ?>" target="_blank"><button type="button" class="btn btn-default btn-sm">{!! FT::translate('pickup_detail.button.print_invoice') !!}</button></a>
+                        			<?php if ($pickup['Status'] == 'Pending') { ?>
+	                        			<a href="#"><button type="button" class="btn btn-info btn-sm" disabled>{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
+										<a href="#"><button type="button" class="btn btn-default btn-sm" disabled>{!! FT::translate('pickup_detail.button.print_invoice') !!}</button></a>
+										<a href="{{ url('/pickup_detail_payment/'.$pickup['ID'])}}"><button type="button" class="btn btn-warning btn-sm">ชำระเงิน</button></a>
+									<?php }else{ ?>
+										<a href="/pickup_detail_print/<?php echo $pickup['ID']; ?>" target="_blank"><button type="button" class="btn btn-info btn-sm">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
+										<a href="/pickup_invoice_print/<?php echo $pickup['ID']; ?>" target="_blank"><button type="button" class="btn btn-default btn-sm">{!! FT::translate('pickup_detail.button.print_invoice') !!}</button></a>
+										<a href="#"><button type="button" class="btn btn-warning btn-sm" disabled>ชำระเงิน</button></a>
+									<?php } ?>
                         		</td>
                         	</tr>
                         <?php 
