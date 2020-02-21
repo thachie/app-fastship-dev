@@ -398,15 +398,21 @@
                                 <div class="col-md-3 col-xs-4 text-right " id="totalpickup"></div>
                                 <div class="col-md-4 col-xs-2">{!! FT::translate('unit.baht') !!}</div>
                             </div>
-                            <div class="radio text-center">
-                                <div class="col-md-5 col-xs-12">
-                                    <label>{!! FT::translate('label.payment_method') !!}</label>
+                            @if($customer_data['invoice'] == 1)
+                                <input type="hidden" name="payment_method" id="invoice" value="Invoice">
+                            @else
+                                <div class="radio text-center">
+                                    <div class="col-md-5 col-xs-12">
+                                        <label>{!! FT::translate('label.payment_method') !!}</label>
+                                    </div>
+                                    <div class="col-md-7 col-xs-12">
+                                        <!--<label><input type="radio" name="payment_method" id="Bank_Transfer" value="Bank_Transfer" checked>{!! FT::translate('radio.payment.bank_transfer') !!}</label>-->
+                                        <label><input type="radio" name="payment_method" id="QR" value="QR" checked>QR Payment</label>
+                                        <label><input type="radio" name="payment_method" id="Credit_Card" value="Credit_Card" <?php if(!isset($credit) || !$credit){ echo "disabled"; }?>>{!! FT::translate('radio.payment.creditcard') !!}</label>
+                                        
+                                    </div>
                                 </div>
-                                <div class="col-md-7 col-xs-12">
-                                    <label><input type="radio" name="payment_method" id="Bank_Transfer" value="Bank_Transfer" checked>{!! FT::translate('radio.payment.bank_transfer') !!}</label>
-                                    <label><input type="radio" name="payment_method" id="Credit_Card" value="Credit_Card" <?php if(!isset($credit) || !$credit){ echo "disabled"; }?>>{!! FT::translate('radio.payment.creditcard') !!}</label>
-                                </div>
-                            </div>
+                            @endif
                         </div>
                     </div>
                     <br />

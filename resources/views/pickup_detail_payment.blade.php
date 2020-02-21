@@ -100,135 +100,142 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
 					                data-order-id="{{ $kbankOrderId }}"
 					                data-description="{{ 'Pickup # ' . $pickup['ID'] . ' - Pickup by ' . $pickup['PickupType'] }}"
 					                data-show-button="false" ></script>
-					                <input type="button" class="btn btn-success btn-lg" style="padding: 10px 100px;" role="button" value="Pay Now" onclick="KPayment.show()">
+					                <input type="button" class="btn btn-success btn-lg" style="padding: 10px 80px;" role="button" value="Click To Pay Now" onclick="KPayment.show()">
 					            </form>
 							</div>
 						</div>
+						
+						<div class="row">
+					    	<div class="col-md-12 text-center" style="font-size: 10px;">
+					    		<!--<i class="fa fa-bank" style="cursor: pointer;"></i> โอนผ่านธนาคาร</a>-->
+					    		<a href="{{url ('/payment_submission')}}" target="_blank"><i class="fa fa-bank"></i> โอนผ่านธนาคาร</a>
+					    	</div>
+					    </div>
+					    <div class="clearfix"></div>
                         
-	                        <div class=" well" style="margin-bottom:0px;">
-								<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.create_date') !!} : </div>
-								<div class="col-xs-6 col-md-8 text-left"><?php echo date("d/m/Y H:i:s",strtotime($pickup_data['CreateDate']['date']));?></div>
-								<div class="clearfix"></div>
+                        <div class=" well" style="margin-bottom:0px;">
+							<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.create_date') !!} : </div>
+							<div class="col-xs-6 col-md-8 text-left"><?php echo date("d/m/Y H:i:s",strtotime($pickup_data['CreateDate']['date']));?></div>
+							<div class="clearfix"></div>
+						
+							<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.pickup_type') !!} : </div>
+							<div class="col-xs-6 col-md-8 text-left"><?php echo (isset($pickupType[$pickup_data['PickupType']]))?$pickupType[$pickup_data['PickupType']]:$pickup_data['PickupType']; ?></div>
+							<div class="clearfix"></div>
+						
+							<?php if($pickup_data['PickupType'] == "Pickup_AtHome"): ?>
 							
-								<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.pickup_type') !!} : </div>
-								<div class="col-xs-6 col-md-8 text-left"><?php echo (isset($pickupType[$pickup_data['PickupType']]))?$pickupType[$pickup_data['PickupType']]:$pickup_data['PickupType']; ?></div>
+								<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.pickup_date') !!} : </div>
+								<div class="col-xs-6 col-md-8 text-left"><?php echo date("d/m/Y H:i:s",strtotime($pickup_data['ScheduleDate']));?></div>
 								<div class="clearfix"></div>
-							
-								<?php if($pickup_data['PickupType'] == "Pickup_AtHome"): ?>
 								
-									<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.pickup_date') !!} : </div>
-									<div class="col-xs-6 col-md-8 text-left"><?php echo date("d/m/Y H:i:s",strtotime($pickup_data['ScheduleDate']));?></div>
-									<div class="clearfix"></div>
-									
-									<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.contact') !!} : </div>
-									<div class="col-xs-6 col-md-8 text-left">
-									<?php echo $pickup_data['PickupAddress']['Firstname'];?> <?php echo $pickup_data['PickupAddress']['Lastname'];?>
-									</div>
-									<div class="clearfix"></div>
-									
-									<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.telephone') !!} : </div>
-									<div class="col-xs-6 col-md-8 text-left">
-									<?php echo $pickup_data['PickupAddress']['PhoneNumber'];?>
-									</div>
-									<div class="clearfix"></div>
-									
-									<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.address1') !!} : </div>
-									<div class="col-xs-6 col-md-8 text-left">
-									<?php echo $pickup_data['PickupAddress']['AddressLine1'];?>
-									<?php echo $pickup_data['PickupAddress']['AddressLine2'];?>
-									<?php echo $pickup_data['PickupAddress']['City'];?>
-									<?php echo $pickup_data['PickupAddress']['State'];?>
-									<?php echo $pickup_data['PickupAddress']['Postcode'];?>
-									Thailand
-									</div>
-									<div class="clearfix"></div>
-			
-								<?php endif; ?>
-							
-								<!--<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.payment_method') !!} : </div>
-								<div class="col-xs-6 col-md-8 text-left"><?php echo $paymentMethod[$pickup_data['PaymentMethod']];?></div>-->
-
+								<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.contact') !!} : </div>
+								<div class="col-xs-6 col-md-8 text-left">
+								<?php echo $pickup_data['PickupAddress']['Firstname'];?> <?php echo $pickup_data['PickupAddress']['Lastname'];?>
+								</div>
 								<div class="clearfix"></div>
-							
-								<?php if(isset($pickup_data['Remark']) && $pickup_data['Remark']): ?>
-								<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.remark') !!} : </div>
-								<div class="col-xs-6 col-md-8 text-left"><?php echo $pickup_data['Remark'];?></div>
+								
+								<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.telephone') !!} : </div>
+								<div class="col-xs-6 col-md-8 text-left">
+								<?php echo $pickup_data['PickupAddress']['PhoneNumber'];?>
+								</div>
 								<div class="clearfix"></div>
-								<?php endif; ?>
-							
-			                </div>
+								
+								<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.address1') !!} : </div>
+								<div class="col-xs-6 col-md-8 text-left">
+								<?php echo $pickup_data['PickupAddress']['AddressLine1'];?>
+								<?php echo $pickup_data['PickupAddress']['AddressLine2'];?>
+								<?php echo $pickup_data['PickupAddress']['City'];?>
+								<?php echo $pickup_data['PickupAddress']['State'];?>
+								<?php echo $pickup_data['PickupAddress']['Postcode'];?>
+								Thailand
+								</div>
+								<div class="clearfix"></div>
+		
+							<?php endif; ?>
+						
+							<!--<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.payment_method') !!} : </div>
+							<div class="col-xs-6 col-md-8 text-left"><?php echo $paymentMethod[$pickup_data['PaymentMethod']];?></div>-->
 
+							<div class="clearfix"></div>
+						
+							<?php if(isset($pickup_data['Remark']) && $pickup_data['Remark']): ?>
+							<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.remark') !!} : </div>
+							<div class="col-xs-6 col-md-8 text-left"><?php echo $pickup_data['Remark'];?></div>
+							<div class="clearfix"></div>
+							<?php endif; ?>
+						
+		                </div>
 							
-                            <h3 style="padding-top: 30px;">{!! FT::translate('pickup_detail.panel.heading2') !!}</h3>
-                            <table class="table table-stripe table-hover">
-                            <thead>
-                            <tr>
-                            	<td>{!! FT::translate('label.shipment_id') !!}</td>
-                            	<td class="hidden-xs">{!! FT::translate('label.receiver') !!}</td>
-                            	<td class="hidden-xs">{!! FT::translate('label.destination') !!}</td>
-                            	<td>{!! FT::translate('label.status') !!}</td>
-                            	<td>{!! FT::translate('label.print_label') !!}</td>
-                            	<td>{!! FT::translate('label.copy') !!}</td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            
-                           
-                            <?php 
-                            if(sizeof($pickup_data['ShipmentDetail']['ShipmentIds']) > 0): 
-                            foreach($pickup_data['ShipmentDetail']['ShipmentIds'] as $data):
-                                
-                            ?>
-                            <tr>
-                            	<td>
-                                	<a href="/shipment_detail/<?php echo $data['ID'];?>" target="_blank"><i class="fa fa-search"></i></a>
-                                	<a href="/shipment_detail/<?php echo $data['ID'];?>" target="_blank"><?php echo $data['ID'];?></a>
-                            	</td>
-                            	<?php if($data['ReceiverDetail']['Firstname'] != ""): ?>
-                            	<td class="hidden-xs"><?php echo $data['ReceiverDetail']['Firstname'];?> <?php echo $data['ReceiverDetail']['Lastname'];?></td>
-                            	<?php else: ?>
-                            	<td class="hidden-xs"><?php echo $data['ReceiverDetail']['Custname'];?></td>
-                            	<?php endif; ?>
-                            	<td class="hidden-xs"><?php echo $countries[$data['ReceiverDetail']['Country']];?></td>
-                            	<td><?php echo isset($shipmentStatus[$data['Status']])?$shipmentStatus[$data['Status']]:$data['Status']; ?></td>
-                            	<?php 
-                            	if($isSeperateLabel && isset($data) && isset($labels[$data['ID']]) && isset($labels[$data['ID']]['barcode'])): 
-                            	   $barcodeURL = "https://app.fastship.co/thaipost/label/" . $labels[$data['ID']]['barcode'];
-                            	?>
-                            	<td class="small" >
-                                	<a href="<?php echo $barcodeURL; ?>" target="_blank"><i class="fa fa-print"></i></a> 
-                                	<a href="<?php echo $barcodeURL; ?>" target="_blank" style="font-weight: 100;">{!! FT::translate('pickup_detail.print_label') !!}</a>
-                            	</td>
-                            	<?php else: ?>
-                            	<td class="small" ></td>
-                            	<?php endif; ?>
-                            	<td>
-                            		<a href="{{ url('/shipment/clone/?shipment_id='.$data['ID']) }}"><button type="button" class="btn btn-xs btn-secondary">{!! FT::translate('button.clone') !!}</button></a>
-                            	</td>
-                            </tr>
-                            <?php 
-                            endforeach;
-			                endif;
-			                ?> 
-			                </tbody>
-                            </table>
-			                <!--<div class="row text-center">
-			                    <div class="col-md-12"><h4>{!! FT::translate('pickup_detail.pickup_total') !!} <span class="orange"><?php echo number_format($pickup_data['Amount'],0); ?></span> {!! FT::translate('unit.baht') !!}</h4></div>
-								<a href="/pickup_detail_print/<?php echo $pickupID; ?>" target="_blank"><button type="submit" id="submit" name="submit" value="submit" class="btn btn-primary">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
-								<a href="/pickup_invoice_print/<?php echo $pickupID; ?>" target="_blank"><button type="submit" id="submit" name="submit" value="submit" class="btn btn-primary">{!! FT::translate('pickup_detail.button.print_invoice') !!}</button></a>
-			                </div>-->
-			                <div class="clearfix"></div><br />
+                        <h3 style="padding-top: 30px;">{!! FT::translate('pickup_detail.panel.heading2') !!}</h3>
+                        <table class="table table-stripe table-hover">
+	                        <thead>
+		                        <tr>
+		                        	<td>{!! FT::translate('label.shipment_id') !!}</td>
+		                        	<td class="hidden-xs">{!! FT::translate('label.receiver') !!}</td>
+		                        	<td class="hidden-xs">{!! FT::translate('label.destination') !!}</td>
+		                        	<!--<td>{!! FT::translate('label.reference') !!}</td>-->
+		                        	<td>{!! FT::translate('label.agent') !!}</td>
+		                        	<td>{!! FT::translate('label.amount') !!}</td>
+		                        </tr>
+	                        </thead>
+	                        <tbody>
+	                            <?php 
+	                            if(sizeof($pickup_data['ShipmentDetail']['ShipmentIds']) > 0): 
+	                            foreach($pickup_data['ShipmentDetail']['ShipmentIds'] as $data):
+	                                
+	                            ?>
+		                            <tr>
+		                            	<td>
+		                                	<a href="/shipment_detail/<?php echo $data['ID'];?>" target="_blank"><i class="fa fa-search"></i></a>
+		                                	<a href="/shipment_detail/<?php echo $data['ID'];?>" target="_blank"><?php echo $data['ID'];?></a>
+		                            	</td>
+		                            	<?php if($data['ReceiverDetail']['Firstname'] != ""): ?>
+		                            	<td class="hidden-xs"><?php echo $data['ReceiverDetail']['Firstname'];?> <?php echo $data['ReceiverDetail']['Lastname'];?></td>
+		                            	<?php else: ?>
+		                            	<td class="hidden-xs"><?php echo $data['ReceiverDetail']['Custname'];?></td>
+		                            	<?php endif; ?>
+		                            	<td class="hidden-xs"><?php echo $countries[$data['ReceiverDetail']['Country']];?></td>
+		                            	<!--<td><?php echo isset($data['Reference'])?$data['Reference']:'-';?></td>-->
+		                            	<td><?php echo $data['ShipmentDetail']['ShippingAgent']; ?></td>
+		                            	<td><?php echo $data['ShipmentDetail']['ShippingRate']; ?></td>
+		                            	<!--<td><?php echo isset($shipmentStatus[$data['Status']])?$shipmentStatus[$data['Status']]:$data['Status']; ?></td>
+		                            	<?php 
+		                            	if($isSeperateLabel && isset($data) && isset($labels[$data['ID']]) && isset($labels[$data['ID']]['barcode'])): 
+		                            	   $barcodeURL = "https://app.fastship.co/thaipost/label/" . $labels[$data['ID']]['barcode'];
+		                            	?>
+		                            	<td class="small" >
+		                                	<a href="<?php echo $barcodeURL; ?>" target="_blank"><i class="fa fa-print"></i></a> 
+		                                	<a href="<?php echo $barcodeURL; ?>" target="_blank" style="font-weight: 100;">{!! FT::translate('pickup_detail.print_label') !!}</a>
+		                            	</td>
+		                            	<?php else: ?>
+		                            	<td class="small" ></td>
+		                            	<?php endif; ?>
+		                            	<td>
+		                            		<a href="{{ url('/shipment/clone/?shipment_id='.$data['ID']) }}"><button type="button" class="btn btn-xs btn-secondary">{!! FT::translate('button.clone') !!}</button></a>
+		                            	</td>-->
+		                            </tr>
+	                            <?php 
+	                            endforeach;
+				                endif;
+				                ?> 
+				            </tbody>
+                        </table>
+		                <!--<div class="row text-center">
+		                    <div class="col-md-12"><h4>{!! FT::translate('pickup_detail.pickup_total') !!} <span class="orange"><?php echo number_format($pickup_data['Amount'],0); ?></span> {!! FT::translate('unit.baht') !!}</h4></div>
+							<a href="/pickup_detail_print/<?php echo $pickupID; ?>" target="_blank"><button type="submit" id="submit" name="submit" value="submit" class="btn btn-primary">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
+							<a href="/pickup_invoice_print/<?php echo $pickupID; ?>" target="_blank"><button type="submit" id="submit" name="submit" value="submit" class="btn btn-primary">{!! FT::translate('pickup_detail.button.print_invoice') !!}</button></a>
+		                </div>-->
+		                <div class="clearfix"></div><br />
 			                
-			                <?php 
-			                if($isSeperateLabel): 
-    			                if($pickup_data['PickupType'] == "Drop_AtThaiPost") $droppointName = "{!! FT::translate('radio.dropoff.thaipost') !!}";
-    			                else if($pickup_data['PickupType'] == "Pickup_AtKerry") $droppointName = "Kerry";
-    			                else $droppointName = "{!! FT::translate('radio.pickup.droppoint') !!}";
-			                ?>
-			                <p class="text-center">{!! FT::translate('pickup_detail.dropoff.text1') !!} <strong><?php echo $droppointName; ?></strong> {!! FT::translate('pickup_detail.dropoff.text2') !!}</p>
-			                <?php endif; ?>
-
-                        </div>
+		                <?php 
+		                if($isSeperateLabel): 
+			                if($pickup_data['PickupType'] == "Drop_AtThaiPost") $droppointName = "{!! FT::translate('radio.dropoff.thaipost') !!}";
+			                else if($pickup_data['PickupType'] == "Pickup_AtKerry") $droppointName = "Kerry";
+			                else $droppointName = "{!! FT::translate('radio.pickup.droppoint') !!}";
+		                ?>
+		                <p class="text-center">{!! FT::translate('pickup_detail.dropoff.text1') !!} <strong><?php echo $droppointName; ?></strong> {!! FT::translate('pickup_detail.dropoff.text2') !!}</p>
+		                <?php endif; ?>
+                    </div>
                 </div>
         	</div>
             <div class="col-md-5"> 
@@ -240,7 +247,7 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                 		<h3>{!! FT::translate('label.pickup_id') !!} : <span style="color: #f15a22;"><?php echo $pickupID; ?></span></h3>-->
                 		<div class="clearfix"></div>
 
-                		<div class="row text-center">
+                		<!--<div class="row text-center">
 							<div class="col-6 col-md-6">
 						    	<h3>ยอดชำระ <span class="orange"><?php echo number_format($pickup['Amount'],0); ?></span> {!! FT::translate('unit.baht') !!}</h3>
 							</div>
@@ -264,7 +271,7 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
 					    	<div class="col-md-12 text-center">
 					    		<a href="{{url ('/payment_submission')}}" target="_blank"><i class="fa fa-bank"></i> โอนผ่านธนาคาร</a>
 					    	</div>
-					    </div>
+					    </div>-->
 						<div class="clearfix"></div>
 	                    <!--<div class="timeline timeline-single-column">
 	                    	<div class="timeline-item <?php echo $step1[0]; ?>">

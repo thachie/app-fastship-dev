@@ -98,7 +98,7 @@ class PickupController extends Controller
         $customer_data['country'] = $customer['Country'];
         $customer_data['latitude'] = $customer['Latitude'];
         $customer_data['longitude'] = $customer['Longitude'];
-
+        $customer_data['invoice'] = $customer['IsInvoice'];
         //check first
         $firstTime = array();
         if($status != "noShipment"){
@@ -214,7 +214,9 @@ class PickupController extends Controller
         }else{
             $address_select = "old";
         }
-        //alert($request->all());die();
+        //alert($request->all());
+        $PaymentMethod = $request->input('payment_method');
+        
         //get api token
         Fastship::getToken($customerId);
         
@@ -442,16 +444,17 @@ class PickupController extends Controller
             });*/
             // ####
 
-            //return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
-            return redirect('pickup_detail_payment/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
-            
+            if ($PaymentMethod == 'QR') {
+                return redirect('pickup_detail_payment/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว กรุณาตรวจสอบรายการและชำระเงิน')->with('msg-type','success');
+            }else{
+                return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
+            }
         }
     }
 
     //Feature Prepaid System
     public function preparePickupDetailPayment($pickupId=null)
     {
-        
         //check customer login
         if (session('customer.id') != null){
             $customerId = session('customer.id');
@@ -490,7 +493,6 @@ class PickupController extends Controller
                 }
                 //alert($shipment_data);
             }
-
             //QR
             Fastship::getToken($customerId);
             $pickup = FS_Pickup::get($pickupId);
@@ -498,7 +500,8 @@ class PickupController extends Controller
             foreach ($shipmentIds as $key => $shipid) {
                 $pickup['ShipmentDetail']['ShipmentIds'][$key] = FS_Shipment::get($shipid);
             }
-            
+            //alert($pickupData['PaymentMethod']);
+            //alert($pickupData);
             //prepare to Kbank
             $amount = $pickup['Amount'];
             $description = "Pickup # " . $pickup['ID'] . " - Pickup by " . $pickup['PickupType'];
@@ -526,6 +529,52 @@ class PickupController extends Controller
                 "kbankOrderId" => $order_id,
             );
             return view('pickup_detail_payment',$data);
+            /*if ($pickupData['PaymentMethod'] == 'Bank_Transfer' || $pickupData['PaymentMethod'] == 'QR') {
+                //QR
+                Fastship::getToken($customerId);
+                $pickup = FS_Pickup::get($pickupId);
+                $shipmentIds = $pickup['ShipmentDetail']['ShipmentIds'];
+                foreach ($shipmentIds as $key => $shipid) {
+                    $pickup['ShipmentDetail']['ShipmentIds'][$key] = FS_Shipment::get($shipid);
+                }
+                //alert($pickupData['PaymentMethod']);
+                //alert($pickupData);
+                //prepare to Kbank
+                $amount = $pickup['Amount'];
+                $description = "Pickup # " . $pickup['ID'] . " - Pickup by " . $pickup['PickupType'];
+                $jsonCreateOrderId = '{
+                    "amount": '.$amount.',
+                    "currency": "THB",
+                    "description": "'.$description.'",
+                    "source_type": "qr",
+                    "reference_order": "'.$pickupId.'"
+                }';
+                $method = "POST";
+                $url = "https://kpaymentgateway-services.kasikornbank.com/qr/v2/order";
+                $jsonData = $jsonCreateOrderId;
+
+                $response = callAPI_Kbank($method, $url, $jsonData);
+                $res = json_decode($response, true);
+                $order_id = $res['id'];
+
+                $data = array(
+                    'pickupID' => $pickupId, 
+                    'pickup_data' => $pickupData, 
+                    'status' => $status, 
+                    'labels' => $labels,
+                    "pickup" => $pickup,
+                    "kbankOrderId" => $order_id,
+                );
+                return view('pickup_detail_payment',$data);
+            }else{
+                $data = array(
+                    'pickupID' => $pickupId, 
+                    'pickup_data' => $pickupData, 
+                    'status' => $status, 
+                    'labels' => $labels,
+                );
+                return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
+            }*/
         }else{
             return 'Pickup id is null.';
         }
