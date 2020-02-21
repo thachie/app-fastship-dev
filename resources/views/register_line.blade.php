@@ -12,30 +12,45 @@ if(isset($ref) && $ref != ""){
 <style>
     #body-container{display: inline;}
     #footer-wrapper{display: none;}
+    #body-container .panel-primary{ box-shadow: 0 2px 10px rgba(241, 90, 34,0.3); }
+    #body-container .panel-primary .panel-body{ padding: 40px 20px; }
+    #body-container .check_mark{ margin-bottom: 10px; }
+
+@media only screen and (max-width: 480px) {
+    #body-container .check_mark{ max-width: 18px; }
+    #body-container h1{ font-size:28px;text-align: center; }
+    #body-container h2{ font-size:26px; }
+    #body-container h3{ font-size:18px; }
+}   
 </style>
-<div class="conter-wrapper" style="min-height: 500px; padding-bottom: 0;">     
+<div class="conter-wrapper">     
 <div class="row" style="margin-bottom: 0;">     
     <div class="col-md-10 col-md-offset-1">
-        <form name="register_form" class="form-horizontal regis" method="post" action="{{url ('/customer/register')}}">	                        
-	        {{ csrf_field() }} 
+        <form name="register_form" class="form-horizontal regis" method="post" action="{{url ('/customer/register')}}">
+                    
+	        {{ csrf_field() }}
+	        
+	        <input type="hidden" name="line_id" value="{{ $lineId }}" />
+	        
 	        <div class="panel panel-primary">
 	            <div class="panel-body">
 	            	<div class="col-md-4">
 	            	
-	            	<div class="text-center" style="padding: 25px;"><img src="../images/joinus/fastship_register.png" style="max-width: 200px;"/></div>
+	            		<div class="text-center" style="padding: 0 0 25px;"><img src="../images/joinus/fastship_register.png" style="max-width: 200px;"/></div>
 	            	
-	            	<h3 class="text-center orange">{!! FT::translate('register.content.heading') !!}</h3>
-                    <div class="" style="padding: 10px 0 0 0;">
-                        <h3><img src="../images/joinus/check-mark.png" style="margin-bottom: 10px;"/> {!! FT::translate('register.content.list1') !!}</h3>
-                        <h3><img src="../images/joinus/check-mark.png" style="margin-bottom: 10px;"/> {!! FT::translate('register.content.list2') !!}</h3>
-                        <h3><img src="../images/joinus/check-mark.png" style="margin-bottom: 10px;"/> {!! FT::translate('register.content.list3') !!}</h3>             
-                    </div>
+    	            	<h2 class="text-center orange">{!! FT::translate('register.content.heading') !!}</h2>
+                        <div class="" style="padding: 10px 0 0 0;">
+                            <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> {!! FT::translate('register.content.list1') !!}</h3>
+                            <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> {!! FT::translate('register.content.list2') !!}</h3>
+                            <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> เชื่อมต่อ <span class="orange">Marketplace</span> ง่ายๆ</h3>
+                            <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> {!! FT::translate('register.content.list3') !!}</h3>             
+                        </div>
 	            		
 	            	</div>
 	            	<div class="col-md-8">
 	            	
-	            		<h2>เริ่มต้นใช้งานฟรีกับเราทันที</h2>
-	            		<p>{!! FT::translate('register.panel.heading') !!}</p>
+	            		<h1>เริ่มต้นใช้งานกับเรา เปิดบัญชีฟรี!</h1>
+	            		<p class="gray">กรุณากรอกข้อมูลให้ครบถ้วน</p>
 	            		
 	            		<div class="col-md-6">
 	            			<input type="text" class="form-control required" placeholder="{!! FT::translate('placeholder.firstname') !!}" name="firstname" id="firstname" required value="{{ old('firstname',$default['firstname']) }}" />
@@ -104,17 +119,21 @@ if(isset($ref) && $ref != ""){
                         	</select>
                         </div>
                         
+                        @if(!isset($lineId) || $lineId == "")
                         <div class="col-md-6">
-                            <!-- <label for="password" class="col-12 control-label">รหัสผ่าน/Password</label> -->
-                            <input type="password" class="form-control required" placeholder="{!! FT::translate('placeholder.password') !!}" name="password" id="password" required value="" />
+                            <input type="hidden" class="form-control required" placeholder="{!! FT::translate('placeholder.password') !!}" name="password" id="password" required value="" />
                         </div>
                         <div class="col-md-6">
-                            <!-- <label for="c_password" class="col-12 control-label">ยืนยันรหัสผ่าน/Confirm Password</label> -->
-                            <input type="password" class="form-control required" placeholder="{!! FT::translate('placeholder.confirm_password') !!}" name="c_password" id="c_password" required value="" />
+                           <input type="hidden" class="form-control required" placeholder="{!! FT::translate('placeholder.confirm_password') !!}" name="c_password" id="c_password" required value="" />
                         </div>
+                        @else
+                        	<input type="hidden" name="password" value="{{ $default['password'] }}" />
+                        	<input type="hidden" name="c_password" value="{{ $default['password'] }}" />
+                        @endif
                         
                         @if(!isset($code) || $code == "")
-                        <div class="col-md-6">
+                        <div class="col-md-12">
+                        	<div class="small" style="font-weight: 600;">ใส่รหัสผู้แนะนำเพื่อรับส่วนลด</div>
                         	<input type="text" class="form-control" placeholder="{!! FT::translate('placeholder.referral') !!}" name="referral" id="referral" value="{{ old('referral',$referCode) }}"  />
                         </div>
                         @else
@@ -125,22 +144,24 @@ if(isset($ref) && $ref != ""){
                         	<input type="hidden" name="marketplace_ref_id" id="marketplace_ref_id" value="{{ old('marketplace_ref_id',$marketplaceRefId) }}" />
                         	<input type="hidden" name="marketplace_type" id="marketplace_type" value="{{ old('marketplace_type',$code) }}" />
                         @endif
-                    
+                        
+                        <div class="clearfix"></div><br />
+                        
+    					<div class="col-md-5">
+                        	<div class="text-center "><button type="submit" name="submit" class="btn btn-lg btn-block btn-primary">{!! FT::translate('button.register') !!}</button></div> 
+    					</div>
+    					<div class="col-md-7">
+    					    <div>{!! FT::translate('register.form.term') !!}</div>
+    					    <div class="small" style="cursor: pointer;"><a data-toggle="modal" data-target="#ModalTerm" style="color: #f15a22;">{!! FT::translate('register.form.term_button') !!}</a></div>
+    					</div>
+
 	            	</div>
 
-                        
-                    <div class="col-md-12">
-					    <div class="text-center" style="margin: 20px auto;">{!! FT::translate('register.form.term') !!}<button type="button" data-toggle="modal" data-target="#ModalTerm" style="background: transparent; border: 0 none; color: #f15a22;">{!! FT::translate('register.form.term_button') !!}</button></div>
-					</div>
-                    <div class="text-center "><button type="submit" name="submit" class="col-md-6 col-md-offset-3 btn btn-lg btn-primary">{!! FT::translate('button.register') !!}</button></div> 
-					<div class="clearfix"></div><br />
-					<div class="small text-center">{!! FT::translate('register.footer.text') !!} <a href="{{ url('/') }}">{!! FT::translate('register.footer.login') !!}</a></div>
-	            
 	            </div>
 	        </div>
 	    </form>
-		<!-- <div class="col-md-12 text-center">เป็นสมาชิกอยู่แล้ว <a href="/">เข้าสู่ระบบ</a></div> -->
-	    <div class="clearfix"></div><br />
+	    <div class="clearfix"></div>
+
     </div>
     <div class="clearfix"></div>
 </div>
@@ -154,7 +175,7 @@ if(isset($ref) && $ref != ""){
             </div>
             <div class="modal-body">
                 <div style="overflow-y: scroll;height: 345px;padding-bottom: 20px;font-size: 12px; line-height: 24px;">
-                    <p style="text-indent: 40px;">ฟาสต์ชิป (Fastship) ให้บริการจัดส่งเอกสารหรือพัสดุไปต่างประเทศ ผ่านบริษัทขนส่งต่างๆ เช่น DHL, UPS, Aramex, SF Express, FedEx หรือบริษัทขนส่งอื่นๆ เมื่อท่านเลือกใช้บริการของบริษัทดังกล่าวในฐานะ “บริษัทผู้นำส่ง” ผู้จัดส่งจะต้องตกลงยินยอมในนามของผู้จัดส่งหรือในนามของผู้ใดก็ตามที่เกี่ยวข้องกับการจัดส่ง ว่าข้อตกลงและเงื่อนไขต่อไปนี้จะมีผลบังคับใช้เมื่อ ฟาสต์ชิปหรือบริษัทขนส่ง ที่เลือกได้ตอบรับทำการจัดส่ง ยกเว้นจะมีการตกลงทางลายลักษณ์อักษรกับทางเจ้าหน้าที่ที่ได้รับมอบหมายจาก ฟาสต์ชิป</p>
+                    <p style="text-indent: 40px;">ฟาสต์ชิป (Fastship) ให้บริการจัดส่งเอกสารหรือพัสดุไปต่างประเทศ ผ่านบริษัทขนส่งต่างๆ เช่น  UPS, Aramex, SF Express, FedEx หรือบริษัทขนส่งอื่นๆ เมื่อท่านเลือกใช้บริการของบริษัทดังกล่าวในฐานะ “บริษัทผู้นำส่ง” ผู้จัดส่งจะต้องตกลงยินยอมในนามของผู้จัดส่งหรือในนามของผู้ใดก็ตามที่เกี่ยวข้องกับการจัดส่ง ว่าข้อตกลงและเงื่อนไขต่อไปนี้จะมีผลบังคับใช้เมื่อ ฟาสต์ชิปหรือบริษัทขนส่ง ที่เลือกได้ตอบรับทำการจัดส่ง ยกเว้นจะมีการตกลงทางลายลักษณ์อักษรกับทางเจ้าหน้าที่ที่ได้รับมอบหมายจาก ฟาสต์ชิป</p>
                     <p style="text-indent: 40px;">การจัดส่งสินค้า หมายถึง เอกสารและพัสดุภัณฑ์ทั้งหมด ซึ่งส่งไปในใบกำกับการจัดส่งโดยทาง ฟาสต์ชิป สามารถเลือกส่งด้วยวิธีใดก็ได้ ไม่ว่าทางอากาศ ทางถนน หรือด้วยพาหนะขนส่งชนิดอื่นๆ โดย ฟาสต์ชิป ทำหน้าที่เป็นนายหน้าการขนส่ง ระหว่างผู้จัดส่งกับบริษัทขนส่งใดๆ หรือเรียกต่อไปว่า“บริษัทผู้นำส่ง” ที่ผู้จัดส่งกำหนด หรือตามที่ ฟาสต์ชิป เห็นสมควร การขนส่งสิ่งของทุกชนิดจะดำเนินการภายใต้ความรับผิดชอบเบื้องต้น ซึ่งจำกัดไว้ตามที่ได้ระบุ ณ ที่นี้ โดยจะมีค่าชดเชยในมูลค่าที่จำกัดตามแต่กรณี หากผู้จัดส่งต้องการความคุ้มครองที่เพิ่มขึ้นในการจัดส่ง สามารถติดต่อชำระเงินเพิ่มเติมสำหรับการทำประกันได้ (กรุณาอ่านข้อมูลเพิ่มเติมทางด้านล่าง)</p>
                     <p style="text-indent: 40px;">
                     1. พิธีศุลกากร การนำเข้าและส่งออก

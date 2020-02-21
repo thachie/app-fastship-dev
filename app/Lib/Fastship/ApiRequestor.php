@@ -136,6 +136,7 @@ class FS_ApiRequestor
         	'User-ID: ' . Fastship::$apiUserId,
         	'Cust-ID: ' . Fastship::$customerId, 
             'Accept: application/json',
+            'Debug: true', 
             'User-Agent: Fastship/v1 PHPBindings/' . Fastship::VERSION
         );
         if (Fastship::getApiVersion()){
