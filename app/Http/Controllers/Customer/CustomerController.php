@@ -1067,6 +1067,17 @@ class CustomerController extends Controller
 	        $code = $ref;
 	    }
 	    
+	    if($request->has('line_id')){
+	        $lineId = $request->input('line_id');
+	        
+	        //genearate password
+	        $generatePassword = uniqid();
+	        
+	    }else{
+	        $lineId = "";
+	        $generatePassword = "";
+	    }
+	    
 	    //default
 	    $defaultFirstname = "";
 	    $defaultLastname = "";
@@ -1106,12 +1117,14 @@ class CustomerController extends Controller
 	    $data = array(
 	        'provinces' => $provinces,
 	        'code' => $code,
+	        'lineId' => $lineId,
 	        'marketplaceRefId' => $marketplaceRefId,
 	        'default' => array(
 	            "firstname" => $defaultFirstname,
 	            "lastname" => $defaultLastname,
 	            "email" => $defaultEmail,
 	            "telephone" => $defaultTelephone,
+	            "password" => $generatePassword,
 	        ),
 	    );
 	    
@@ -1760,8 +1773,10 @@ class CustomerController extends Controller
 	
 	public function loginLine(Request $request)
 	{
-
+	    
+	    //params
 	    $code = $request->input('code');
+	    $state = $request->input('state');
 	    
 	    $apiParam = array(
 	        "grant_type" => "authorization_code",
@@ -1777,7 +1792,7 @@ class CustomerController extends Controller
 	    $res1 = json_decode($Response1,true);
 
 	    if(!isset($res1) || !isset($res1['id_token'])){
-	        return redirect('/')->with('msg','ไม่สามารถเชื่อมต่อได้');
+	        return redirect('/login')->with('msg','ไม่สามารถเชื่อมต่อได้1');
 	    }
 	    
 	    $apiParam = array(
@@ -1788,28 +1803,58 @@ class CustomerController extends Controller
 	    
 	    $Response2 = callAPI_Line('POST', $url, http_build_query($apiParam));
 	    $res2 = json_decode($Response2,true);
-
+	    
 	    if(!isset($res2)){
-	        return redirect('/')->with('msg','ไม่สามารถเชื่อมต่อได้');
+	        return redirect('/login')->with('msg','ไม่สามารถเชื่อมต่อได้2');
 	    }
 	    $userId = $res2['sub'];
 	    
 	    if(!$userId){
-	        return redirect('/')->with('msg','ไม่สามารถเชื่อมต่อได้');
+	        return redirect('/login')->with('msg','ไม่สามารถเชื่อมต่อได้3');
 	    }
 	    
 	    Fastship::getToken($customerId);
 	    $checkLineId = FS_Customer::checkLineUserId($userId);
 
-	    if($checkLineId > 0){
-
-	        Fastship::getToken($checkLineId);
-	        $customer = FS_Customer::get($checkLineId);
-
+	    if(substr( $state, 0, 4 ) === "join"){ //register
+	        
+	        if($checkLineId > 0){
+	            
+	            return redirect('/login')->with('msg','Line นี้เชื่อมต่อกับบัญชี Fastship แล้ว ไม่สามารถสร้างบัญชีใหม่ได้');
+	            
+	        }else{
+	            
+	            
+	            return redirect('register_line?line_id='.$userId);
+	            
+	            echo "new user";
+	            exit();
+	            
+	        }
+	        
+	    }else if(substr( $state, 0, 5 ) === "login"){ //login
+	        
+	        if($checkLineId > 0){
+	            
+	            //existed customer
+	            Fastship::getToken($checkLineId);
+	            $customer = FS_Customer::get($checkLineId);
+	            
+	        }else{
+	            
+	            
+	            return redirect('register_line?line_id='.$userId)->with('msg','ไม่พบผู้ใช้ในระบบ กรุณาสมัครสมาชิกใหม่');
+	            
+	            echo "new user";
+	            exit();
+	            
+	        }
+	        
 	    }else{
-	        echo "new user";
-	        exit();
+	        return redirect('/login')->with('msg','ไม่สามารถเชื่อมต่อได้4'.$state."..");
 	    }
+	    
+	    
 	    
 	    //save to session
 	    $request->session()->put('customer.id', $checkLineId);
