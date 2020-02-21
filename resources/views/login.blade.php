@@ -91,18 +91,21 @@
 		<script src="/js/vendor.js" type="text/javascript"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-		<div class="col-md-4" style="background-color: #f15a22;height: 100%;overflow: hidden;">
+		<div class="col-md-4 hidden-xs" style="background-color: #f15a22;height: 100%;overflow: hidden;">
 			<div class="row" style="margin-top: 20%;">
-    			<div class=" text-center"><img src="/images/logo-white.png"></div>
+    			<div class=" text-center"><img src="/images/logo-white.png" style="max-width: 90%;"></div>
     			<h3 class="white text-center">Deliver at your fingertips</h3>
 
-    			<div style="position: absolute;bottom: 0;right: 10px;"><img class="rotate_pic" src="/images/login_pic.png"></div>
+    			<div style="position: absolute;bottom: 0;right: 20px;"><img class="rotate_pic" src="/images/login_pic.png"></div>
 			</div>
 		</div>
-		<div class="col-md-8">
+		<div class="col-md-8 ">
 			<div class="row" style="margin-top: 15%;">
     			<div class="col-md-6 col-md-offset-2">
     			
+    				<div class="hidden-md hidden-lg text-center"><img src="/images/logo-header.png" style="max-width: 100%;"></div>
+    				<div class="clearfix"></div><br />
+    				
     				@if (session('msg'))
     				<div class="alert alert-danger small">
     					{!! session('msg') !!}
@@ -150,7 +153,7 @@
         			<div class="clearfix"></div>
         			<br />
     			
-    				<h4 style="margin-top: 20px;">ยังไม่ได้เป็นสมาชิก? สมัครสมาชิกใหม่ไม่มีค่าใช้จ่าย</h4>
+    				<h4 style="margin-top: 20px;">ยังไม่ได้เป็นสมาชิก? สมัครเลยไม่มีค่าใช้จ่าย</h4>
 					<a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653844645&redirect_uri=https%3A%2F%2Fapp.fastship.co%2Fliff%2Floginline&state=join_{{ uniqid() }}&scope=openid%20profile" style="text-decoration: none;">
                 		<img src="{{ url('images/line_register.png') }}" style="max-height: 40px;"/>
                 	</a>

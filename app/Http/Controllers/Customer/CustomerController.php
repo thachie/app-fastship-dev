@@ -137,6 +137,11 @@ class CustomerController extends Controller
         if($request->has('marketplace_type')){
             $marketplaceType = strtoupper($request->input('marketplace_type'));
         }
+        if($request->has('line_id')){
+            $data['line_id'] = $request->input('line_id');
+        }else{
+            $data['line_id'] = "";
+        }
 
 		//check and replace email validate
 		$data['email'] = preg_replace("/[^A-Za-z0-9-@\._]/", "", $data['email']); 
@@ -209,6 +214,7 @@ class CustomerController extends Controller
 		        'TrafficSource' => $referrerMedium,
 			    'AdsCampaign' => $referrerCampaign,
 			    'Behavior' => $data['behavior'],
+			    'LineUserId' => $data['line_id'],
 		        //'Zoho' => $leadId,
 				'Group' => $class,
 			);
@@ -218,49 +224,9 @@ class CustomerController extends Controller
 			    return back()->with('msg','ข้อมูลไม่ถูกต้อง : ' . strtolower($data['email']));
 			}
 
-			//insert to DB
-			$insert = DB::table('customer')->insert(
-			    [
-					'CUST_ID' => $customerId,
-					'CUST_LEADSOURCE' => '5',
-					'CUST_FIRSTNAME' => $data['firstname'],
-					'CUST_LASTNAME' => $data['lastname'],
-					'CUST_COMPANY' => '',
-					'CUST_LINEID' => '',
-			        'CUST_EMAIL' => strtolower($data['email']),
-					'CUST_TEL' => $data['telephone'],
-					'CUST_ADDR1' => '',
-					'CUST_ADDR2' => '',
-					'CUST_CITY' => '',
-			        'CUST_STATE' => $data['state'],
-					'CUST_POSTCODE' => '',
-					'CNTRY_CODE' => 'THA',
-					'CUST_PASSWORD' => $password,
-					'CUST_APITOKEN' => '',
-					'CUST_GROUP' => $class,
-					'CUST_ROLE' => 'CUSTOMER',
-					'IS_SELLER' => '1',
-					'IS_ADMIN' => '0',
-					'IS_SUPPLIER' => '0',
-			        'CUST_PICKFOR' => $data['for'],
-					'CUST_REFERCODE' => $data['referral'],
-					'IS_APPROVE' => 1,
-					'IS_ACTIVE' => 1,
-			        //'ZOHO_LEAD_ID' => $leadId,
-					'CREATE_DATETIME' => date('Y-m-d H:i:s')
-			    ]
-			);
-
 			//check SOOK
 			if(isset($marketplaceType) && strtoupper($marketplaceType) == "SOOK"){
-			    $insert = DB::table('customer_channel')->insert([
-			        'CUST_ID' => $customerId,
-			        'CUST_CHANNEL' => 'SOOK',
-			        'CUST_ACCOUNTNAME' => $marketplaceRefId,
-			        'IS_ACTIVE' => 1,
-			        'CREATE_DATETIME' => date("Y-m-d H:i:s"),
-			    ]);
-			    
+
 			    Fastship::getToken($customerId);
 			    $params = array(
 			        "CustomerID" => $customerId,
@@ -307,49 +273,37 @@ class CustomerController extends Controller
 			
 			//update lead id
 			Fastship::getToken($customerId);
-			$update = DB::table('customer')->where('cust_id',$customerId)
-			->update([
-			     'ZOHO_LEAD_ID' => $leadId,
-			]);
-			
 			$params = array(
 			    'ZohoLeadId' => $leadId,
 			);
 			FS_Customer::update($params);
 
-			if($insert){
-					
-				//send email
-				$email_data = array(
-				   'firstname' => $data['firstname'],
-				   'email' => strtolower($data['email']),
-				   'customerData' => $createDetails,
-				);
-					
-				Mail::send('email/register',$email_data,function($message) use ($email_data){
-					$message->to($email_data['email']);
-					$message->bcc(['oak@tuff.co.th','thachie@tuff.co.th']);
-					$message->from('cs@fastship.co', 'FastShip');
-					$message->subject('FastShip - ยินดีต้อนรับคุณ'. $email_data['firstname'] ." บัญชีของคุณถูกสร้างเรียบร้อยแล้ว");
-				});
-
-				//save to session
-				$request->session()->put('customer.id', $customerId);
-				$request->session()->put('customer.name', $data['firstname']);
-				    
-			    //set shipment in cart
-				$shipment_data = 0;
-				$request->session()->put('pending.shipment', $shipment_data);
-
-				if(isset($marketplaceType) && strtoupper($marketplaceType) == "SOOK"){
-				    return redirect('/register_complete')->with('marketplace','SOOK');
-				}else{
-				    return redirect('/register_complete');
-				}
-				//return redirect('/')->with('msg-type','success')->with('msg','สมัครสมาชิกสำเร็จแล้ว');
+			//send email
+			$email_data = array(
+			   'firstname' => $data['firstname'],
+			   'email' => strtolower($data['email']),
+			   'customerData' => $createDetails,
+			);
 				
+			Mail::send('email/register',$email_data,function($message) use ($email_data){
+				$message->to($email_data['email']);
+				$message->bcc(['oak@tuff.co.th','thachie@tuff.co.th']);
+				$message->from('cs@fastship.co', 'FastShip');
+				$message->subject('FastShip - ยินดีต้อนรับคุณ'. $email_data['firstname'] ." บัญชีของคุณถูกสร้างเรียบร้อยแล้ว");
+			});
+
+			//save to session
+			$request->session()->put('customer.id', $customerId);
+			$request->session()->put('customer.name', $data['firstname']);
+			    
+		    //set shipment in cart
+			$shipment_data = 0;
+			$request->session()->put('pending.shipment', $shipment_data);
+
+			if(isset($marketplaceType) && strtoupper($marketplaceType) == "SOOK"){
+			    return redirect('/register_complete')->with('marketplace','SOOK');
 			}else{
-				return redirect('/joinus')->with('msg','ลงทะเบียนไม่สำเร็จ');
+			    return redirect('/register_complete');
 			}
 
 		}else{
