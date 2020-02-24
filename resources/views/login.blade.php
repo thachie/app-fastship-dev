@@ -120,13 +120,14 @@
                         	<input type="hidden" name="return" value="{{ session('return') }}" />
                         @endif
                         
-                        <h2>{!! FT::translate('login.panel.heading') !!}</h2>
-                        <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653844645&redirect_uri=https%3A%2F%2Fapp.fastship.co%2Fliff%2Floginline&state=login_{{ uniqid() }}&scope=openid%20profile">
+                        <h2>เข้าสู่ระบบหรือสมัครสมาชิก</h2>
+                        <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653844645&redirect_uri=https%3A%2F%2Fapp.fastship.co%2Fliff%2Floginline&state={{ uniqid() }}&scope=openid%20profile">
                     		<img src="{{ url('images/line_login.png') }}" style="max-height: 60px;"/>
                     	</a>
                     	
                     	<h5 class="seperate"><span>หรือ</span></h5>
     
+    					<h4>เข้าสู่ระบบด้วยอีเมล์</h4>
     	                <div class="col-md-8">
     	                	<div class="">{!! FT::translate('login.form.email') !!}</div>
     	                	<input type="text" id="username" class="form-control required" name="username" required />
@@ -152,12 +153,8 @@
     			
         			<div class="clearfix"></div>
         			<br />
-    			
-    				<h4 style="margin-top: 20px;">ยังไม่ได้เป็นสมาชิก? สมัครเลยไม่มีค่าใช้จ่าย</h4>
-					<a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653844645&redirect_uri=https%3A%2F%2Fapp.fastship.co%2Fliff%2Floginline&state=join_{{ uniqid() }}&scope=openid%20profile" style="text-decoration: none;">
-                		<img src="{{ url('images/line_register.png') }}" style="max-height: 40px;"/>
-                	</a>
-					<span class="small" style="margin-left: 10px;"><a href="/joinus">สมัครด้วยอีเมล์</a></span>
+        			
+					<span class="small" style="margin-left: 10px;">ยังไม่ได้เป็นสมาชิก? สมัครเลยไม่มีค่าใช้จ่าย <a href="/joinus">สมัครด้วยอีเมล์</a></span>
 					
     			</div>
 			</div>

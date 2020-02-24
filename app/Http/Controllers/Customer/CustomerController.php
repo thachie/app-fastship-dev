@@ -14,24 +14,114 @@ use App\Lib\Fastship\FS_Pickup;
 use App\Lib\Fastship\FS_Customer;
 use App\Lib\Thaitrade\ThaitradeManager;
 use App\Lib\Zoho\ZohoApiV2;
-use App\Lib\Zoho\ZohoManager;
 use Illuminate\Support\Facades\Mail;
 use Exception;
 
 class CustomerController extends Controller
 {
 
+    public $marketplaces = array();
+    
 	public function __construct()
 	{
 		$this->dateTime = date_default_timezone_set("Asia/Bangkok");
 		if($_SERVER['REMOTE_ADDR'] == "localhost"){
 			include(app_path() . '\Lib\inc.functions.php');
-			//include(app_path() . '\Lib\Omise.php');
 		}else{
 			include(app_path() . '/Lib/inc.functions.php');
-			//include(app_path() . '/Lib/Omise.php');
 		}
 
+		$this->marketplaces = array(
+		    "EBAY_US" => array(
+		        "country" => "us",
+		        "name" => "United States",
+		    ),
+		    "EBAY_AU" => array(
+		        "country" => "au",
+		        "name" => "Australia",
+		    ),
+		    "EBAY_CA" => array(
+		        "country" => "ca",
+		        "name" => "Canada",
+		    ),
+		    "EBAY_DE" => array(
+		        "country" => "de",
+		        "name" => "Germany",
+		    ),
+		    "EBAY_FR" => array(
+		        "country" => "fr",
+		        "name" => "France",
+		    ),
+		    "EBAY_GB" => array(
+		        "country" => "gb",
+		        "name" => "Great Britain",
+		    ),
+		    "EBAY_ES" => array(
+		        "country" => "es",
+		        "name" => "Spain",
+		    ),
+		    "EBAY_BE" => array(
+		        "country" => "be",
+		        "name" => "Belgium",
+		    ),
+		    "EBAY_AT" => array(
+		        "country" => "at",
+		        "name" => "Austria",
+		    ),
+		    "EBAY_CH" => array(
+		        "country" => "ch",
+		        "name" => "Switzerland",
+		    ),
+		    "EBAY_IE" => array(
+		        "country" => "ie",
+		        "name" => "Ireland",
+		    ),
+		    "EBAY_IT" => array(
+		        "country" => "it",
+		        "name" => "Italy",
+		    ),
+		    "EBAY_HK" => array(
+		        "country" => "hk",
+		        "name" => "Hong Kong",
+		    ),
+		    "EBAY_IN" => array(
+		        "country" => "in",
+		        "name" => "India",
+		    ),
+		    "EBAY_MY" => array(
+		        "country" => "my",
+		        "name" => "Malaysia",
+		    ),
+		    "EBAY_NL" => array(
+		        "country" => "nl",
+		        "name" => "Netherlands",
+		    ),
+		    "EBAY_PH" => array(
+		        "country" => "ph",
+		        "name" => "Philippines",
+		    ),
+		    "EBAY_PL" => array(
+		        "country" => "pl",
+		        "name" => "Poland",
+		    ),
+		    "EBAY_SG" => array(
+		        "country" => "sg",
+		        "name" => "Singapore",
+		    ),
+		    "EBAY_TH" => array(
+		        "country" => "th",
+		        "name" => "Thailand",
+		    ),
+		    "EBAY_TW" => array(
+		        "country" => "tw",
+		        "name" => "Taiwan",
+		    ),
+		    "EBAY_VN" => array(
+		        "country" => "vn",
+		        "name" => "Vietnam",
+		    ),
+		    
+		);
 	}
 
 	public function login(Request $request)
@@ -61,10 +151,16 @@ class CustomerController extends Controller
 			//get customer
 			$customerObj = FS_Customer::get($customerId);
 			
-			
+			if($request->has("line_id") && $customerObj['LineId'] == null){
+			     $lineId = $request->input('line_id');
+			     $params = array(
+			         "LineUserId" => $lineId,
+			     );
+			     FS_Customer::update($params);
+			}
 			
 			if($customerObj == null){
-				return redirect('/login')->with('msg','ไม่พบข้อมูลผู้ใช้งาน');
+				return back()->with('msg','ไม่พบข้อมูลผู้ใช้งาน');
 			}else{
 			    
 			    //save to session
@@ -93,7 +189,7 @@ class CustomerController extends Controller
 				}
 			}
 		}else{
-			return redirect('/login')->with('msg','กรุณากรอกข้อมูลให้ครบถ้วน');
+		    return back()->with('msg','กรุณากรอกข้อมูลให้ครบถ้วน');
 		}
 	}
 
@@ -145,8 +241,7 @@ class CustomerController extends Controller
 
 		//check and replace email validate
 		$data['email'] = preg_replace("/[^A-Za-z0-9-@\._]/", "", $data['email']); 
-		//$data['email'] = preg_replace("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", "", $data['email']);
-		
+
 		//check password
 		if($data['password'] == $data['c_password']){
 				
@@ -215,7 +310,6 @@ class CustomerController extends Controller
 			    'AdsCampaign' => $referrerCampaign,
 			    'Behavior' => $data['behavior'],
 			    'LineUserId' => $data['line_id'],
-		        //'Zoho' => $leadId,
 				'Group' => $class,
 			);
 			$customerId = FS_Customer::create($createDetails);
@@ -349,8 +443,7 @@ class CustomerController extends Controller
             ->where("IS_ACTIVE",1)
             ->get();
         $row_credit = $creditCardsObj->count();
-		//alert($row_credit);
-		//alert($creditCardsObj);
+
 		if($row_credit > 0){
 			foreach ($creditCardsObj as $value) {
 				$creditCards[] = $value;
@@ -359,12 +452,11 @@ class CustomerController extends Controller
 			$creditCards = array();
 		}
 		
-		//alert($creditCards);
 		$data = array(
-				'customer_data' => $customer_data,
-				'transactions' => array(),
-				'creditCards' => $creditCards,
-				'channels' => array(),
+			'customer_data' => $customer_data,
+			'transactions' => array(),
+			'creditCards' => $creditCards,
+			'channels' => array(),
 		);
 
 		return view('myaccount',$data);
@@ -400,29 +492,6 @@ class CustomerController extends Controller
 	    $customer_data['refcode'] = $customerObj['ReferCode'];
 	    $customer_data['latitude'] = $customerObj['Latitude'];
 	    $customer_data['longitude'] = $customerObj['Longitude'];
-
-	    /*
-	    $customer_data['ID'] = $customerObj->CUST_ID;
-	    $customer_data['firstname'] = $customerObj->CUST_FIRSTNAME;
-	    $customer_data['lastname'] = $customerObj->CUST_LASTNAME;
-	    $customer_data['phonenumber'] = $customerObj->CUST_TEL;
-	    $customer_data['email'] = $customerObj->CUST_EMAIL;
-	    $customer_data['company'] = $customerObj->CUST_COMPANY;
-	    $customer_data['taxid'] = $customerObj->CUST_TAXID;
-	    $customer_data['address1'] = $customerObj->CUST_ADDR1;
-	    $customer_data['address2'] = $customerObj->CUST_ADDR2;
-	    $customer_data['city'] = $customerObj->CUST_CITY;
-	    $customer_data['state'] = $customerObj->CUST_STATE;
-	    $customer_data['postcode'] = $customerObj->CUST_POSTCODE;
-	    $customer_data['country'] = $customerObj->CNTRY_CODE;
-	    $customer_data['group'] = $customerObj->CUST_GROUP;
-	    $customer_data['refcode'] = $customerObj->CUST_REFERCODE;
-	    $customer_data['latitude'] = $customerObj->CUST_LATITUDE;
-	    $customer_data['longitude'] = $customerObj->CUST_LONGITUDE;
-	    $customer_data['group'] = $customerObj->CUST_GROUP;
-	    */
-	    //get api token
-	    //Fastship::getToken($customerId);
 
 	    //prepare current month
 	    $searchDetails = array(
@@ -616,29 +685,13 @@ class CustomerController extends Controller
 			return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
 		}
 
-		//$ebaySession = EbayManager::GetSessionId();
-
 		Fastship::getToken($customerId);
 		$channel_data = FS_Customer::getChannel($customerId);
-		
-// 		$channelObj = DB::table('customer_channel')
-// 			->where("CUST_ID",$customerId)
-// 			->where("IS_ACTIVE",1)
-// 			->get();
+
 		if($channel_data == false){
 		  $channel_data = array();
 		}
-		/*
-		if(sizeof($channelObj) > 0){
-			foreach($channelObj as $channel){
-				$channel_data[] = array(
-					"accountName" => $channel->CUST_ACCOUNTNAME,
-					"channelType" => $channel->CUST_CHANNEL,
-					"createDate" => $channel->CREATE_DATETIME,
-				);
-			}
-		}
-		*/
+
 		$data = array(
 			"channels" => $channel_data,
 		);
@@ -694,97 +747,7 @@ class CustomerController extends Controller
 	        return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
 	    }
 
-	    $marketplaces = array(
-	        "EBAY_US" => array(
-	            "country" => "us",
-	            "name" => "United States",
-	        ),
-	        "EBAY_AU" => array(
-	            "country" => "au",
-	            "name" => "Australia",
-	        ),
-	        "EBAY_CA" => array(
-	            "country" => "ca",
-	            "name" => "Canada",
-	        ),
-	        "EBAY_DE" => array(
-	            "country" => "de",
-	            "name" => "Germany",
-	        ),
-	        "EBAY_FR" => array(
-	            "country" => "fr",
-	            "name" => "France",
-	        ),
-	        "EBAY_GB" => array(
-	            "country" => "gb",
-	            "name" => "Great Britain",
-	        ),
-	        "EBAY_ES" => array(
-	            "country" => "es",
-	            "name" => "Spain",
-	        ),
-	        "EBAY_BE" => array(
-	            "country" => "be",
-	            "name" => "Belgium",
-	        ),
-	        "EBAY_AT" => array(
-	            "country" => "at",
-	            "name" => "Austria",
-	        ),
-	        "EBAY_CH" => array(
-	            "country" => "ch",
-	            "name" => "Switzerland",
-	        ),
-	        "EBAY_IE" => array(
-	            "country" => "ie",
-	            "name" => "Ireland",
-	        ),
-	        "EBAY_IT" => array(
-	            "country" => "it",
-	            "name" => "Italy",
-	        ),
-	        "EBAY_HK" => array(
-	            "country" => "hk",
-	            "name" => "Hong Kong",
-	        ),
-	        "EBAY_IN" => array(
-	            "country" => "in",
-	            "name" => "India",
-	        ),
-	        "EBAY_MY" => array(
-	            "country" => "my",
-	            "name" => "Malaysia",
-	        ),
-	        "EBAY_NL" => array(
-	            "country" => "nl",
-	            "name" => "Netherlands",
-	        ),
-	        "EBAY_PH" => array(
-	            "country" => "ph",
-	            "name" => "Philippines",
-	        ),
-	        "EBAY_PL" => array(
-	            "country" => "pl",
-	            "name" => "Poland",
-	        ),
-	        "EBAY_SG" => array(
-	            "country" => "sg",
-	            "name" => "Singapore",
-	        ),
-	        "EBAY_TH" => array(
-	            "country" => "th",
-	            "name" => "Thailand",
-	        ),
-	        "EBAY_TW" => array(
-	            "country" => "tw",
-	            "name" => "Taiwan",
-	        ),
-	        "EBAY_VN" => array(
-	            "country" => "vn",
-	            "name" => "Vietnam",
-	        ),
-
-	    );
+	    $marketplaces = $this->marketplaces;
 	    
 	    $data = array(
 	        "marketplaces" => $marketplaces,
@@ -803,97 +766,7 @@ class CustomerController extends Controller
 	        return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
 	    }
 	    
-	    $marketplaces = array(
-	        "EBAY_US" => array(
-	            "country" => "us",
-	            "name" => "United States",
-	        ),
-	        "EBAY_AU" => array(
-	            "country" => "au",
-	            "name" => "Australia",
-	        ),
-	        "EBAY_CA" => array(
-	            "country" => "ca",
-	            "name" => "Canada",
-	        ),
-	        "EBAY_DE" => array(
-	            "country" => "de",
-	            "name" => "Germany",
-	        ),
-	        "EBAY_FR" => array(
-	            "country" => "fr",
-	            "name" => "France",
-	        ),
-	        "EBAY_GB" => array(
-	            "country" => "gb",
-	            "name" => "Great Britain",
-	        ),
-	        "EBAY_ES" => array(
-	            "country" => "es",
-	            "name" => "Spain",
-	        ),
-	        "EBAY_BE" => array(
-	            "country" => "be",
-	            "name" => "Belgium",
-	        ),
-	        "EBAY_AT" => array(
-	            "country" => "at",
-	            "name" => "Austria",
-	        ),
-	        "EBAY_CH" => array(
-	            "country" => "ch",
-	            "name" => "Switzerland",
-	        ),
-	        "EBAY_IE" => array(
-	            "country" => "ie",
-	            "name" => "Ireland",
-	        ),
-	        "EBAY_IT" => array(
-	            "country" => "it",
-	            "name" => "Italy",
-	        ),
-	        "EBAY_HK" => array(
-	            "country" => "hk",
-	            "name" => "Hong Kong",
-	        ),
-	        "EBAY_IN" => array(
-	            "country" => "in",
-	            "name" => "India",
-	        ),
-	        "EBAY_MY" => array(
-	            "country" => "my",
-	            "name" => "Malaysia",
-	        ),
-	        "EBAY_NL" => array(
-	            "country" => "nl",
-	            "name" => "Netherlands",
-	        ),
-	        "EBAY_PH" => array(
-	            "country" => "ph",
-	            "name" => "Philippines",
-	        ),
-	        "EBAY_PL" => array(
-	            "country" => "pl",
-	            "name" => "Poland",
-	        ),
-	        "EBAY_SG" => array(
-	            "country" => "sg",
-	            "name" => "Singapore",
-	        ),
-	        "EBAY_TH" => array(
-	            "country" => "th",
-	            "name" => "Thailand",
-	        ),
-	        "EBAY_TW" => array(
-	            "country" => "tw",
-	            "name" => "Taiwan",
-	        ),
-	        "EBAY_VN" => array(
-	            "country" => "vn",
-	            "name" => "Vietnam",
-	        ),
-	        
-	    );
+	    $marketplaces = $this->marketplaces;
 
 	    $marketplace = $marketplaces[$site];
 	    
@@ -1457,59 +1330,6 @@ class CustomerController extends Controller
 
 	}
 
-	//Add Marketplace Channel
-	/*
-	public function addChannel(Request $request) //post
-	{
-		if (session('customer.id') != null){
-			$customerId = session('customer.id');
-		}else{
-			return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
-		}
-
-		//validate data
-		if($request->input('cust_id') == ""){
-			return redirect('/channel_list')->with('msg','ไม่พบหมายเลขสมาชิก');
-		}
-		if($request->input('account') == ""){
-			return redirect('/channel_list')->with('msg','ไม่พบบัญชีในช่องทางดังกล่าว');
-		}
-		if($request->input('token') == ""){
-			return redirect('/channel_list')->with('msg','เกิดปัญหาในการเชื่อมต่อช่องทางดังกล่าว');
-		}
-		
-		$key = "CloudCom_Hub_Key_Tuff_Muaythai";
-		$decodedToken = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key) , base64_decode($request->input('token')), MCRYPT_MODE_CBC,md5(md5($key))),"\0");
-
-		//insert to db
-		$insert = DB::table('customer_channel')->insert(
-		[
-			'CUST_ID' => $request->input('cust_id'),
-			'CUST_CHANNEL' => 'EBAY',
-			'CUST_ACCOUNTNAME' => $request->input('account'),
-		    'CUST_APITOKEN' => $decodedToken,
-			'IS_ACTIVE' => 1,
-			'CREATE_DATETIME' => date('Y-m-d H:i:s'),
-		]
-		);
-		
-		Fastship::getToken($customerId);
-		$params = array(
-		    "CustomerID" => $request->input('cust_id'),
-		    "ChannelType" => "EBAY",
-		    "AccountName" => $request->input('account'),
-		    "Token" => $decodedToken,
-		);
-		FS_Customer::addChannel($params);
-		
-		if($insert){
-			return redirect('/channel_list')->with('msg','เพิ่มช่องทางใหม่เรียบร้อยแล้ว')->with('msg-type','success');
-		}else{
-			return redirect('/channel_list')->with('msg','เกิดปัญหาในการเชื่อมต่อช่องทางดังกล่าว');
-		}
-
-	}*/
-	
 	//Remove Marketplace Channel
 	public function removeChannel(Request $request) //post
 	{
@@ -1526,9 +1346,6 @@ class CustomerController extends Controller
 	    
 	    $ccId = $request->input('cc_id');
 
-	    //delete from db
-	    //$delete = DB::table('customer_channel')->where('CC_ID', $ccId )->delete();
-	    
 	    Fastship::getToken($customerId);
 	    $delete = FS_Customer::removeChannel($ccId);
 	    
@@ -1589,19 +1406,7 @@ class CustomerController extends Controller
 			
 			print_r($decoded);
 			echo "<hr />";
-			
-// 			$update = DB::table('customer')
-// 			->where('CUST_ID', $customerObj->CUST_ID)
-// 			->update(
-// 				[ 'CUST_PASSWORD' => $encoded ]
-// 			);
-			
-			//update to API
-// 			Fastship::getToken($customerObj->CUST_ID);
-// 			$updateDetails = array(
-// 			    'Password' => $encoded,
-// 			);
-// 			$updateCompleted = FS_Customer::changePassword($updateDetails);
+
 		}
 		die();
 
@@ -1769,47 +1574,20 @@ class CustomerController extends Controller
 	    
 	    Fastship::getToken($customerId);
 	    $checkLineId = FS_Customer::checkLineUserId($userId);
+    
+        if($checkLineId > 0){
+            
+            //existed customer
+            Fastship::getToken($checkLineId);
+            $customer = FS_Customer::get($checkLineId);
+            
+        }else{
 
-	    if(substr( $state, 0, 4 ) === "join"){ //register
-	        
-	        if($checkLineId > 0){
-	            
-	            return redirect('/login')->with('msg','Line นี้เชื่อมต่อกับบัญชี Fastship แล้ว ไม่สามารถสร้างบัญชีใหม่ได้');
-	            
-	        }else{
-	            
-	            
-	            return redirect('register_line?line_id='.$userId);
-	            
-	            echo "new user";
-	            exit();
-	            
-	        }
-	        
-	    }else if(substr( $state, 0, 5 ) === "login"){ //login
-	        
-	        if($checkLineId > 0){
-	            
-	            //existed customer
-	            Fastship::getToken($checkLineId);
-	            $customer = FS_Customer::get($checkLineId);
-	            
-	        }else{
-	            
-	            
-	            return redirect('register_line?line_id='.$userId)->with('msg','ไม่พบผู้ใช้ในระบบ กรุณาสมัครสมาชิกใหม่');
-	            
-	            echo "new user";
-	            exit();
-	            
-	        }
-	        
-	    }else{
-	        return redirect('/login')->with('msg','ไม่สามารถเชื่อมต่อได้4'.$state."..");
-	    }
-	    
-	    
-	    
+            //return redirect('register_line?line_id='.$userId)->with('msg','ไม่พบผู้ใช้ในระบบ กรุณาสมัครสมาชิกใหม่');
+            return redirect('register_line?line_id='.$userId);
+
+        }
+
 	    //save to session
 	    $request->session()->put('customer.id', $checkLineId);
 	    $request->session()->put('customer.name', $customer['Firstname']);
@@ -1830,17 +1608,7 @@ class CustomerController extends Controller
 	    $request->session()->put('pending.shipment', $shipment_data);
 	    
 	    return redirect('calculate_shipment_rate');
-	    
-	    exit();
-	    
-	    
-	    $params = array(
-	        "LineUserId" => $userId,
-	    );
-	    FS_Customer::update($params);
-	    
-	    return redirect('/')->with('msg','เชื่อมต่อเรียบร้อยแล้ว')->with('msg-type','success');
-	    
+
 	}
 
 }

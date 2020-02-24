@@ -380,68 +380,6 @@ function FS_PullOrder($params)
 	}
 }
 
-
-/* duplicate with inc.functions.php -> cause error while create shipment
-function alert()
-{
-	$arg_list = func_get_args();
-	foreach ($arg_list as $k => $v){
-		print "<pre>";
-		print_r( $v );
-		print "</pre>";
-	}
-}
-*/
-/*
-function callAPI($method, $url, $data){
-	try
-	{
-		$curl = curl_init();
-		switch ($method){
-			case "POST":
-				curl_setopt($curl, CURLOPT_POST, 1);
-				if ($data)
-				curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-				break;
-			case "PUT":
-				curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
-				if ($data)
-				curl_setopt($curl, CURLOPT_POSTFIELDS, $data);			 					
-				break;
-			default:
-				if ($data)
-				//$url = sprintf("%s?%s", $url, http_build_query($data));
-				$url = $url.'?'.$data; //sprintf("%s?%s", $url, http_build_query($data));
-		}
-
-		// OPTIONS:
-		curl_setopt($curl, CURLOPT_URL, $url);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-				'Authorization: Basic Y2xvdWRjb206MTIzNDU=',
-				'Content-Type: application/json',
-			)
-		);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-
-		// EXECUTE:
-		$result = curl_exec($curl);
-
-		if(curl_errno($curl)){
-	        throw new Exception(curl_error($curl));
-	    }
-		
-		if(!$result){
-		   die("Connection Failure");
-		}
-		curl_close($curl);
-		return $result;
-	}catch(Exception $e){
-		echo 'Error -- '. $e->getMessage();
-	}
-}
-*/
 function base_url()
 {
 	$base_url	= "https://".$_SERVER['HTTP_HOST'].str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);

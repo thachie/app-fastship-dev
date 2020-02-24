@@ -25,141 +25,157 @@ if(isset($ref) && $ref != ""){
 </style>
 <div class="conter-wrapper">     
 <div class="row" style="margin-bottom: 0;">     
-    <div class="col-md-10 col-md-offset-1">
-        <form name="register_form" class="form-horizontal regis" method="post" action="{{url ('/customer/register')}}">
+    <div class="col-md-12 ">
+
+	        <div class="row">
+	        	<div class="col-md-4" style="padding: 40px;background-color: #eee;">
+	        	    <div class="text-center" style="padding: 0 0 25px;"><img src="../images/joinus/fastship_register.png" style="max-width: 200px;"/></div>
+            	
+	            	<h2 class="text-center orange">{!! FT::translate('register.content.heading') !!}</h2>
+                    <div class="" style="padding: 10px 0 0 0;">
+                        <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> {!! FT::translate('register.content.list1') !!}</h3>
+                        <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> {!! FT::translate('register.content.list2') !!}</h3>
+                        <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> เชื่อมต่อ <span class="orange">Marketplace</span> ง่ายๆ</h3>
+                        <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> {!! FT::translate('register.content.list3') !!}</h3>             
+                    </div>
+            		
+	        	</div>
+            	<div class="col-md-5" style="background-color: #fff;overflow: hidden;color:#fff;padding: 40px;">
+            	<form name="register_form" class="form-horizontal regis" method="post" action="{{url ('/customer/register')}}">
                     
-	        {{ csrf_field() }}
-	        
-	        <input type="hidden" name="line_id" value="{{ $lineId }}" />
-	        
-	        <div class="panel panel-primary">
-	            <div class="panel-body">
-	            	<div class="col-md-4">
-	            	
-	            		<div class="text-center" style="padding: 0 0 25px;"><img src="../images/joinus/fastship_register.png" style="max-width: 200px;"/></div>
-	            	
-    	            	<h2 class="text-center orange">{!! FT::translate('register.content.heading') !!}</h2>
-                        <div class="" style="padding: 10px 0 0 0;">
-                            <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> {!! FT::translate('register.content.list1') !!}</h3>
-                            <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> {!! FT::translate('register.content.list2') !!}</h3>
-                            <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> เชื่อมต่อ <span class="orange">Marketplace</span> ง่ายๆ</h3>
-                            <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> {!! FT::translate('register.content.list3') !!}</h3>             
-                        </div>
-	            		
-	            	</div>
-	            	<div class="col-md-8">
-	            	
-	            		<h1>เริ่มต้นใช้งานกับเรา เปิดบัญชีฟรี!</h1>
-	            		<p class="gray">กรุณากรอกข้อมูลให้ครบถ้วน</p>
-	            		
-	            		<div class="col-md-6">
-	            			<input type="text" class="form-control required" placeholder="{!! FT::translate('placeholder.firstname') !!}" name="firstname" id="firstname" required value="{{ old('firstname',$default['firstname']) }}" />
-	            		</div>
-	            		<div class="col-md-6">
-	            			<input type="text" class="form-control required" placeholder="{!! FT::translate('placeholder.lastname') !!}" name="lastname" id="lastname" required value="{{ old('lastname',$default['lastname']) }}" />
-	            		</div>
-	            		
-	            		<div class="col-md-6">
-                            <!-- <label for="email" class="col-12 control-label">อีเมล์ที่ใช้งาน/Email</label> -->
-                            <input type="text" class="form-control required" placeholder="{!! FT::translate('placeholder.email') !!}" name="email" id="email" required value="{{ old('email',$default['email']) }}" />
-                        </div>
-                                    
-                        <div class="col-md-6">
-                            <!-- <label for="telephone" class="col-12 control-label">เบอร์ติดต่อ/Telephone</label> -->
-                            <input type="number" class="form-control required" placeholder="{!! FT::translate('placeholder.telephone') !!}" name="telephone" id="telephone"  max="9999999999" maxlength="10" required value="{{ old('telephone',$default['telephone']) }}" />
-                        </div>  
-                        
-                        <div class="col-md-12">
-                        	<select name="state" class="form-control required" required>
-                        		<option value="">----- {!! FT::translate('dropdown.default.province') !!} -----</option>
-                        		@foreach($provinces as $province)
-                        		@if($province->name_th == old('state'))
-                            		@if(session('lang') != null && session('lang') == "en")
-                            		<option value="{{ $province->name_th }}" selected>{{ $province->name_en }}</option>
-                            		@else
-                            		<option value="{{ $province->name_th }}" selected>{{ $province->name_th }}</option>
-                            		@endif
+        	        {{ csrf_field() }}
+        	        
+        	        <input type="hidden" name="line_id" value="{{ $lineId }}" />
+
+            		<h1>เริ่มต้นใช้งานกับเรา เปิดบัญชีฟรี!</h1>
+            		<p class="gray">กรุณากรอกข้อมูลให้ครบถ้วน</p>
+            		
+            		<div class="col-md-6">
+            			<input type="text" class="form-control required" placeholder="{!! FT::translate('placeholder.firstname') !!}" name="firstname" id="firstname" required value="{{ old('firstname',$default['firstname']) }}" />
+            		</div>
+            		<div class="col-md-6">
+            			<input type="text" class="form-control required" placeholder="{!! FT::translate('placeholder.lastname') !!}" name="lastname" id="lastname" required value="{{ old('lastname',$default['lastname']) }}" />
+            		</div>
+            		
+            		<div class="col-md-6">
+                        <!-- <label for="email" class="col-12 control-label">อีเมล์ที่ใช้งาน/Email</label> -->
+                        <input type="text" class="form-control required" placeholder="{!! FT::translate('placeholder.email') !!}" name="email" id="email" required value="{{ old('email',$default['email']) }}" />
+                    </div>
+                                
+                    <div class="col-md-6">
+                        <!-- <label for="telephone" class="col-12 control-label">เบอร์ติดต่อ/Telephone</label> -->
+                        <input type="number" class="form-control required" placeholder="{!! FT::translate('placeholder.telephone') !!}" name="telephone" id="telephone"  max="9999999999" maxlength="10" required value="{{ old('telephone',$default['telephone']) }}" />
+                    </div>  
+                    
+                    <div class="col-md-12">
+                    	<select name="state" class="form-control required" required>
+                    		<option value="">----- {!! FT::translate('dropdown.default.province') !!} -----</option>
+                    		@foreach($provinces as $province)
+                    		@if($province->name_th == old('state'))
+                        		@if(session('lang') != null && session('lang') == "en")
+                        		<option value="{{ $province->name_th }}" selected>{{ $province->name_en }}</option>
                         		@else
-                        			@if(session('lang') != null && session('lang') == "en")
-                            		<option value="{{ $province->name_th }}">{{ $province->name_en }}</option>
-                            		@else
-                            		<option value="{{ $province->name_th }}">{{ $province->name_th }}</option>
-                            		@endif
+                        		<option value="{{ $province->name_th }}" selected>{{ $province->name_th }}</option>
                         		@endif
-                        		@endforeach
-                        	</select>
-                        </div>
-    
-                        <div class="col-md-6">
-                        @if(old('referral',$referCode) == "SOOK")
-                        	<select name="for" class="form-control required" required>
-                        		<option value="thaitrade">ขายใน Thaitrade</option>
-                        	</select>
-                        @else
-                            <select name="for" class="form-control required" required>
-                        		<option value="">--- {!! FT::translate('dropdown.default.for') !!} ---</option>
-                        		<option value="ebay">{!! FT::translate('option.for.ebay') !!}</option>
-                        		<option value="amazon">{!! FT::translate('option.for.amazon') !!}</option>
-                        		<option value="etsy">{!! FT::translate('option.for.etsy') !!}</option>
-                        		<option value="thaitrade">{!! FT::translate('option.for.thaitrade') !!}</option>
-                        		<option value="sample">{!! FT::translate('option.for.sample') !!}</option>
-                        		<option value="personal">{!! FT::translate('option.for.personal') !!}</option>
-                        		<option value="other">{!! FT::translate('option.for.other') !!}</option>
-                        	</select>
-                        @endif
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <select name="behavior" class="form-control required" required>
-                        		<option value="">--- {!! FT::translate('dropdown.default.behavior') !!} ---</option>
-                        		<option value="1_10">{!! FT::translate('option.behavior.low') !!}</option>
-                        		<option value="11_50">{!! FT::translate('option.behavior.medium') !!}</option>
-                        		<option value="50plus">{!! FT::translate('option.behavior.high') !!}</option>
-                        		<option value="0">{!! FT::translate('option.behavior.onetime') !!}</option>
-                        	</select>
-                        </div>
-                        
-                        @if(!isset($lineId) || $lineId == "")
-                        <div class="col-md-6">
-                            <input type="hidden" class="form-control required" placeholder="{!! FT::translate('placeholder.password') !!}" name="password" id="password" required value="" />
-                        </div>
-                        <div class="col-md-6">
-                           <input type="hidden" class="form-control required" placeholder="{!! FT::translate('placeholder.confirm_password') !!}" name="c_password" id="c_password" required value="" />
-                        </div>
-                        @else
-                        	<input type="hidden" name="password" value="{{ $default['password'] }}" />
-                        	<input type="hidden" name="c_password" value="{{ $default['password'] }}" />
-                        @endif
-                        
-                        @if(!isset($code) || $code == "")
-                        <div class="col-md-12">
-                        	<div class="small" style="font-weight: 600;">ใส่รหัสผู้แนะนำเพื่อรับส่วนลด</div>
-                        	<input type="text" class="form-control" placeholder="{!! FT::translate('placeholder.referral') !!}" name="referral" id="referral" value="{{ old('referral',$referCode) }}"  />
-                        </div>
-                        @else
-                        	<input type="hidden" name="referral" id="referral" value="{{ old('referral',$referCode) }}" />
-                        @endif
-                        
-                        @if(isset($marketplaceRefId) && $marketplaceRefId != "")
-                        	<input type="hidden" name="marketplace_ref_id" id="marketplace_ref_id" value="{{ old('marketplace_ref_id',$marketplaceRefId) }}" />
-                        	<input type="hidden" name="marketplace_type" id="marketplace_type" value="{{ old('marketplace_type',$code) }}" />
-                        @endif
-                        
-                        <div class="clearfix"></div><br />
-                        
-    					<div class="col-md-5">
-                        	<div class="text-center "><button type="submit" name="submit" class="btn btn-lg btn-block btn-primary">{!! FT::translate('button.register') !!}</button></div> 
-    					</div>
-    					<div class="col-md-7">
-    					    <div>{!! FT::translate('register.form.term') !!}</div>
-    					    <div class="small" style="cursor: pointer;"><a data-toggle="modal" data-target="#ModalTerm" style="color: #f15a22;">{!! FT::translate('register.form.term_button') !!}</a></div>
-    					</div>
+                    		@else
+                    			@if(session('lang') != null && session('lang') == "en")
+                        		<option value="{{ $province->name_th }}">{{ $province->name_en }}</option>
+                        		@else
+                        		<option value="{{ $province->name_th }}">{{ $province->name_th }}</option>
+                        		@endif
+                    		@endif
+                    		@endforeach
+                    	</select>
+                    </div>
 
-	            	</div>
+                    <div class="col-md-6">
+                    @if(old('referral',$referCode) == "SOOK")
+                    	<select name="for" class="form-control required" required>
+                    		<option value="thaitrade">ขายใน Thaitrade</option>
+                    	</select>
+                    @else
+                        <select name="for" class="form-control required" required>
+                    		<option value="">--- {!! FT::translate('dropdown.default.for') !!} ---</option>
+                    		<option value="ebay">{!! FT::translate('option.for.ebay') !!}</option>
+                    		<option value="amazon">{!! FT::translate('option.for.amazon') !!}</option>
+                    		<option value="etsy">{!! FT::translate('option.for.etsy') !!}</option>
+                    		<option value="thaitrade">{!! FT::translate('option.for.thaitrade') !!}</option>
+                    		<option value="sample">{!! FT::translate('option.for.sample') !!}</option>
+                    		<option value="personal">{!! FT::translate('option.for.personal') !!}</option>
+                    		<option value="other">{!! FT::translate('option.for.other') !!}</option>
+                    	</select>
+                    @endif
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <select name="behavior" class="form-control required" required>
+                    		<option value="">--- {!! FT::translate('dropdown.default.behavior') !!} ---</option>
+                    		<option value="1_10">{!! FT::translate('option.behavior.low') !!}</option>
+                    		<option value="11_50">{!! FT::translate('option.behavior.medium') !!}</option>
+                    		<option value="50plus">{!! FT::translate('option.behavior.high') !!}</option>
+                    		<option value="0">{!! FT::translate('option.behavior.onetime') !!}</option>
+                    	</select>
+                    </div>
+                    
+                    @if(!isset($lineId) || $lineId == "")
+                    <div class="col-md-6">
+                        <input type="hidden" class="form-control required" placeholder="{!! FT::translate('placeholder.password') !!}" name="password" id="password" required value="" />
+                    </div>
+                    <div class="col-md-6">
+                       <input type="hidden" class="form-control required" placeholder="{!! FT::translate('placeholder.confirm_password') !!}" name="c_password" id="c_password" required value="" />
+                    </div>
+                    @else
+                    	<input type="hidden" name="password" value="{{ $default['password'] }}" />
+                    	<input type="hidden" name="c_password" value="{{ $default['password'] }}" />
+                    @endif
+                    
+                    @if(!isset($code) || $code == "")
+                    <div class="col-md-12">
+                    	<div class="small" style="font-weight: 600;">ใส่รหัสผู้แนะนำเพื่อรับส่วนลด</div>
+                    	<input type="text" class="form-control" placeholder="{!! FT::translate('placeholder.referral') !!}" name="referral" id="referral" value="{{ old('referral',$referCode) }}"  />
+                    </div>
+                    @else
+                    	<input type="hidden" name="referral" id="referral" value="{{ old('referral',$referCode) }}" />
+                    @endif
+                    
+                    @if(isset($marketplaceRefId) && $marketplaceRefId != "")
+                    	<input type="hidden" name="marketplace_ref_id" id="marketplace_ref_id" value="{{ old('marketplace_ref_id',$marketplaceRefId) }}" />
+                    	<input type="hidden" name="marketplace_type" id="marketplace_type" value="{{ old('marketplace_type',$code) }}" />
+                    @endif
+                    
+                    <div class="clearfix"></div><br />
+                    
+					<div class="col-md-5">
+                    	<div class="text-center "><button type="submit" name="submit" class="btn btn-lg btn-block btn-primary">{!! FT::translate('button.register') !!}</button></div> 
+					</div>
+					<div class="col-md-7">
+					    <div>{!! FT::translate('register.form.term') !!}</div>
+					    <div class="small" style="cursor: pointer;"><a data-toggle="modal" data-target="#ModalTerm" style="color: #f15a22;">{!! FT::translate('register.form.term_button') !!}</a></div>
+					</div>
+					
+				</form>
+            	</div>
+            	<div class="col-md-3" style="background-color: #e5e5e5;overflow: hidden;padding: 40px;height: 76.5%;">
+            	<form name="login_form" class="form-horizontal regis" method="post" action="{{url ('/customer/login')}}">
+                    
+        	        {{ csrf_field() }}
+        	        
+        	        <input type="hidden" name="line_id" value="{{ $lineId }}" />
+        	        
+            		<h3>เป็นสมาชิกอยู่แล้ว </h3>
+            		<p class="gray">เข้าสู่ระบบ</p>
+            		
+            		<input type="text" class="form-control required" placeholder="{!! FT::translate('placeholder.email') !!}" name="username" id="email" required value="{{ old('email',$default['email']) }}" />
 
-	            </div>
-	        </div>
-	    </form>
+                    <input type="password" class="form-control required" placeholder="{!! FT::translate('placeholder.password') !!}" name="password" id="password" required value="" />
+
+					<div class="text-center "><button type="submit" name="submit" class="btn btn-sm btn-block btn-info">{!! FT::translate('button.login') !!}</button></div> 
+            	
+            	</form>
+            	</div>
+
+	    </div>
+	    
 	    <div class="clearfix"></div>
 
     </div>
