@@ -95,8 +95,9 @@ $limit = 20;
 <!-- 								<a href="/pickup_detail/<?php echo $pickup['ID']; ?>">-->
 <!-- 									<button type="button" class="btn btn-primary">{!! FT::translate('pickup_list.button.manage') !!}</button> -->
 <!-- 								</a> -->
-								<a href="/pickup_detail_print/<?php echo $pickup['ID']; ?>" target="_blank"><button type="button" class="btn btn-info btn-sm">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
-								<a href="/pickup_invoice_print/<?php echo $pickup['ID']; ?>" target="_blank"><button type="button" class="btn btn-default btn-sm">{!! FT::translate('pickup_detail.button.print_invoice') !!}</button></a>
+								<a href="{{ url('pickup_detail_print/'.$pickup['ID'])}}" target="_blank"><button type="button" class="btn btn-info btn-sm">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
+								<a href="{{ url('pickup_invoice_print/'.$pickup['ID'])}}" target="_blank"><button type="button" class="btn btn-default btn-sm">{!! FT::translate('pickup_detail.button.print_invoice') !!}</button></a>
+								<a href="{{ url('/pickup_detail_payment/'.$pickup['ID'])}}"><button type="button" class="btn btn-warning btn-sm">ชำระเงิน</button></a>
 								
 							</div> 
 						</div> 
