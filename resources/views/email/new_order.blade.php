@@ -731,6 +731,154 @@
       </tr>
     </tbody>
   </table>
+  
+  <!-- title_payment_intro -->
+   <table class="email_section" role="presentation" align="center" width="100%" cellspacing="0" cellpadding="0" border="0">
+    <tbody>
+      <tr>
+        <td class="email_bg bg_light px" style="font-size: 0;text-align: center;line-height: 100%;background-color: #f5f5f5;padding-left: 16px;padding-right: 16px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+          <!--[if (mso)|(IE)]>
+          <table role="presentation" width="800" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align:top;Margin:0 auto;">
+            <tbody>
+              <tr>
+                <td align="center" style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;vertical-align:top;">
+          <![endif]-->
+          <table class="content_section" role="presentation" align="center" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width: 800px;margin: 0 auto;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+            <tbody>
+              <tr>
+                <td class="content_cell bg_white px py" style="font-size: 0;text-align: center;background-color: #ffffff;padding-top: 16px;padding-bottom: 16px;padding-left: 16px;padding-right: 16px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                  <div class="column_row" style="font-size: 0;text-align: center;max-width: 624px;margin: 0 auto;">
+                    <!--[if (mso)|(IE)]>
+                    <table role="presentation" width="624" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align:top;Margin:0 auto;">
+                      <tbody>
+                        <tr>
+                          <td align="center" style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;vertical-align:top;">
+                    <![endif]-->
+                      <table class="column" role="presentation" align="center" width="100%" cellspacing="0" cellpadding="0" border="0" style="vertical-align: top;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                        <tbody>   
+						  <p class="mb_xs" style="color: #959ba0;font-family: Arial, Helvetica, sans-serif;margin-top: 0px;margin-bottom: 8px;word-break: break-word;font-size: 16px;line-height: 26px;">กรุณาชำระเงินใบรับพัสดุ {{ $pickupData['ID'] }} เพื่อดำเนินการขั้นต่อไป</p>
+                          <tr>
+                            <td class="column_cell px text_primary text_center" style="vertical-align: top;color: #f15a22;text-align: center;padding-left: 16px;padding-right: 16px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                              <h3 style="color: inherit;font-family: Arial, Helvetica, sans-serif;margin-top: 0px;margin-bottom: 0px;word-break: break-word;font-size: 26px;line-height: 42px;font-weight: bold;">ยอดชำระ {{ number_format($pickupData['Amount']) }} บาท</h3>
+                            </td>
+                          </tr>
+						            </tbody>
+                      </table>
+                    <!--[if (mso)|(IE)]>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <![endif]-->
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--[if (mso)|(IE)]>
+                </td>
+              </tr>
+            </tkbody>
+          </table>
+          <![endif]-->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+ <!-- button_payment_button -->
+ <table class="email_section" role="presentation" align="center" width="100%" cellspacing="0" cellpadding="0" border="0">
+    <tbody>
+      <tr>
+        <td class="email_bg bg_light px" style="font-size: 0;text-align: center;line-height: 100%;background-color: #f5f5f5;padding-left: 16px;padding-right: 16px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+          <!--[if (mso)|(IE)]>
+          <table role="presentation" width="800" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align:top;Margin:0 auto;">
+            <tbody>
+              <tr>
+                <td align="center" style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;vertical-align:top;">
+          <![endif]-->
+          <table class="content_section" role="presentation" align="center" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width: 800px;margin: 0 auto;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+            <tbody>
+              <tr>
+                <td class="content_cell bg_white px py_xs" style="font-size: 0;text-align: center;background-color: #ffffff;padding-top: 4px;padding-bottom: 8px;padding-left: 16px;padding-right: 16px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                  <div class="column_row" style="font-size: 0;text-align: center;max-width: 624px;margin: 0 auto;">
+                    <!--[if (mso)|(IE)]>
+                    <table role="presentation" width="312" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align:top;Margin:0 auto;">
+                      <tbody>
+                        <tr>
+                          <td align="center" style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;vertical-align:top;">
+                    <![endif]-->
+                      <div class="col_2" style="vertical-align: top;display: inline-block;width: 100%;max-width: 312px;">
+                        <table class="column" role="presentation" align="center" width="100%" cellspacing="0" cellpadding="0" border="0" style="vertical-align: top;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                          <tbody>
+                            <tr>
+                              <td class="column_cell px text_dark text_center" style="vertical-align: top;color: #333333;text-align: center;padding-left: 16px;padding-right: 16px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                                <table role="presentation" width="100%" class="ebutton" align="center" border="0" cellspacing="0" cellpadding="0" style="-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;margin: 0 auto;">
+                                  <tbody>
+                                    <tr>
+                                      <td class="bg_dark" style="background-color: #f15a22;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;font-size: 16px;padding: 13px 24px;border-radius: 4px;line-height: normal;text-align: center;font-weight: bold;-webkit-transition: box-shadow .25s;transition: box-shadow .25s;"><a href="{{ $url }}" style="-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;text-decoration: none;color: #ffffff;font-family: Arial, Helvetica, sans-serif;margin-top: 0px;margin-bottom: 0px;word-break: break-word;font-weight: bold;"><span style="color: #ffffff;text-decoration: none;">ชำระเงินผ่าน QR Code</span></a></td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                      <p class="mb_xs" style="color: #959ba0;font-family: Arial, Helvetica, sans-serif;margin-top: 0px;margin-bottom: 8px;word-break: break-word;font-size: 10px;line-height: 26px;">
+                                      	<a href="{{ $url }}" style="-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;text-decoration: none;color: #aaaaaa;font-family: Arial, Helvetica, sans-serif;margin-top: 0px;margin-bottom: 0px;word-break: break-word;font-weight: bold;">{{ $url }}</a>
+                                      </p>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    <!--[if (mso)|(IE)]>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <![endif]-->
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--[if (mso)|(IE)]>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <![endif]-->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- title_primary_lg2 -->
+  <table class="email_section" role="presentation" align="center" width="100%" cellspacing="0" cellpadding="0" border="0">
+    <tbody>
+      <tr>
+        <td class="email_bg bg_light px" style="font-size: 0;text-align: center;line-height: 100%;background-color: #f5f5f5;padding-left: 16px;padding-right: 16px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+          <table class="content_section" role="presentation" align="center" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width: 800px;margin: 0 auto;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+            <tbody>
+              <tr>
+                <td class="content_cell bg_white px py" style="font-size: 0;text-align: center;background-color: #ffffff;padding-top: 16px;padding-bottom: 0px;padding-left: 16px;padding-right: 16px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                  <div class="column_row" style="font-size: 0;text-align: center;max-width: 624px;margin: 0 auto;">
+                      <table class="column" role="presentation" align="center" width="100%" cellspacing="0" cellpadding="0" border="0" style="vertical-align: top;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                        <tbody>   
+                          <p class="mb_xs" style="color: #959ba0;font-family: Arial, Helvetica, sans-serif;margin-top: 0px;margin-bottom: 8px;word-break: break-word;font-size: 16px;line-height: 26px;">หากท่านชำระด้วยบัตรเครดิต ระบบจะทำการตัดเงินในบัตรของท่านโดยอัตโนมัติ</p>
+                        </tbody>
+                      </table>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+    
+    
   <!-- invoice_details_2columns -->
   <table class="email_section" role="presentation" align="center" width="100%" cellspacing="0" cellpadding="0" border="0">
     <tbody>

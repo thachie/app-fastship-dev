@@ -142,17 +142,24 @@ class TestController extends Controller {
 	    foreach ($response['ShipmentDetail']['ShipmentIds'] as $shipmentId) {
 	        $shipment_data[] = FS_Shipment::get($shipmentId);
 	    }
+	    
+	    $converter = new Encryption;
+	    $code1 = $converter->encode_short($pickupId);
+	    $code2 = $converter->encode_short($customerId);
+	    $url = "https://app.fastship.co/kbank/qr/".$code1."/".$code2;
+	    
 	    $data = array(
 	        'pickupId' => $pickupId,
 	        'email' => $eMail,
 	        'pickupData' => $response,
 	        'shipmentData' => $shipment_data,
+	        'url' => $url,
 	    );
-	    
+
 	    Mail::send('email/new_order',$data,function($message) use ($data){
 	        $message->to($data['email']);
-	        $message->from('info@fastship.co', 'FastShip');
-	        $message->subject( time() . ' TEST ใบรับพัสดุจาก FastShip หมายเลข '. $data['pickupId'] ." ถูกสร้างแล้ว");
+	        $message->from('cs@fastship.co', 'FastShip');
+	        $message->subject( time() . 'TEST ใบรับพัสดุจาก FastShip หมายเลข '. $data['pickupId'] ." ถูกสร้างแล้ว");
 	    });
 	    
 	}
