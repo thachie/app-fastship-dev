@@ -549,7 +549,7 @@ class CreditBalanceController extends Controller
             $pickupId = $request->pickupId;
         }
         alert($pickupId);
-        die();
+        //die();
         $this->validate($request, [
             'command' => 'required',
             'omise_token' => 'required',
@@ -663,7 +663,7 @@ class CreditBalanceController extends Controller
                                 //return redirect('/myaccount')->with('msg','ทำรายการไม่สมบูรณ์ กรุณาทำรายการใหม่อีกครั้ง');
                                 return redirect('new_creditcard/'.$pickupId)->with('msg','ทำรายการไม่สมบูรณ์ กรุณาทำรายการใหม่อีกครั้ง');
                             }else{
-                                return redirect('/pickup_detail/'.$pickupId)->with('msg','ทำรายการเพิ่มบัตรเรียบร้อยแล้ว')->with('msg-type','success');
+                                return redirect('credit/omise_auto_charge/'.$pickupId)->with('msg','ทำรายการเพิ่มบัตรเรียบร้อยแล้ว')->with('msg-type','success');
                             }
                             
                             //echo 'Success';die();
@@ -700,7 +700,7 @@ class CreditBalanceController extends Controller
         }
         alert('omiseAutoChargeAction');
         alert('$pickupId');die();
-        
+
         $tran_id = 'CC';
         $cus_id = $customerId;
         $Y =  date("y");
