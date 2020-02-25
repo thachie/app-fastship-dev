@@ -399,7 +399,7 @@ class CreditBalanceController extends Controller
         }else{
             return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
         }
-        alert($request->all());die();
+        
         $this->validate($request, [
             'command' => 'required',
             'omise_token' => 'required',
@@ -691,130 +691,7 @@ class CreditBalanceController extends Controller
         }
     }
 
-    public function omiseAutoChargeAction($pickupId)
-    {
-        if(session('customer.id') != null){
-            $customerId = session('customer.id');
-        }else{
-            return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
-        }
-        alert('omiseAutoChargeAction');
-        alert('$pickupId');die();
 
-        $tran_id = 'CC';
-        $cus_id = $customerId;
-        $Y =  date("y");
-        $digits = 2;
-        $rand =  str_pad(rand(0, pow(10, $digits)-1), $digits, '0', STR_PAD_LEFT);
-        $tran_id = $tran_id.$Y.date("md").$rand;
-        $date_Time = date("Y-m-d H:i:s");
-        $balance_in = $amount;
-        $balance_out = 0;
-        $tran_ref = $tran_id;
-        $transfer_no = 'cust_test_5bbwabybamcjd70aqjk';
-        $tran_type = 'Credit'; //debit credit
-        $payment_method = 'credit_card';
-        $verified = 'Pending';
-        $verified_by = 'System';
-        $file_upload = '';
-        $memo = 'Create Credit';
-        $dateTime = $date_Time;
-        $tranfer_date = '';
-        if(!empty($tranfer_date)){
-            $balance_in_date = $tranfer_date;
-        }else{
-            $balance_in_date = date("Y-m-d H:i:s");
-        }
-        $payment_transfer = 'bank_transfer_api';              
-        $balance_out_date = '';
-        $create_date = $date_Time;
-
-        $min = 2000;
-        $max = 100000000;
-        $calAmount = ($amount)*100;
-        if(!empty($transfer_no) && ($calAmount >= $min && $calAmount <= $max)){
-            $insert = DB::table('create_credit')->insert([
-                'tran_id' => $tran_id,
-                'cus_id' => $customerId,
-                'amount' => $amount,
-                'balance_in' => $balance_in,
-                'balance_out' => $balance_out,
-                'tran_ref' => $tran_ref,
-                'transfer_no' => $transfer_no,
-                'tran_type' => $tran_type,
-                'payment_method' => $payment_method,
-                'payment_transfer' => $payment_transfer,
-                'verified' => $verified,
-                'verified_by' => $verified_by,
-                'file_upload' => $file_upload,
-                'memo' => $memo,
-                'balance_in_date' => $balance_in_date,
-                'create_date' => $create_date
-            ]);
-            $cc_id = DB::getPdo()->lastInsertId();
-            if($insert){
-                //echo 'Success';
-                
-                //OmiseCharge
-                if($_SERVER['REMOTE_ADDR'] == "localhost" || $_SERVER['REMOTE_ADDR'] == "127.0.0.1"){
-                    $url = 'http://localhost/Omise/CreditChargeAction.php';
-                }else{
-                    $url = 'https://app.fastship.co/Omise/CreditChargeAction.php';
-                }
-
-                $JSON = '{
-                    "amount": "'.$calAmount.'",
-                    "currency" : "thb",
-                    "customer": "'.$transfer_no.'"
-                }'; 
-                //alert($JSON);
-                $Response = callAPI('POST', $url, $JSON);
-                $res = json_decode($Response, true);
-                //alert($res);
-                $OBJECT = $res['Omise']['OBJECT'];
-                $STATUS = $res['Omise']['STATUS'];
-                $LOCATION = $res['Omise']['LOCATION'];
-                $CODE = $res['Omise']['CODE'];
-                $MESSAGE = $res['Omise']['MESSAGE'];
-                if($OBJECT == 'charge'){
-                    $res = $this->insertToCreditBalance($cc_id, $customerId);
-                    $insert = DB::table('omise_charge_status')->insert([
-                        'CUST_ID' => $customerId,
-                        'CUSTOMER_PAYMENT' => $transfer_no,
-                        'AMOUNT' => $AMOUNT,
-                        'OBJECT' => $OBJECT,
-                        'STATUS' => $STATUS,
-                        'LOCATION' => $LOCATION,
-                        'CODE' => $CODE,
-                        'MESSAGE' => $MESSAGE
-                    ]);
-                    //echo 'Success';
-                    return redirect('/add_credit')->with('msg','ทำรายการเรียบร้อย ระบบกำลังตรวจสอบข้อมูล')->with('msg-type','success');
-                }else{
-                    $insert = DB::table('omise_charge_status')->insert([
-                        'CUST_ID' => $customerId,
-                        'CUSTOMER_PAYMENT' => $transfer_no,
-                        'AMOUNT' => $AMOUNT,
-                        'OBJECT' => $OBJECT,
-                        'STATUS' => $STATUS,
-                        'LOCATION' => $LOCATION,
-                        'CODE' => $CODE,
-                        'MESSAGE' => $MESSAGE
-                    ]);
-                    //echo 'Fail';
-                    return redirect('/add_credit')->with('msg','ระบบไม่สามารถตัดเงินได้ กรุณาทำรายการใหม่อีกครั้ง');
-                }
-
-                //return redirect('/add_credit')->with('msg','ทำรายการเรียบร้อย ระบบกำลังตรวจสอบข้อมูล')->with('msg-type','success');
-            }else{
-                echo 'Fail';
-                return redirect('/add_credit')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
-            }
-        }else{
-            //echo 'Fail';
-            return redirect('/add_credit')->with('msg','จำนวนเงินไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
-        }
-    }
 
 
     public function omiseChargeAction()
@@ -1283,5 +1160,461 @@ class CreditBalanceController extends Controller
     public function destroy(Credit $credit)
     {
         //
+    }
+
+    public function omiseAutoChargeAction($pickupId)
+    {
+        if(session('customer.id') != null){
+            $customerId = session('customer.id');
+        }else{
+            return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+        }
+        //http://devapp.fastship.co/credit/omise_auto_charge/298268
+        alert('omiseAutoChargeAction');
+        alert($pickupId);
+
+
+        //get params
+        $pickupId = $pickupId;
+        $method = 'Credit_Card';
+        
+
+        Fastship::getToken($customerId);
+        $response = FS_Pickup::get($pickupId);
+        alert($pickup);
+        alert($response);
+        $amount = $response['Amount'];
+        //die();
+        //calculate additional
+                        
+        $amountSatang = ($amount)*100;
+        $customerOmise = DB::table('omise_customer')->where('cust_id',$pickup->custid)->where('is_active',1)->select('omise_id')->value('omise_id');
+        
+        alert($customerOmise);
+        //omise api params
+        $apiParams = array(
+            "amount" => $amountSatang,
+            "currency" => "thb",
+            "customer" => $customerOmise,
+            "pickupId" => $pickupId,
+        );
+        alert($apiParams);die();
+        //call api
+        $url = 'https://admin.fastship.co/api/omise/CreditChargeAction.php';
+        $Response = Utils::callAPI("POST",$url, json_encode($apiParams));
+        //print_r($Response);
+        //$omiseResult = json_decode($Response, true);
+        $omiseResult = $Response;
+        
+        //save omise log
+        $insert = DB::table('omise_charge_status')->insert([
+            'omise_id' => $omiseResult['data']['id'],
+            'transaction' => $omiseResult['data']['transaction'],
+            'cust_id' => $pickup->custid,
+            'customer_payment' => $omiseResult['data']['customer'],
+            'amount' => $omiseResult['data']['amount'],
+            'object' => $omiseResult['data']['object'],
+            'status' => $omiseResult['data']['status'],
+            'location' => $omiseResult['data']['location'],
+            'message' => $omiseResult['data']['desc'],
+            'capture' => $omiseResult['data']['capture'],
+            'authorized' => $omiseResult['data']['authorized'],
+            'paid' => $omiseResult['data']['paid'],
+            'paid_at' => $omiseResult['data']['paid_at'],
+        ]);
+        
+        //api success
+        if($omiseResult['data']['status'] == "successful"){
+
+            $transactionId = $omiseResult['data']['transaction'];
+
+        }else{
+            return back()->with('msg','manual')->with('msg_display',$omiseResult['data']['status']);
+        }
+
+
+
+
+
+
+
+
+        die();
+
+        $tran_id = 'CC';
+        $cus_id = $customerId;
+        $Y =  date("y");
+        $digits = 2;
+        $rand =  str_pad(rand(0, pow(10, $digits)-1), $digits, '0', STR_PAD_LEFT);
+        $tran_id = $tran_id.$Y.date("md").$rand;
+        $date_Time = date("Y-m-d H:i:s");
+        $balance_in = $amount;
+        $balance_out = 0;
+        $tran_ref = $tran_id;
+        $transfer_no = 'cust_test_5bbwabybamcjd70aqjk';
+        $tran_type = 'Credit'; //debit credit
+        $payment_method = 'credit_card';
+        $verified = 'Pending';
+        $verified_by = 'System';
+        $file_upload = '';
+        $memo = 'Create Credit';
+        $dateTime = $date_Time;
+        $tranfer_date = '';
+        if(!empty($tranfer_date)){
+            $balance_in_date = $tranfer_date;
+        }else{
+            $balance_in_date = date("Y-m-d H:i:s");
+        }
+        $payment_transfer = 'bank_transfer_api';              
+        $balance_out_date = '';
+        $create_date = $date_Time;
+
+        $min = 2000;
+        $max = 100000000;
+        $calAmount = ($amount)*100;
+        if(!empty($transfer_no) && ($calAmount >= $min && $calAmount <= $max)){
+            $insert = DB::table('create_credit')->insert([
+                'tran_id' => $tran_id,
+                'cus_id' => $customerId,
+                'amount' => $amount,
+                'balance_in' => $balance_in,
+                'balance_out' => $balance_out,
+                'tran_ref' => $tran_ref,
+                'transfer_no' => $transfer_no,
+                'tran_type' => $tran_type,
+                'payment_method' => $payment_method,
+                'payment_transfer' => $payment_transfer,
+                'verified' => $verified,
+                'verified_by' => $verified_by,
+                'file_upload' => $file_upload,
+                'memo' => $memo,
+                'balance_in_date' => $balance_in_date,
+                'create_date' => $create_date
+            ]);
+            $cc_id = DB::getPdo()->lastInsertId();
+            if($insert){
+                //echo 'Success';
+                
+                //OmiseCharge
+                if($_SERVER['REMOTE_ADDR'] == "localhost" || $_SERVER['REMOTE_ADDR'] == "127.0.0.1"){
+                    $url = 'http://localhost/Omise/CreditChargeAction.php';
+                }else{
+                    $url = 'https://app.fastship.co/Omise/CreditChargeAction.php';
+                }
+
+                $JSON = '{
+                    "amount": "'.$calAmount.'",
+                    "currency" : "thb",
+                    "customer": "'.$transfer_no.'"
+                }'; 
+                //alert($JSON);
+                $Response = callAPI('POST', $url, $JSON);
+                $res = json_decode($Response, true);
+                //alert($res);
+                $OBJECT = $res['Omise']['OBJECT'];
+                $STATUS = $res['Omise']['STATUS'];
+                $LOCATION = $res['Omise']['LOCATION'];
+                $CODE = $res['Omise']['CODE'];
+                $MESSAGE = $res['Omise']['MESSAGE'];
+                if($OBJECT == 'charge'){
+                    $res = $this->insertToCreditBalance($cc_id, $customerId);
+                    $insert = DB::table('omise_charge_status')->insert([
+                        'CUST_ID' => $customerId,
+                        'CUSTOMER_PAYMENT' => $transfer_no,
+                        'AMOUNT' => $AMOUNT,
+                        'OBJECT' => $OBJECT,
+                        'STATUS' => $STATUS,
+                        'LOCATION' => $LOCATION,
+                        'CODE' => $CODE,
+                        'MESSAGE' => $MESSAGE
+                    ]);
+                    //echo 'Success';
+                    return redirect('/add_credit')->with('msg','ทำรายการเรียบร้อย ระบบกำลังตรวจสอบข้อมูล')->with('msg-type','success');
+                }else{
+                    $insert = DB::table('omise_charge_status')->insert([
+                        'CUST_ID' => $customerId,
+                        'CUSTOMER_PAYMENT' => $transfer_no,
+                        'AMOUNT' => $AMOUNT,
+                        'OBJECT' => $OBJECT,
+                        'STATUS' => $STATUS,
+                        'LOCATION' => $LOCATION,
+                        'CODE' => $CODE,
+                        'MESSAGE' => $MESSAGE
+                    ]);
+                    //echo 'Fail';
+                    return redirect('/add_credit')->with('msg','ระบบไม่สามารถตัดเงินได้ กรุณาทำรายการใหม่อีกครั้ง');
+                }
+
+                //return redirect('/add_credit')->with('msg','ทำรายการเรียบร้อย ระบบกำลังตรวจสอบข้อมูล')->with('msg-type','success');
+            }else{
+                echo 'Fail';
+                return redirect('/add_credit')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
+            }
+        }else{
+            //echo 'Fail';
+            return redirect('/add_credit')->with('msg','จำนวนเงินไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
+        }
+    }
+
+    public function doVerifyPayment_XXX(Request $request)
+    {
+        
+        //validate
+        $this->validate($request, [
+             'pick_id' => 'required',
+             'actual_payment' => 'required',
+             'actual_amount' => 'required',
+        ]);
+        
+        //check customer login
+        if (session('customer.id') != null){
+            $adminId = session('customer.id');
+        }else{
+            return redirect('/login')->with('msg','login');
+        }
+
+        //get params
+        $pickupId = $request->input('pick_id');
+        $method = $request->input('actual_payment');
+        $amount = $request->input('actual_amount');
+        
+        //get pickup
+        $pickup = DB::table('pickup_list')->join('order', 'order.pick_id', '=', 'pickup_list.pick_id')
+        ->select(
+            "pickup_list.pick_id as id",
+            "pickup_list.pick_type as type",
+            "pickup_list.cust_id as custid",
+            "pickup_list.pick_actualpayment as actpayment",
+            "pickup_list.pick_cost as pickcost",
+            DB::raw("sum(order.order_packcost) as packcost"),
+            DB::raw("sum(order.order_insurance) as insurance"),
+            "pickup_list.pick_additioncost as additioncost",
+            "pickup_list.pick_discount as discount",
+            "pickup_list.pick_total as total"
+        )->where('pickup_list.pick_id',$pickupId)->where('pickup_list.pick_status',5)
+        ->where("pickup_list.create_datetime",">",Utils::getCutoffDate())
+        ->groupBy('pickup_list.pick_id')->first();
+        if(!isset($pickup)){
+            return back()->with('msg','manual')->with('msg_display','ไม่พบใบรับพัสดุ ' . $pickupId);
+        }
+        
+        //check delay
+        $delay = 0;
+        $duration = DB::table("processlog")
+        ->select(
+            DB::raw("TIMESTAMPDIFF(MINUTE,MAX(processlog.log_curr_datetime),NOW()) as duration")
+        )->where("processlog.log_type","PICKUP")->where("processlog.log_ref",$pickupId)
+        ->where("processlog.log_prev_status",3)->where("processlog.log_curr_status",5)->value('duration');
+        if($duration > 30){
+            $delay = 1;
+        }
+            
+        //calculate additional
+        $additionCost = ($amount - $pickup->total);
+
+        //get transactionId for each method
+        if($method == "Bank_Transfer"){
+            
+            //create transaction
+            $transactionId = "BNKTRF_".date("YmdHi")."_".$pickupId;
+  
+        }elseif($method == "Credit_Card"){
+            
+            $transactionId = "chrg_xxxxx";
+            
+//if(false){ //hold for test
+                
+            $amountSatang = ($amount)*100;
+            $customerOmise = DB::table('omise_customer')->where('cust_id',$pickup->custid)->where('is_active',1)->select('omise_id')->value('omise_id');
+            //$customerOmise = DB::table('omise_customer')->where('cust_id',69)->where('is_active',1)->select('omise_id')->value('omise_id');
+            //$amountSatang = 2001;
+
+            //omise api params
+            $apiParams = array(
+                "amount" => $amountSatang,
+                "currency" => "thb",
+                "customer" => $customerOmise,
+                "pickupId" => $pickupId,
+            );
+            
+            //call api
+            $url = 'https://admin.fastship.co/api/omise/CreditChargeAction.php';
+            $Response = Utils::callAPI("POST",$url, json_encode($apiParams));
+            //print_r($Response);
+            //$omiseResult = json_decode($Response, true);
+            $omiseResult = $Response;
+            
+            //save omise log
+            $insert = DB::table('omise_charge_status')->insert([
+                'omise_id' => $omiseResult['data']['id'],
+                'transaction' => $omiseResult['data']['transaction'],
+                'cust_id' => $pickup->custid,
+                'customer_payment' => $omiseResult['data']['customer'],
+                'amount' => $omiseResult['data']['amount'],
+                'object' => $omiseResult['data']['object'],
+                'status' => $omiseResult['data']['status'],
+                'location' => $omiseResult['data']['location'],
+                'message' => $omiseResult['data']['desc'],
+                'capture' => $omiseResult['data']['capture'],
+                'authorized' => $omiseResult['data']['authorized'],
+                'paid' => $omiseResult['data']['paid'],
+                'paid_at' => $omiseResult['data']['paid_at'],
+            ]);
+            
+            //api success
+            if($omiseResult['data']['status'] == "successful"){
+
+                $transactionId = $omiseResult['data']['transaction'];
+
+            }else{
+                return back()->with('msg','manual')->with('msg_display',$omiseResult['data']['status']);
+            }
+            
+//} //end hold for test
+
+        }elseif($method == "Cash"){
+            
+            //create transaction
+            $transactionId = "CSH_".date("YmdHi")."_".$pickupId;
+            
+        }elseif($method == "Invoice"){
+            
+            //create transaction
+            $transactionId = "IV_".date("YmdHi")."_".$pickupId;
+          
+        }elseif($method == "Store_Credit"){
+            
+            //create transaction
+            $transactionId = "SC_".date("YmdHi")."_".$pickupId;
+            
+        }else{
+            
+            //payment method not found
+            return back()->with('msg','method-not-found')->with('msg_param1',$method);
+
+        }
+        
+        //create payment statement
+        //if($pickup->custid == 38){ //thachie28@gmail.com
+            
+        //get last balance
+        $balanceQry = DB::table('payment_statement')->where('cust_id',$pickup->custid)->where('pay_status',2)->orderBy('approve_datetime','desc')->limit(1)->value('pay_balance');
+        if(isset($balanceQry)){
+            $balance = $balanceQry;
+        }else{
+            $balance = 0;
+        }
+        
+        //topup
+        if($method != "Store_Credit"){
+            $insert = DB::table('payment_statement')->insert([
+                'cust_id' => $pickup->custid,
+                'pick_id' => $pickup->id,
+                'pay_type' => "TOPUP",
+                'pay_transaction' => $transactionId,
+                'pay_in' => $amount,
+                'pay_out' => 0,
+                'pay_balance' => $balance + $amount,
+                'pay_method' => $method,
+                'pay_status' => 2,
+                'pay_note' => "auto topup in verify payment",
+                'approve_by' => $adminId,
+                'approve_datetime' => date("Y-m-d H:i:s"),
+                'create_datetime' => date("Y-m-d H:i:s"),
+            ]);
+        }
+        
+        //get last balance
+        $balanceQry = DB::table('payment_statement')->where('cust_id',$pickup->custid)->where('pay_status',2)->orderBy('approve_datetime','desc')->limit(1)->value('pay_balance');
+        if(isset($balanceQry)){
+            $balance = $balanceQry;
+        }else{
+            $balance = 0;
+        }
+        
+        //fee
+        $insert = DB::table('payment_statement')->insert([
+            'cust_id' => $pickup->custid,
+            'pick_id' => $pickup->id,
+            'pay_type' => "FEE",
+            'pay_transaction' => date("Ymd") . $pickup->id,
+            'pay_in' => 0,
+            'pay_out' => $amount,
+            'pay_balance' => $balance - $amount,
+            'pay_method' => $method,
+            'pay_status' => 2,
+            'pay_note' => "auto pay fee in verify payment",
+            'approve_by' => $adminId,
+            'approve_datetime' => date("Y-m-d H:i:s"),
+            'create_datetime' => date("Y-m-d H:i:s"),
+        ]);
+            
+        //}
+        
+        //update pickup appnote
+        DB::table("pickup_list")->where("pickup_list.pick_id",$pickupId)->limit(1)
+        ->update([
+            'approve_flg' => "Open",
+            'approve_note' => "",
+            'onhold_cnt' => 0,
+            'onhold_note' => "",
+        ]);
+        
+        //add process log
+        $logParams = array(
+            "ref" => $pickupId,
+            "current" => 17,
+            "delay" => $delay,
+            "adminId" => $adminId,
+        );
+        ProcessLog::addLogsByPickupId($logParams);
+
+        //update shipments status and ship date
+        $update = DB::table('order')->where('pick_id',$pickupId)->where('order_status','<>',5)
+        ->update([
+            'order_status' => 17,
+        ]);
+        
+        //update pickup status
+        $update = DB::table('pickup_list')->where('pick_id',$pickupId)->where('pick_status',5)
+        ->update([
+            'pick_status' => 4,
+            'pick_actualpayment' => $method,
+            'pick_acttotal' => $amount,
+            'pick_additioncost' => ($amount - $pickup->total),
+            'pick_tranid' => $transactionId,
+            'is_paid' => 1,
+            'admin_id' => $adminId,
+            'paid_datetime' => date('Y-m-d H:i:s')
+        ]);
+        
+        if($update){
+            
+            //update pickup appnote
+            DB::table("pickup_list")->where("pickup_list.pick_id",$pickupId)->limit(1)
+            ->update([
+                'approve_flg' => "Open",
+                'approve_note' => "",
+                'onhold_cnt' => 0,
+                'onhold_note' => "",
+                
+            ]);
+            
+            //add process log
+            $logParams = array(
+                "type" => "PICKUP",
+                "ref" => $pickupId,
+                "current" => 4,
+                "delay" => $delay,
+                "adminId" => $adminId,
+            );
+            ProcessLog::addLog($logParams);
+
+            return redirect('/pickups?s=5')->with('msg','verify-payment-complete')->with('msg_param1',$pickupId);
+            
+        }else{
+            return back()->with('msg','db-error');
+        }
+ 
     }
 }
