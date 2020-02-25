@@ -105,6 +105,8 @@ Route::group(['middleware' => 'loginsession'], function () {
 	Route::post('customer/change_password', 'Customer\CustomerController@changePassword');
 	Route::post('customer/remove-channel', 'Customer\CustomerController@removeChannel');
 	Route::get('liff/connectline', 'Customer\CustomerController@connectLine');
+	//Add new creditcard
+	Route::match(['get', 'post'], 'new_creditcard/{pickupId?}','Customer\CustomerController@prepareAddNewCreditCard');
 
 	//shipment
 	Route::get('calculate_shipment_rate', 'Shipment\ShipmentController@prepareCalculateShipmentRate');
@@ -177,7 +179,9 @@ Route::group(['middleware' => 'loginsession'], function () {
 	Route::get('credit/getBalance/{customerId?}','Credit\CreditBalanceController@getBalance'); //test
 	Route::get('credit/insertToCreditBalance/{ccID?}/{customerId?}','Credit\CreditBalanceController@insertToCreditBalance'); //test
 	Route::post('credit/delete_creditcard', 'Credit\CreditBalanceController@deleteCreditCard');
-	Route::get('credit/add_new_creditcard/{pickupId?}', 'Credit\CreditBalanceController@omiseAddNewCreditCard');
+
+	Route::post('credit/add_new_creditcard', 'Credit\CreditBalanceController@omiseAddNewCreditCard');
+	Route::get('credit/omise_auto_charge/{pickupId?}', 'Credit\CreditBalanceController@omiseAutoChargeAction');
 	
 	//payment submission
 	Route::get('payment_submission', 'Credit\CreditBalanceController@preparePaymentSubmission');

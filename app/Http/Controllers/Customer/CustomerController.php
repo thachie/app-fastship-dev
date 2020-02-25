@@ -461,6 +461,70 @@ class CustomerController extends Controller
 
 		return view('myaccount',$data);
 	}
+
+	//Prepare for check rate page
+	public function prepareAddNewCreditcard(Request $request, $id)
+	{
+
+		if (session('customer.id') != null){
+			$customerId = session('customer.id');
+		}else{
+			return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+		}
+
+		if (empty($id)) {
+			$pickupId = '';
+		}else{
+			$pickupId = $id;
+		}
+
+		Fastship::getToken($customerId);
+		$customer = FS_Customer::get($customerId);
+		
+		$customer_data = array();
+		$customer_data['ID'] = $customer['ID'];
+		$customer_data['firstname'] = $customer['Firstname'];
+		$customer_data['lastname'] = $customer['Lastname'];
+		$customer_data['phonenumber'] = $customer['PhoneNumber'];
+		$customer_data['email'] = $customer['Email'];
+		$customer_data['company'] = $customer['Company'];
+		$customer_data['taxid'] = $customer['TaxId'];
+		$customer_data['address1'] = $customer['AddressLine1'];
+		$customer_data['address2'] = $customer['AddressLine2'];
+		$customer_data['city'] = $customer['City'];
+		$customer_data['state'] = $customer['State'];
+		$customer_data['postcode'] = $customer['Postcode'];
+		$customer_data['country'] = $customer['Country'];
+		$customer_data['latitude'] = $customer['Latitude'];
+		$customer_data['longitude'] = $customer['Longitude'];
+		$customer_data['group'] = $customer['Group'];
+		$customer_data['refcode'] = $customer['ReferCode'];
+
+		$creditCardsObj = DB::table('omise_customer')
+			->select("ID","NUMBER","OMISE_LASTDIGITS","OMISE_BANK","OMISE_CARDNAME")
+            ->where("CUST_ID",$customerId)
+            ->where("IS_ACTIVE",1)
+            ->get();
+        $row_credit = $creditCardsObj->count();
+
+		if($row_credit > 0){
+			foreach ($creditCardsObj as $value) {
+				$creditCards[] = $value;
+			}
+		}else{
+			$creditCards = array();
+		}
+		
+		$data = array(
+			'customer_data' => $customer_data,
+			'transactions' => array(),
+			'creditCards' => $creditCards,
+			'channels' => array(),
+			'pickupId' => $pickupId,
+		);
+
+		return view('add_new_creditcard',$data);
+	}
 	
 	public function prepareAccountOverview()
 	{

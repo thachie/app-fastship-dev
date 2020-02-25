@@ -541,7 +541,15 @@ class CreditBalanceController extends Controller
         }else{
             return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
         }
-        //alert($request->all());
+        alert('omiseAddNewCreditCard');
+        alert($request->all());
+        if (empty($request->pickupId)) {
+            $pickupId = '';
+        }else{
+            $pickupId = $request->pickupId;
+        }
+        alert($pickupId);
+        die();
         $this->validate($request, [
             'command' => 'required',
             'omise_token' => 'required',
@@ -652,27 +660,158 @@ class CreditBalanceController extends Controller
                             
                             //$response = false;
                             if($response === false){
-                                return redirect('/myaccount')->with('msg','ทำรายการไม่สมบูรณ์ กรุณาทำรายการใหม่อีกครั้ง');
+                                //return redirect('/myaccount')->with('msg','ทำรายการไม่สมบูรณ์ กรุณาทำรายการใหม่อีกครั้ง');
+                                return redirect('new_creditcard/'.$pickupId)->with('msg','ทำรายการไม่สมบูรณ์ กรุณาทำรายการใหม่อีกครั้ง');
+                            }else{
+                                return redirect('/pickup_detail/'.$pickupId)->with('msg','ทำรายการเพิ่มบัตรเรียบร้อยแล้ว')->with('msg-type','success');
                             }
                             
-                            //echo 'Success';
-                            return redirect('/myaccount')->with('msg','ทำรายการเพิ่มบัตรเรียบร้อยแล้ว')->with('msg-type','success');
+                            //echo 'Success';die();
+                            //return redirect('/pickup_detail/'.$pickupId)->with('msg','ทำรายการเพิ่มบัตรเรียบร้อยแล้ว')->with('msg-type','success');
                         }else{
                             //echo 'Fail';
-                            return redirect('/myaccount')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง2');
+                            //return redirect('/myaccount')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง2');
+                            return redirect('new_creditcard/'.$pickupId)->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง2');
                         }
                     }else{
                         //echo 'Fail';
-                        return redirect('/myaccount')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง3');
+                        //return redirect('/myaccount')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง3');
+                        return redirect('new_creditcard/'.$pickupId)->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง3');
                     }
                 }else{
                     //echo 'Fail';
-                    return redirect('/myaccount')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
+                    //return redirect('/myaccount')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
+                    return redirect('new_creditcard/'.$pickupId)->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
                 }
             }
         }else{
             //echo 'Fail';
-            return redirect('/myaccount')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
+            //return redirect('/myaccount')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
+            return redirect('new_creditcard/'.$pickupId)->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
+        }
+    }
+
+    public function omiseAutoChargeAction($pickupId)
+    {
+        if(session('customer.id') != null){
+            $customerId = session('customer.id');
+        }else{
+            return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+        }
+        alert('omiseAutoChargeAction');
+        alert('$pickupId');die();
+        $tran_id = 'CC';
+        $cus_id = $customerId;
+        $Y =  date("y");
+        $digits = 2;
+        $rand =  str_pad(rand(0, pow(10, $digits)-1), $digits, '0', STR_PAD_LEFT);
+        $tran_id = $tran_id.$Y.date("md").$rand;
+        $date_Time = date("Y-m-d H:i:s");
+        $balance_in = $amount;
+        $balance_out = 0;
+        $tran_ref = $tran_id;
+        $transfer_no = 'cust_test_5bbwabybamcjd70aqjk';
+        $tran_type = 'Credit'; //debit credit
+        $payment_method = 'credit_card';
+        $verified = 'Pending';
+        $verified_by = 'System';
+        $file_upload = '';
+        $memo = 'Create Credit';
+        $dateTime = $date_Time;
+        $tranfer_date = '';
+        if(!empty($tranfer_date)){
+            $balance_in_date = $tranfer_date;
+        }else{
+            $balance_in_date = date("Y-m-d H:i:s");
+        }
+        $payment_transfer = 'bank_transfer_api';              
+        $balance_out_date = '';
+        $create_date = $date_Time;
+
+        $min = 2000;
+        $max = 100000000;
+        $calAmount = ($amount)*100;
+        if(!empty($transfer_no) && ($calAmount >= $min && $calAmount <= $max)){
+            $insert = DB::table('create_credit')->insert([
+                'tran_id' => $tran_id,
+                'cus_id' => $customerId,
+                'amount' => $amount,
+                'balance_in' => $balance_in,
+                'balance_out' => $balance_out,
+                'tran_ref' => $tran_ref,
+                'transfer_no' => $transfer_no,
+                'tran_type' => $tran_type,
+                'payment_method' => $payment_method,
+                'payment_transfer' => $payment_transfer,
+                'verified' => $verified,
+                'verified_by' => $verified_by,
+                'file_upload' => $file_upload,
+                'memo' => $memo,
+                'balance_in_date' => $balance_in_date,
+                'create_date' => $create_date
+            ]);
+            $cc_id = DB::getPdo()->lastInsertId();
+            if($insert){
+                //echo 'Success';
+                
+                //OmiseCharge
+                if($_SERVER['REMOTE_ADDR'] == "localhost" || $_SERVER['REMOTE_ADDR'] == "127.0.0.1"){
+                    $url = 'http://localhost/Omise/CreditChargeAction.php';
+                }else{
+                    $url = 'https://app.fastship.co/Omise/CreditChargeAction.php';
+                }
+
+                $JSON = '{
+                    "amount": "'.$calAmount.'",
+                    "currency" : "thb",
+                    "customer": "'.$transfer_no.'"
+                }'; 
+                //alert($JSON);
+                $Response = callAPI('POST', $url, $JSON);
+                $res = json_decode($Response, true);
+                //alert($res);
+                $OBJECT = $res['Omise']['OBJECT'];
+                $STATUS = $res['Omise']['STATUS'];
+                $LOCATION = $res['Omise']['LOCATION'];
+                $CODE = $res['Omise']['CODE'];
+                $MESSAGE = $res['Omise']['MESSAGE'];
+                if($OBJECT == 'charge'){
+                    $res = $this->insertToCreditBalance($cc_id, $customerId);
+                    $insert = DB::table('omise_charge_status')->insert([
+                        'CUST_ID' => $customerId,
+                        'CUSTOMER_PAYMENT' => $transfer_no,
+                        'AMOUNT' => $AMOUNT,
+                        'OBJECT' => $OBJECT,
+                        'STATUS' => $STATUS,
+                        'LOCATION' => $LOCATION,
+                        'CODE' => $CODE,
+                        'MESSAGE' => $MESSAGE
+                    ]);
+                    //echo 'Success';
+                    return redirect('/add_credit')->with('msg','ทำรายการเรียบร้อย ระบบกำลังตรวจสอบข้อมูล')->with('msg-type','success');
+                }else{
+                    $insert = DB::table('omise_charge_status')->insert([
+                        'CUST_ID' => $customerId,
+                        'CUSTOMER_PAYMENT' => $transfer_no,
+                        'AMOUNT' => $AMOUNT,
+                        'OBJECT' => $OBJECT,
+                        'STATUS' => $STATUS,
+                        'LOCATION' => $LOCATION,
+                        'CODE' => $CODE,
+                        'MESSAGE' => $MESSAGE
+                    ]);
+                    //echo 'Fail';
+                    return redirect('/add_credit')->with('msg','ระบบไม่สามารถตัดเงินได้ กรุณาทำรายการใหม่อีกครั้ง');
+                }
+
+                //return redirect('/add_credit')->with('msg','ทำรายการเรียบร้อย ระบบกำลังตรวจสอบข้อมูล')->with('msg-type','success');
+            }else{
+                echo 'Fail';
+                return redirect('/add_credit')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
+            }
+        }else{
+            //echo 'Fail';
+            return redirect('/add_credit')->with('msg','จำนวนเงินไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
         }
     }
 
