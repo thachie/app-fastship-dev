@@ -906,20 +906,6 @@ class PickupController extends Controller
     	}else{
     		return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
     	}
-    	
-        /*'MinShippingRate' => $_REQUEST['MinShippingRate'],
-        'MaxShippingRate' => $_REQUEST['MaxShippingRate'],
-        'MinWeight' => $_REQUEST['MinWeight'],
-        'MaxWeight' => $_REQUEST['MaxWeight']
-        'Name' => $_REQUEST['PickupName'],
-        'Email' => $_REQUEST['PickupEmail'],
-        'PhoneNumber' => $_REQUEST['PickupPhoneNumber'],
-        'Postcode' => $_REQUEST['PickupPostcode'],
-        'PaymentMethod' => $_REQUEST['PaymentMethod'],
-        'PickupType' => $_REQUEST['PickupType'],
-        'CreateDateSince' => $_REQUEST['StartDate'],
-        'CreateDateTo' => $_REQUEST['EndDate'],
-        'Status' => $_REQUEST['Status'],*/
 
         $data['MinShippingRate'] = isset($_REQUEST['MinShippingRate'])?$_REQUEST['MinShippingRate']:"";
         $data['MaxShippingRate'] = isset($_REQUEST['MaxShippingRate'])?$_REQUEST['MaxShippingRate']:"";

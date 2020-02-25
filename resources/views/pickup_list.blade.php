@@ -21,6 +21,7 @@ $limit = 20;
                         		<td>{!! FT::translate('label.pickup_id') !!}</td>
                         		<td>{!! FT::translate('label.create_date') !!}</td>
                         		<td>{!! FT::translate('label.status') !!}</td>
+                        		<td>วิธีการเข้ารับ</td>
                         		<td>{!! FT::translate('label.grand_total') !!}</td>
                         		<td>{!! FT::translate('label.number_shipment') !!}</td>
                         		<td></td>
@@ -33,21 +34,19 @@ $limit = 20;
                         	//if($pickup['Status'] == "Cancelled") continue;
                         ?>
                         	<tr>
-                        		<td><a href="/pickup_detail/<?php echo $pickup['ID']; ?>"><?php echo $pickup['ID']; ?></a></td>
-                        		<td><?php echo date("d/m/Y",strtotime($pickup['CreateDate']['date'])); ?></td>
-                        		<td><?php echo $pickup['Status']; ?></td>
-                        		<td><?php echo number_format($pickup['Amount']); ?></td>
-                        		<td><?php echo $pickup['TotalShipment']; ?></td>
+                        		<td><a href="/pickup_detail/{{ $pickup['ID'] }}">{{ $pickup['ID'] }}</a></td>
+                        		<td>{{ date("d/m/Y",strtotime($pickup['CreateDate']['date'])) }}</td>
+                        		<td>{{ $pickup['Status'] }}</td>
+                        		<td>{{ $pickupType[$pickup['PickupType']] }}</td>
+                        		<td>{{ number_format($pickup['Amount']) }}</td>
+                        		<td>{{ $pickup['TotalShipment'] }}</td>
                         		<td>
-                        			<?php if ($pickup['Status'] == 'Pending') { ?>
-	                        			<a href="#"><button type="button" class="btn btn-info btn-sm" disabled>{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
-										<a href="#"><button type="button" class="btn btn-default btn-sm" disabled>{!! FT::translate('pickup_detail.button.print_invoice') !!}</button></a>
-										<a href="{{ url('/pickup_detail_payment/'.$pickup['ID'])}}"><button type="button" class="btn btn-warning btn-sm">ชำระเงิน</button></a>
-									<?php }else{ ?>
-										<a href="/pickup_detail_print/<?php echo $pickup['ID']; ?>" target="_blank"><button type="button" class="btn btn-info btn-sm">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
-										<a href="/pickup_invoice_print/<?php echo $pickup['ID']; ?>" target="_blank"><button type="button" class="btn btn-default btn-sm">{!! FT::translate('pickup_detail.button.print_invoice') !!}</button></a>
-										<a href="#"><button type="button" class="btn btn-warning btn-sm" disabled>ชำระเงิน</button></a>
-									<?php } ?>
+                        			@if($pickup['Status'] == 'Pending')
+	                        			<a href="{{ url('/pickup_detail_payment/'.$pickup['ID'])}}"><button type="button" class="btn btn-info btn-sm">ชำระเงิน</button></a>
+									@else
+										<a href="{{ url('pickup_detail_print/'.$pickup['ID'])}}" target="_blank"><button type="button" class="btn btn-info btn-sm">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
+										<a href="{{ url('pickup_invoice_print/'.$pickup['ID'])}}" target="_blank"><button type="button" class="btn btn-default btn-sm">{!! FT::translate('pickup_detail.button.print_invoice') !!}</button></a>
+									@endif
                         		</td>
                         	</tr>
                         <?php 
@@ -92,13 +91,13 @@ $limit = 20;
 							<div class="clearfix"></div>
 							
 							<div class="col-xs-12 text-center" style="margin-top: 10px;">
-<!-- 								<a href="/pickup_detail/<?php echo $pickup['ID']; ?>">-->
-<!-- 									<button type="button" class="btn btn-primary">{!! FT::translate('pickup_list.button.manage') !!}</button> -->
-<!-- 								</a> -->
+
+							@if($pickup['Status'] == 'Pending')
+								<a href="{{ url('/pickup_detail_payment/'.$pickup['ID'])}}"><button type="button" class="btn btn-info btn-sm">ชำระเงิน</button></a>
+							@else
 								<a href="{{ url('pickup_detail_print/'.$pickup['ID'])}}" target="_blank"><button type="button" class="btn btn-info btn-sm">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
 								<a href="{{ url('pickup_invoice_print/'.$pickup['ID'])}}" target="_blank"><button type="button" class="btn btn-default btn-sm">{!! FT::translate('pickup_detail.button.print_invoice') !!}</button></a>
-								<a href="{{ url('/pickup_detail_payment/'.$pickup['ID'])}}"><button type="button" class="btn btn-warning btn-sm">ชำระเงิน</button></a>
-								
+							@endif
 							</div> 
 						</div> 
 						<?php 
