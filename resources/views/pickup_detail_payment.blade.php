@@ -131,7 +131,7 @@
                             	<?php endif; ?>
                             	<td class="hidden-xs"><?php echo $countries[$data['ReceiverDetail']['Country']];?></td>
                             	<!--<td><?php echo isset($data['Reference'])?$data['Reference']:'-';?></td>-->
-                            	<td><img src="{{ url('/images/agent/' . $data['ShipmentDetail']['ShippingAgent'] . '.gif') }}" /></td>
+                            	<td><img src="{{ url('/images/agent/' . $data['ShipmentDetail']['ShippingAgent'] . '.gif') }}" style="max-width: 80px;"/></td>
                             	<td><?php echo $data['ShipmentDetail']['ShippingRate']; ?></td>
                             	<!--<td><?php echo isset($shipmentStatus[$data['Status']])?$shipmentStatus[$data['Status']]:$data['Status']; ?></td>
                             	<?php 
