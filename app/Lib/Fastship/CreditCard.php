@@ -67,4 +67,25 @@ class FS_CreditCard extends FS_ApiResource
         }
     }
     
+    /**
+     * @param array|null $params
+     * @param string|null $apiToken
+     *
+     * @return Fastship_Get_Credit_Cards Get the rates for a Pickup.
+     */
+    public static function get($id, $apiToken = null)
+    {
+        
+        $requestor = new FS_ApiRequestor($apiToken);
+        $url = "credit_card/get/" . $id;
+        
+        list($response, $rcode) = $requestor->request('get', $url);
+        
+        if($rcode != 200){
+            return false;
+        }else{
+            return $response;
+        }
+    }
+    
 }
