@@ -407,9 +407,13 @@
                                     </div>
                                     <div class="col-md-7 col-xs-12">
                                         <!--<label><input type="radio" name="payment_method" id="Bank_Transfer" value="Bank_Transfer" checked>{!! FT::translate('radio.payment.bank_transfer') !!}</label>-->
-                                        <label><input type="radio" name="payment_method" id="QR" value="QR" checked>QR Payment</label>
-                                        <label><input type="radio" name="payment_method" id="Credit_Card" value="Credit_Card" <?php if(!isset($credit) || !$credit){ echo "disabled"; }?>>{!! FT::translate('radio.payment.creditcard') !!}</label>
-                                        
+                                        <div class="text-left">
+                                            <label><input type="radio" name="payment_method" id="QR" value="QR" checked>QR Payment</label>
+                                        </div>
+                                        <div class="text-left">
+                                            <label><input type="radio" name="payment_method" id="Credit_Card" value="Credit_Card" <?php if(!isset($credit) || !$credit){ echo "disabled"; }?>>{!! FT::translate('radio.payment.creditcard') !!}</label>
+                                            <label><input type="radio" name="payment_method" id="Credit_Card" value="Credit_Card_New">{!! FT::translate('radio.payment.creditcard') !!} (New)</label>
+                                        </div>
                                     </div>
                                 </div>
                             @endif

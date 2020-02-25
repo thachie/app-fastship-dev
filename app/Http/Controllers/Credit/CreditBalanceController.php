@@ -399,7 +399,7 @@ class CreditBalanceController extends Controller
         }else{
             return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
         }
-        //alert($request->all());
+        alert($request->all());die();
         $this->validate($request, [
             'command' => 'required',
             'omise_token' => 'required',
@@ -513,6 +513,148 @@ class CreditBalanceController extends Controller
                         		return redirect('/myaccount')->with('msg','ทำรายการไม่สมบูรณ์ กรุณาทำรายการใหม่อีกครั้ง');
                         	}
                         	
+                            //echo 'Success';
+                            return redirect('/myaccount')->with('msg','ทำรายการเพิ่มบัตรเรียบร้อยแล้ว')->with('msg-type','success');
+                        }else{
+                            //echo 'Fail';
+                            return redirect('/myaccount')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง2');
+                        }
+                    }else{
+                        //echo 'Fail';
+                        return redirect('/myaccount')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง3');
+                    }
+                }else{
+                    //echo 'Fail';
+                    return redirect('/myaccount')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
+                }
+            }
+        }else{
+            //echo 'Fail';
+            return redirect('/myaccount')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
+        }
+    }
+
+    public function omiseAddNewCreditCard(Request $request)
+    {
+        if(session('customer.id') != null){
+            $customerId = session('customer.id');
+        }else{
+            return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+        }
+        //alert($request->all());
+        $this->validate($request, [
+            'command' => 'required',
+            'omise_token' => 'required',
+            'card_number' => 'required',
+            'cvv_number' => 'required',
+            '_token' => 'required',
+            'holder_name' => 'required',
+            'expiration_month' => 'required',
+            'expiration_year' => 'required',
+        ]);
+
+        $command = $request->input('command');
+        $token = $request->input('omise_token');
+        $number = $request->input('card_number');
+        $cvv = $request->input('cvv_number');
+        if($command == 'collect-card'){
+            //$customer = getCustomer($customerId);
+            $customer = $this->getCustomerById($customerId);
+            //alert('customer');alert($customer);
+            if(empty($customer)){
+                return redirect('/myaccount')->with('msg','ไม่มีข้อมูลในระบบ');
+            }else{
+                //$customerId = $customer['CUST_ID'];
+                $customerName = $customer['Firstname'];
+                $customerLastname = $customer['Lastname'];
+                $customerEmail = $customer['Email'];
+//                 $customerName = $customer->CUST_FIRSTNAME;
+//                 $customerLastname = $customer->CUST_LASTNAME;
+//                 $customerEmail = $customer->CUST_EMAIL;
+
+                $JSON = '{
+                    "command": "'.$command.'",
+                    "customerId" : "'.$customerId.'",
+                    "customerName": "'.$customerName.'",
+                    "customerLastname": "'.$customerLastname.'",
+                    "customerEmail": "'.$customerEmail.'",
+                    "token": "'.$token.'",
+                    "number": "'.$number.'",
+                    "cvv": "'.$cvv.'"
+                }'; 
+
+                //alert($JSON);
+
+                if($_SERVER['REMOTE_ADDR'] == "localhost" || $_SERVER['REMOTE_ADDR'] == "127.0.0.1"){
+                    $url = 'http://localhost/Omise/AddcardAction.php';
+                }else{
+                    $url = 'https://app.fastship.co/Omise/AddcardAction.php';
+                    //$url = 'http://13.229.75.39/Omise/AddcardAction.php';
+                }
+                $Response = callAPI('POST', $url, $JSON);
+                $res = json_decode($Response, true);
+
+                $statusCode = $res['respones']['Code'];
+
+                if($statusCode == 200){
+                    $omisecard = $res['customerPayment'];
+                    if(!empty($omisecard)){
+                        $CUST_ID = $omisecard['CUST_ID'];
+                        $OMISE_ID = $omisecard['OMISE_ID'];
+                        $OMISE_CARD = $omisecard['OMISE_CARD'];
+                        $OMISE_CARDNAME = $omisecard['OMISE_CARDNAME'];
+                        $OMISE_CARDTYPE = $omisecard['OMISE_CARDTYPE'];
+                        $NUMBER = $omisecard['NUMBER'];
+                        $OMISE_LASTDIGITS = $omisecard['OMISE_LASTDIGITS'];
+                        $CVV = $omisecard['CVV'];
+                        $OMISE_EXPIRE = $omisecard['OMISE_EXPIRE'];
+                        $OMISE_BANK = $omisecard['OMISE_BANK'];
+                        $OMISE_COUNTRY = $omisecard['OMISE_COUNTRY'];
+                        $OMISE_DESC = $omisecard['OMISE_DESC'];
+                        $IS_ACTIVE = $omisecard['IS_ACTIVE'];
+                        $CREATE_DATETIME = date("Y-m-d H:i:s");
+                       
+                        $omise_creditcard_insert = DB::table('omise_customer')->insert([
+                            'CUST_ID' => $CUST_ID,
+                            'OMISE_ID' => $OMISE_ID,
+                            'OMISE_CARD' => $OMISE_CARD,
+                            'OMISE_CARDNAME' => $OMISE_CARDNAME,
+                            'OMISE_CARDTYPE' => $OMISE_CARDTYPE,
+                            'NUMBER' => $NUMBER,
+                            'OMISE_LASTDIGITS' => $OMISE_LASTDIGITS,
+                            'CVV' => $CVV,
+                            'OMISE_EXPIRE' => $OMISE_EXPIRE,
+                            'OMISE_BANK' => $OMISE_BANK,
+                            'OMISE_COUNTRY' => $OMISE_COUNTRY,
+                            'OMISE_DESC' => $OMISE_DESC,
+                            'IS_ACTIVE' => $IS_ACTIVE,
+                            'CREATE_DATETIME' => $CREATE_DATETIME
+                        ]);
+
+                        if($omise_creditcard_insert){
+                            
+                            Fastship::getToken($customerId);
+                            
+                            $createDetails = array(
+                                'OmiseId' => $OMISE_ID,
+                                'OmiseCard' => $OMISE_CARD,
+                                'CardName' => $OMISE_CARDNAME,
+                                'CardType' => $OMISE_CARDTYPE,
+                                'LastDigits' => $OMISE_LASTDIGITS,
+                                'Expired' => $OMISE_EXPIRE,
+                                'Bank' => $OMISE_BANK,
+                                'Country' => $OMISE_COUNTRY,
+                                'Description' => $OMISE_DESC,
+                            );
+
+                            //create pickup
+                            $response = FS_CreditCard::create($createDetails);
+                            
+                            //$response = false;
+                            if($response === false){
+                                return redirect('/myaccount')->with('msg','ทำรายการไม่สมบูรณ์ กรุณาทำรายการใหม่อีกครั้ง');
+                            }
+                            
                             //echo 'Success';
                             return redirect('/myaccount')->with('msg','ทำรายการเพิ่มบัตรเรียบร้อยแล้ว')->with('msg-type','success');
                         }else{

@@ -214,8 +214,17 @@ class PickupController extends Controller
         }else{
             $address_select = "old";
         }
-        //alert($request->all());
+        alert($request->all());
         $PaymentMethod = $request->input('payment_method');
+        $pickupId = '298268';
+        if ($PaymentMethod == 'QR') {
+            return redirect('credit/add_new_creditcard/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว กรุณาตรวจสอบรายการและชำระเงิน')->with('msg-type','success');
+        }elseif ($PaymentMethod == 'QR') {
+            //return redirect('pickup_detail_payment/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว กรุณาตรวจสอบรายการและชำระเงิน')->with('msg-type','success');
+        }else{
+            //return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
+        }
+        die();
         
         //get api token
         Fastship::getToken($customerId);

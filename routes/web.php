@@ -177,6 +177,7 @@ Route::group(['middleware' => 'loginsession'], function () {
 	Route::get('credit/getBalance/{customerId?}','Credit\CreditBalanceController@getBalance'); //test
 	Route::get('credit/insertToCreditBalance/{ccID?}/{customerId?}','Credit\CreditBalanceController@insertToCreditBalance'); //test
 	Route::post('credit/delete_creditcard', 'Credit\CreditBalanceController@deleteCreditCard');
+	Route::get('credit/add_new_creditcard/{pickupId?}', 'Credit\CreditBalanceController@omiseAddNewCreditCard');
 	
 	//payment submission
 	Route::get('payment_submission', 'Credit\CreditBalanceController@preparePaymentSubmission');
