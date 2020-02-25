@@ -1170,9 +1170,6 @@ class CreditBalanceController extends Controller
             return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
         }
         //http://devapp.fastship.co/credit/omise_auto_charge/298268
-        alert('omiseAutoChargeAction');
-        alert($pickupId);
-
 
         //get params
         $pickupId = $pickupId;
@@ -1181,8 +1178,8 @@ class CreditBalanceController extends Controller
 
         Fastship::getToken($customerId);
         $response = FS_Pickup::get($pickupId);
-        alert($pickup);
-        alert($response);
+        //alert($pickup);
+        //alert($response);
         $amount = $response['Amount'];
         //die();
         //calculate additional
