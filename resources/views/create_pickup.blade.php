@@ -399,7 +399,7 @@
                                 <div class="col-md-4 col-xs-2">{!! FT::translate('unit.baht') !!}</div>
                             </div>
                             @if($customer_data['invoice'] == 1)
-                                <input type="hidden" name="payment_method" id="invoice" value="Invoice">
+                                <input type="hidden" name="payment_method" id="invoice" value="Invoice" />
                             @else
                                 <div class="radio text-center">
                                     <div class="col-md-5 col-xs-12">
@@ -411,8 +411,17 @@
                                             <label><input type="radio" name="payment_method" id="QR" value="QR" checked>QR Payment</label>
                                         </div>
                                         <div class="text-left">
-                                            <label><input type="radio" name="payment_method" id="Credit_Card" value="Credit_Card" <?php if(!isset($credit) || !$credit){ echo "disabled"; }?>>{!! FT::translate('radio.payment.creditcard') !!}</label>
-                                            <label><input type="radio" name="payment_method" id="Credit_Card" value="Credit_Card_New">{!! FT::translate('radio.payment.creditcard') !!} (New)</label>
+                                            <label>
+                                            	<input type="radio" name="payment_method" id="Credit_Card" value="Credit_Card" />{!! FT::translate('radio.payment.creditcard') !!}
+                                            	<select name="credit_card">
+                                            	@if(credit)
+                                            	@foreach($creditCards as $card)
+                                            	<option value="{{ $card->OMISE_LASTDIGITS }}">XXXX-{{ $card->OMISE_LASTDIGITS }}</option>
+                                            	@endforeach
+                                            	@endif
+                                            	<option value="new">เพิ่มบัตรใหม่</option>
+                                            	</select>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>

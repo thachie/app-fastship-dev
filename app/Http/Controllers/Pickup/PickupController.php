@@ -191,6 +191,7 @@ class PickupController extends Controller
         	'shipment_data' => $shipment_data,
         	'customer_data' => $customer_data,
             'credit' => ($row_credit > 0),
+        	'creditCards' => $creditCardsObj,
         	'discount' => $discount,
             'rates' => $rates,
         );
