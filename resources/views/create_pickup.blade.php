@@ -416,7 +416,7 @@
                                             	<select name="credit_card">
                                             	@if(credit)
                                             	@foreach($creditCards as $card)
-                                            	<option value="{{ $card->OMISE_LASTDIGITS }}">XXXX-{{ $card->OMISE_LASTDIGITS }}</option>
+                                            	<option value="{{ $card->OMISE_LASTDIGITS }}">XXX-XXXX-{{ $card->OMISE_LASTDIGITS }}</option>
                                             	@endforeach
                                             	@endif
                                             	<option value="new">เพิ่มบัตรใหม่</option>
