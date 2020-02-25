@@ -495,7 +495,7 @@ class CustomerController extends Controller
 
 	    //prepare current month
 	    $searchDetails = array(
-	        'NoStatuses' => array("Cancelled","New","Pickup","Received","Unpaid"),
+	        'NoStatuses' => array("Cancelled","New","Pickup","Received","Unpaid","Verified"),
 	        'CreateDateSince' => date("Y-m-01 00:00:00"),
 	        'CreateDateTo' => date('Y-m-t 23:59:59',strtotime(date("Y-m-01"))),
 	        'Limit' => 1000,

@@ -41,9 +41,10 @@ class CreditBalanceController extends Controller
             '1' => "New",
             '2' => "Pickup",
             '3' => "Received",
-            '5' => "Unpaid",
+            '5' => "Verified",
             '4' => "Paid",
             '6' => "Sent",
+            '11' => "Unpaid",
             '100' => "Cancelled",
         );
         
@@ -920,7 +921,7 @@ class CreditBalanceController extends Controller
     	//$creditBalance = FS_CreditBalance::get();
     	//prepare request data
     	$searchDetails = array(
-    		'Status' => 'Unpaid',
+    	    'NoStatuses' => array("Cancelled","New","Pickup","Received","Sent","Paid"),
     	);
 
     	//call api
