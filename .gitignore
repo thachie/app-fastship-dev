@@ -19,7 +19,6 @@ vendor/alexpechkarev/geometry-library/LICENSE
 *.ufm
 *.html
 *.ser
-*.png
 *.css
 *.LGPL
 *.xml
@@ -34,8 +33,6 @@ vendor/monolog/monolog/.php_cs
 *.markdown
 *.pubkey
 *.map
-*.gif
-*.jpg
 *.data
 *.eot
 vendor/sebastian/code-unit-reverse-lookup/.php_cs
