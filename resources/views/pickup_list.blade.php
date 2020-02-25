@@ -41,7 +41,7 @@ $limit = 20;
                         		<td>{{ number_format($pickup['Amount']) }}</td>
                         		<td>{{ $pickup['TotalShipment'] }}</td>
                         		<td>
-                        			@if($pickup['Status'] == 'Pending')
+                        			@if($pickup['Status'] == 'Unpaid')
 	                        			<a href="{{ url('/pickup_detail_payment/'.$pickup['ID'])}}"><button type="button" class="btn btn-info btn-sm">ชำระเงิน</button></a>
 									@else
 										<a href="{{ url('pickup_detail_print/'.$pickup['ID'])}}" target="_blank"><button type="button" class="btn btn-info btn-sm">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
@@ -92,7 +92,7 @@ $limit = 20;
 							
 							<div class="col-xs-12 text-center" style="margin-top: 10px;">
 
-							@if($pickup['Status'] == 'Pending')
+							@if($pickup['Status'] == 'Unpaid')
 								<a href="{{ url('/pickup_detail_payment/'.$pickup['ID'])}}"><button type="button" class="btn btn-info btn-sm">ชำระเงิน</button></a>
 							@else
 								<a href="{{ url('pickup_detail_print/'.$pickup['ID'])}}" target="_blank"><button type="button" class="btn btn-info btn-sm">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>

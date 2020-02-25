@@ -56,6 +56,14 @@ class PaymentController extends Controller
         
         $LOGPROCESS = storage_path('logs/kbank_create_order.log');
         $this->GEN_Logs(date("Y-m-d H:i:s")."|Response|$response",$LOGPROCESS,'l' );
+        
+        $data = array(
+            'pickupID' => $pickupId,
+            'pickup_data' => $pickup,
+            "kbankOrderId" => $order_id,
+        );
+        return view('pickup_detail_payment',$data);
+        
         $data = array(
             "pickup" => $pickup,
             "kbankOrderId" => $order_id,

@@ -11,9 +11,9 @@
 			<div class="clearfix"></div>
 		
         	<div class="row text-center">
-        		<h1>ชำระเงิน ใบรับพัสดุ {{ $pickup_data['ID'] }}</h1>
+        		<h2>ชำระเงิน ใบรับพัสดุ {{ $pickup_data['ID'] }}</h2>
 				<div class="col-12">
-			    	<h2>ยอดชำระ <span class="orange"><?php echo number_format($pickup_data['Amount'],0); ?></span> {!! FT::translate('unit.baht') !!}</h2>
+			    	<h1>ยอดชำระ <span class="orange"><?php echo number_format($pickup_data['Amount'],0); ?></span> {!! FT::translate('unit.baht') !!}</h1>
 				</div>
 				<div class="col-12 col-md-8 col-md-offset-2">
 					<form method="POST" action="https://app.fastship.co/kbank/payment_completed">
@@ -69,7 +69,7 @@
     		    <div class="clearfix"></div>
     		    
                 <?php if($pickup_data['PickupType'] == "Pickup_AtHome"): ?>
-                <div class="col-md-8 col-md-offset-2 well" >
+                <div class="col-md-8 col-md-offset-2 well" style="margin-bottom: 20px;">
                 
                 	<h4>ที่อยู่ที่ให้เข้ารับห</h4>
 
@@ -91,14 +91,12 @@
     				<?php echo $pickup_data['PickupAddress']['Postcode'];?>
     				Thailand
     				</div>
-    				<div class="clearfix"></div>
-    
     			</div>
     			<div class="clearfix"></div>
     			<?php endif; ?>
     
     		    <?php if(isset($pickup_data['Remark']) && $pickup_data['Remark']): ?>
-    			<div class="col-12 text-center text-danger"><?php echo $pickup_data['Remark'];?></div>
+    			<div class="col-12 text-center text-danger" style="margin-bottom: 20px;"><?php echo $pickup_data['Remark'];?></div>
     			<div class="clearfix"></div>
     			<?php endif; ?>
     			
@@ -133,7 +131,7 @@
                             	<?php endif; ?>
                             	<td class="hidden-xs"><?php echo $countries[$data['ReceiverDetail']['Country']];?></td>
                             	<!--<td><?php echo isset($data['Reference'])?$data['Reference']:'-';?></td>-->
-                            	<td><?php echo $data['ShipmentDetail']['ShippingAgent']; ?></td>
+                            	<td><img src="{{ url('/images/agent/' . $data['ShipmentDetail']['ShippingAgent'] . '.gif') }}" /></td>
                             	<td><?php echo $data['ShipmentDetail']['ShippingRate']; ?></td>
                             	<!--<td><?php echo isset($shipmentStatus[$data['Status']])?$shipmentStatus[$data['Status']]:$data['Status']; ?></td>
                             	<?php 
