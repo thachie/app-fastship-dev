@@ -468,6 +468,7 @@ class PickupController extends Controller
         }
         
         if(!empty($pickupId)){
+            
             //get api token
             Fastship::getToken($customerId);
             //get pickup by pickup_id
