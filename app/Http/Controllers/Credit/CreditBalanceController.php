@@ -700,6 +700,7 @@ class CreditBalanceController extends Controller
         }
         alert('omiseAutoChargeAction');
         alert('$pickupId');die();
+        
         $tran_id = 'CC';
         $cus_id = $customerId;
         $Y =  date("y");
