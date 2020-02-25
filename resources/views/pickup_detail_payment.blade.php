@@ -71,7 +71,7 @@
                 <?php if($pickup_data['PickupType'] == "Pickup_AtHome"): ?>
                 <div class="col-md-8 col-md-offset-2 well" style="margin-bottom: 20px;">
                 
-                	<h4>ที่อยู่ที่ให้เข้ารับห</h4>
+                	<h4>ที่อยู่ที่ให้เข้ารับ</h4>
 
     				<div class="col-xs-12 text-center">
     				<?php echo $pickup_data['PickupAddress']['Firstname'];?> <?php echo $pickup_data['PickupAddress']['Lastname'];?>
