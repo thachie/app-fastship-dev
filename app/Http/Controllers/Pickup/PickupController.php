@@ -217,8 +217,9 @@ class PickupController extends Controller
         }
         //alert($request->all());
         $PaymentMethod = $request->input('payment_method');
+        $Card = $request->input('credit_card');
 
-        if ($PaymentMethod == 'Credit_Card_New') {
+        if ($PaymentMethod == 'Credit_Card' && $Card == "new") {
             $pickupId = '298268';
             return redirect('new_creditcard/'.$pickupId);
         }
