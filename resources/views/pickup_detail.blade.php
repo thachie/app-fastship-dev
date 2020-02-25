@@ -127,9 +127,14 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
 								<?php endif; ?>
 							
 								<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.payment_method') !!} : </div>
-								<div class="col-xs-6 col-md-8 text-left"><?php echo $paymentMethod[$pickup_data['PaymentMethod']];?></div>
-								<div class="clearfix"></div>
-							
+								<?php if($pickup_data['PaymentMethod'] == 'QR'):?>
+									<div class="col-xs-6 col-md-8 text-left">QR Payment</div>
+									<div class="clearfix"></div>
+								<?php else: ?>
+									<div class="col-xs-6 col-md-8 text-left"><?php echo $paymentMethod[$pickup_data['PaymentMethod']];?></div>
+									<div class="clearfix"></div>
+								<?php endif; ?>
+
 								<?php if(isset($pickup_data['Remark']) && $pickup_data['Remark']): ?>
 								<div class="col-xs-6 col-md-4 text-right clearfix">{!! FT::translate('label.remark') !!} : </div>
 								<div class="col-xs-6 col-md-8 text-left"><?php echo $pickup_data['Remark'];?></div>
@@ -194,7 +199,7 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                             </table>
 			                <div class="row text-center">
 			                    <div class="col-md-12"><h4>{!! FT::translate('pickup_detail.pickup_total') !!} <span class="orange"><?php echo number_format($pickup_data['Amount'],0); ?></span> {!! FT::translate('unit.baht') !!}</h4></div>
-			                    <?php if ($pickup_data['Status'] != 'Pending') { ?>
+			                    <?php if ($pickup_data['Status'] != 'Unpaid' && $pickup_data['Status'] != 'Cancelled') { ?>
 									<a href="/pickup_detail_print/<?php echo $pickupID; ?>" target="_blank"><button type="submit" id="submit" name="submit" value="submit" class="btn btn-primary">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
 									<a href="/pickup_invoice_print/<?php echo $pickupID; ?>" target="_blank"><button type="submit" id="submit" name="submit" value="submit" class="btn btn-primary">{!! FT::translate('pickup_detail.button.print_invoice') !!}</button></a>
 								<?php }?>
@@ -218,18 +223,18 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                 	<div class="panel-body">
                 		<h2>{!! FT::translate('label.status') !!}: <?php echo $PickupStatus; ?></h2>
                 		<h3>{!! FT::translate('label.pickup_id') !!} : <span style="color: #f15a22;"><?php echo $pickupID; ?></span></h3>
-                		<?php if ($pickup_data['Status'] == 'Pending') { ?>
+                		<?php if ($pickup_data['Status'] == 'Unpaid') { ?>
                 			<div class="timeline timeline-single-column">
                 				<div class="timeline-item">
 		                            <div class="timeline-point timeline-point-default">
-		                                <i class="fa"></i>
+		                                <i class="fa fa-ellipsis-h"></i>
 		                            </div>
 		                            <div class="timeline-event upgrade">
 		                                <div class="timeline-heading">
 		                                    <h4>รอชำระเงิน</h4>
 		                                </div>
 		                                <div class="timeline-body">
-		                                    <a href="{{ url('/pickup_detail_payment/'.$pickupID)}}" >กดไปหน้าชำระเงิน</a>
+		                                    <a href="{{ url('/pickup_detail_payment/'.$pickupID)}}" > <button type="button" class="btn btn-info">กดเพื่อชำระเงิน</button></a>
 		                                </div>
 		                                <!--<div class="timeline-body">
 		                                <?php if($pickup_data['PickupType'] == "Pickup_AtHome"):?>

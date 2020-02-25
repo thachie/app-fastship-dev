@@ -436,12 +436,12 @@ class PickupController extends Controller
             	'shipmentData' => $shipment_data,
             );
 
-            /*Mail::send('email/new_order',$data,function($message) use ($data){
+            Mail::send('email/new_order',$data,function($message) use ($data){
             	$message->to($data['email']);
             	$message->bcc(['thachie@tuff.co.th','oak@tuff.co.th']);
             	$message->from('cs@fastship.co', 'FastShip');
             	$message->subject('FastShip - ใบรับพัสดุหมายเลข '. $data['pickupId'] ." ถูกสร้างแล้ว");
-            });*/
+            });
             // ####
 
             if ($PaymentMethod == 'QR') {
@@ -467,7 +467,7 @@ class PickupController extends Controller
             Fastship::getToken($customerId);
             //get pickup by pickup_id
             $response = FS_Pickup::get($pickupId);
-            if ($response['Status'] != "Pending" && $response['PaymentMethod'] != "QR") {
+            if ($response['Status'] != "Unpaid" && $response['PaymentMethod'] != "QR") {
                 return redirect('pickup_detail/'.$pickupId);
             }else{
                 $isSeperateLabel = ($response['PickupType'] == "Drop_AtThaiPost" || $response['PickupType'] == "Pickup_AtKerry");
