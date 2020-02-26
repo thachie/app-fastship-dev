@@ -25,10 +25,10 @@ if(isset($ref) && $ref != ""){
 </style>
 <div class="conter-wrapper">     
 <div class="row" style="margin-bottom: 0;">     
-    <div class="col-md-12 ">
+    <div class="col-md-10 col-12 col-md-offset-1 ">
 
 	        <div class="row">
-	        	<div class="col-md-4" style="padding: 40px;background-color: #eee;">
+	        	<div class="col-md-6" style="padding: 40px;background-color: #eee;">
 	        	    <div class="text-center" style="padding: 0 0 25px;"><img src="../images/joinus/fastship_register.png" style="max-width: 200px;"/></div>
             	
 	            	<h2 class="text-center orange">{!! FT::translate('register.content.heading') !!}</h2>
@@ -40,7 +40,7 @@ if(isset($ref) && $ref != ""){
                     </div>
             		
 	        	</div>
-            	<div class="col-md-5" style="background-color: #fff;overflow: hidden;color:#fff;padding: 40px;">
+            	<div class="col-md-6" style="background-color: #fff;overflow: hidden;padding: 35px;">
             	<form name="register_form" class="form-horizontal regis" method="post" action="{{url ('/customer/register')}}">
                     
         	        {{ csrf_field() }}
@@ -155,25 +155,30 @@ if(isset($ref) && $ref != ""){
 					
 				</form>
             	</div>
-            	<div class="col-md-3" style="background-color: #e5e5e5;overflow: hidden;padding: 40px;height: 76.5%;">
-            	<form name="login_form" class="form-horizontal regis" method="post" action="{{url ('/customer/login')}}">
+            	
+
+	    </div>
+	    <div class="row">
+	    	<div class="col-md-10 col-12 col-md-offset-1 text-center" style="background-color: #f15a22;padding:20px 20px 0 20px;color:#fff;">
+            	<form name="login_form" class="form-inline" method="post" action="{{url ('/customer/login')}}">
                     
         	        {{ csrf_field() }}
         	        
         	        <input type="hidden" name="line_id" value="{{ $lineId }}" />
-        	        
-            		<h3>เป็นสมาชิกอยู่แล้ว </h3>
-            		<p class="gray">เข้าสู่ระบบ</p>
-            		
-            		<input type="text" class="form-control required" placeholder="{!! FT::translate('placeholder.email') !!}" name="username" id="email" required value="{{ old('email',$default['email']) }}" />
-
-                    <input type="password" class="form-control required" placeholder="{!! FT::translate('placeholder.password') !!}" name="password" id="password" required value="" />
-
-					<div class="text-center "><button type="submit" name="submit" class="btn btn-sm btn-block btn-info">{!! FT::translate('button.login') !!}</button></div> 
-            	
+    
+            		<label class="input-sm ">เข้าสู่ระบบเพื่อ เชื่อมต่อบัญชีกับ Line: </label>
+            		<div class="form-group">
+            			<input type="text" id="email" class="form-control input-sm required" style="width: 200px;" placeholder="{!! FT::translate('placeholder.email') !!}" name="username" required value="{{ old('email',$default['email']) }}" />
+            		</div>
+            		<div class="form-group">
+                        <input type="password" id="password" class="form-control input-sm required" style="width: 200px;" placeholder="{!! FT::translate('placeholder.password') !!}" name="password" required value="" />
+                    </div>
+            		<div class="form-group">
+    					<button type="submit" name="submit" class="btn btn-sm btn-info">{!! FT::translate('button.login') !!}</button>
+    				</div>
+                	
             	</form>
             	</div>
-
 	    </div>
 	    
 	    <div class="clearfix"></div>

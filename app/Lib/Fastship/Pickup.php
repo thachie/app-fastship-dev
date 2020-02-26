@@ -152,11 +152,11 @@ class FS_Pickup extends FS_ApiResource
      *
      * @return Fastship_Pickup Update a Customer.
      */
-    public static function updateZoho($params = null, $apiToken = null)
+    public static function updateStatus($params = null, $apiToken = null)
     {
         
         $requestor = new FS_ApiRequestor($apiToken);
-        $url = "pickup/update_zoho";
+        $url = "pickup/update_status";
         
         list($response, $rcode) = $requestor->request('post', $url, $params);
         
