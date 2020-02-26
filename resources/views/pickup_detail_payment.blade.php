@@ -28,13 +28,14 @@
 		                data-show-button="false" ></script>
 		                <input type="button" class="btn btn-success btn-lg btn-block" role="button" value="กดเพื่อชำระเงินผ่าน QR" onclick="KPayment.show()">
 		            </form>
+                    <!--data-description="{{ 'Pickup # ' . $pickup_data['ID'] . ' - Pickup by ' . $pickup_data['PickupType'] }}"-->
 				</div>
 				<div class="clearfix"></div>
 				
-				<div class="col-md-12 text-center small">
+				<!--<div class="col-md-12 text-center small">
 		    		<a href="{{url ('/payment_submission')}}" target="_blank"><i class="fa fa-bank"></i> โอนผ่านธนาคาร</a>
 		    	</div>
-		    	<div class="clearfix"></div>
+		    	<div class="clearfix"></div>-->
 
 		    	<div class="col-md-10 col-md-offset-1" style="border: 1px solid #eee;padding: 20px;margin-top:20px;margin-bottom:20px;">
     		    	<table class="table table-condensed" style="margin-bottom: 0;">

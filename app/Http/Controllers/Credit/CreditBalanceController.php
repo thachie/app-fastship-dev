@@ -1185,9 +1185,8 @@ class CreditBalanceController extends Controller
         //calculate additional
                         
         $amountSatang = ($amount)*100;
-        $customerOmise = DB::table('omise_customer')->where('cust_id',$pickup->custid)->where('is_active',1)->select('omise_id')->value('omise_id');
-        
-        alert($customerOmise);
+        //$customerOmise = DB::table('omise_customer')->where('cust_id',$pickup->custid)->where('is_active',1)->select('omise_id')->value('omise_id');
+        $customerOmise = 'cust_5j0jdesp2ul3q14i25x';
         //omise api params
         $apiParams = array(
             "amount" => $amountSatang,
@@ -1195,16 +1194,16 @@ class CreditBalanceController extends Controller
             "customer" => $customerOmise,
             "pickupId" => $pickupId,
         );
-        alert($apiParams);die();
+        alert($apiParams);
         //call api
         $url = 'https://admin.fastship.co/api/omise/CreditChargeAction.php';
         $Response = Utils::callAPI("POST",$url, json_encode($apiParams));
         //print_r($Response);
         //$omiseResult = json_decode($Response, true);
         $omiseResult = $Response;
-        
+        alert($omiseResult);
         //save omise log
-        $insert = DB::table('omise_charge_status')->insert([
+        /*$insert = DB::table('omise_charge_status')->insert([
             'omise_id' => $omiseResult['data']['id'],
             'transaction' => $omiseResult['data']['transaction'],
             'cust_id' => $pickup->custid,
@@ -1218,15 +1217,18 @@ class CreditBalanceController extends Controller
             'authorized' => $omiseResult['data']['authorized'],
             'paid' => $omiseResult['data']['paid'],
             'paid_at' => $omiseResult['data']['paid_at'],
-        ]);
+        ]);*/
         
         //api success
         if($omiseResult['data']['status'] == "successful"){
-
-            $transactionId = $omiseResult['data']['transaction'];
+            echo "successful";
+            //return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำการตัดเงินบัตรเครดิตและสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
+            //$transactionId = $omiseResult['data']['transaction'];
 
         }else{
-            return back()->with('msg','manual')->with('msg_display',$omiseResult['data']['status']);
+            echo "fail";
+            //return back()->with('msg','manual')->with('msg_display',$omiseResult['data']['status']);
+            //return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำการตัดเงินบัตรเครดิตไม่สำเร็จ กรุณาตรวจสอบบัตรเครดิตและทำรายการใหม่อีกครั้ง');
         }
 
 
