@@ -1174,184 +1174,50 @@ class CreditBalanceController extends Controller
         //get params
         $pickupId = $pickupId;
         $method = 'Credit_Card';
-        
-
+        $customerOmise = 'cust_5j0jdesp2ul3q14i25x';
         Fastship::getToken($customerId);
         $response = FS_Pickup::get($pickupId);
-        //alert($pickup);
-        //alert($response);
         $amount = $response['Amount'];
-        //die();
-        //calculate additional
-                        
         $amountSatang = ($amount)*100;
-        //$customerOmise = DB::table('omise_customer')->where('cust_id',$pickup->custid)->where('is_active',1)->select('omise_id')->value('omise_id');
-        $customerOmise = 'cust_5j0jdesp2ul3q14i25x';
-        //omise api params
-        $apiParams = array(
-            "amount" => $amountSatang,
-            "currency" => "thb",
-            "customer" => $customerOmise,
-            "pickupId" => $pickupId,
-        );
-        alert($apiParams);
-        //call api
-        $url = 'https://admin.fastship.co/api/omise/CreditChargeAction.php';
-        $Response = Utils::callAPI("POST",$url, json_encode($apiParams));
-        //print_r($Response);
-        //$omiseResult = json_decode($Response, true);
-        $omiseResult = $Response;
-        alert($omiseResult);
-        //save omise log
-        /*$insert = DB::table('omise_charge_status')->insert([
-            'omise_id' => $omiseResult['data']['id'],
-            'transaction' => $omiseResult['data']['transaction'],
-            'cust_id' => $pickup->custid,
-            'customer_payment' => $omiseResult['data']['customer'],
-            'amount' => $omiseResult['data']['amount'],
-            'object' => $omiseResult['data']['object'],
-            'status' => $omiseResult['data']['status'],
-            'location' => $omiseResult['data']['location'],
-            'message' => $omiseResult['data']['desc'],
-            'capture' => $omiseResult['data']['capture'],
-            'authorized' => $omiseResult['data']['authorized'],
-            'paid' => $omiseResult['data']['paid'],
-            'paid_at' => $omiseResult['data']['paid_at'],
-        ]);*/
-        
-        //api success
-        if($omiseResult['data']['status'] == "successful"){
-            echo "successful";
-            //return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำการตัดเงินบัตรเครดิตและสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
-            //$transactionId = $omiseResult['data']['transaction'];
-
-        }else{
-            echo "fail";
-            //return back()->with('msg','manual')->with('msg_display',$omiseResult['data']['status']);
-            //return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำการตัดเงินบัตรเครดิตไม่สำเร็จ กรุณาตรวจสอบบัตรเครดิตและทำรายการใหม่อีกครั้ง');
-        }
-
-
-
-
-
-
-
-
-        die();
-
-        $tran_id = 'CC';
-        $cus_id = $customerId;
-        $Y =  date("y");
-        $digits = 2;
-        $rand =  str_pad(rand(0, pow(10, $digits)-1), $digits, '0', STR_PAD_LEFT);
-        $tran_id = $tran_id.$Y.date("md").$rand;
-        $date_Time = date("Y-m-d H:i:s");
-        $balance_in = $amount;
-        $balance_out = 0;
-        $tran_ref = $tran_id;
-        $transfer_no = 'cust_test_5bbwabybamcjd70aqjk';
-        $tran_type = 'Credit'; //debit credit
-        $payment_method = 'credit_card';
-        $verified = 'Pending';
-        $verified_by = 'System';
-        $file_upload = '';
-        $memo = 'Create Credit';
-        $dateTime = $date_Time;
-        $tranfer_date = '';
-        if(!empty($tranfer_date)){
-            $balance_in_date = $tranfer_date;
-        }else{
-            $balance_in_date = date("Y-m-d H:i:s");
-        }
-        $payment_transfer = 'bank_transfer_api';              
-        $balance_out_date = '';
-        $create_date = $date_Time;
-
         $min = 2000;
         $max = 100000000;
         $calAmount = ($amount)*100;
-        if(!empty($transfer_no) && ($calAmount >= $min && $calAmount <= $max)){
-            $insert = DB::table('create_credit')->insert([
-                'tran_id' => $tran_id,
-                'cus_id' => $customerId,
-                'amount' => $amount,
-                'balance_in' => $balance_in,
-                'balance_out' => $balance_out,
-                'tran_ref' => $tran_ref,
-                'transfer_no' => $transfer_no,
-                'tran_type' => $tran_type,
-                'payment_method' => $payment_method,
-                'payment_transfer' => $payment_transfer,
-                'verified' => $verified,
-                'verified_by' => $verified_by,
-                'file_upload' => $file_upload,
-                'memo' => $memo,
-                'balance_in_date' => $balance_in_date,
-                'create_date' => $create_date
-            ]);
-            $cc_id = DB::getPdo()->lastInsertId();
-            if($insert){
-                //echo 'Success';
-                
-                //OmiseCharge
-                if($_SERVER['REMOTE_ADDR'] == "localhost" || $_SERVER['REMOTE_ADDR'] == "127.0.0.1"){
-                    $url = 'http://localhost/Omise/CreditChargeAction.php';
-                }else{
-                    $url = 'https://app.fastship.co/Omise/CreditChargeAction.php';
-                }
+        alert('amount = '.$amount);
+        alert('min = '.$min);
+        alert('max = '.$max);
+        alert('calAmount = '.$calAmount);
+        if(empty($customerOmise)){
+            return redirect('pickup_detail/'.$pickupId)->with('msg','ข้อมูลไม่ถูกต้อง ระบบไม่สามารถตัดเงินได้ กรุณาทำรายการใหม่อีกครั้งหรือติดต่อเจ้าหน้าที่');
+        }
+        if(!empty($customerOmise) && ($calAmount >= $min && $calAmount <= $max)){
+            //omise api params
+            $apiParams = array(
+                "amount" => $amountSatang,
+                "currency" => "thb",
+                "customer" => $customerOmise,
+                "pickupId" => $pickupId,
+            );
+            //call api
+            $url = 'https://admin.fastship.co/api/omise/CreditChargeAction.php';
+            //$Response = Utils::callAPI("POST",$url, json_encode($apiParams));
+            $Response = callAPI("POST",$url, json_encode($apiParams));
+            $omiseResult = json_decode($Response, true);
+            //alert($omiseResult);
+            
+            //api success
+            if($omiseResult['data']['status'] == "successful"){
+                //echo "successful";
+                return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำการตัดเงินบัตรเครดิตและสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
 
-                $JSON = '{
-                    "amount": "'.$calAmount.'",
-                    "currency" : "thb",
-                    "customer": "'.$transfer_no.'"
-                }'; 
-                //alert($JSON);
-                $Response = callAPI('POST', $url, $JSON);
-                $res = json_decode($Response, true);
-                //alert($res);
-                $OBJECT = $res['Omise']['OBJECT'];
-                $STATUS = $res['Omise']['STATUS'];
-                $LOCATION = $res['Omise']['LOCATION'];
-                $CODE = $res['Omise']['CODE'];
-                $MESSAGE = $res['Omise']['MESSAGE'];
-                if($OBJECT == 'charge'){
-                    $res = $this->insertToCreditBalance($cc_id, $customerId);
-                    $insert = DB::table('omise_charge_status')->insert([
-                        'CUST_ID' => $customerId,
-                        'CUSTOMER_PAYMENT' => $transfer_no,
-                        'AMOUNT' => $AMOUNT,
-                        'OBJECT' => $OBJECT,
-                        'STATUS' => $STATUS,
-                        'LOCATION' => $LOCATION,
-                        'CODE' => $CODE,
-                        'MESSAGE' => $MESSAGE
-                    ]);
-                    //echo 'Success';
-                    return redirect('/add_credit')->with('msg','ทำรายการเรียบร้อย ระบบกำลังตรวจสอบข้อมูล')->with('msg-type','success');
-                }else{
-                    $insert = DB::table('omise_charge_status')->insert([
-                        'CUST_ID' => $customerId,
-                        'CUSTOMER_PAYMENT' => $transfer_no,
-                        'AMOUNT' => $AMOUNT,
-                        'OBJECT' => $OBJECT,
-                        'STATUS' => $STATUS,
-                        'LOCATION' => $LOCATION,
-                        'CODE' => $CODE,
-                        'MESSAGE' => $MESSAGE
-                    ]);
-                    //echo 'Fail';
-                    return redirect('/add_credit')->with('msg','ระบบไม่สามารถตัดเงินได้ กรุณาทำรายการใหม่อีกครั้ง');
-                }
-
-                //return redirect('/add_credit')->with('msg','ทำรายการเรียบร้อย ระบบกำลังตรวจสอบข้อมูล')->with('msg-type','success');
             }else{
-                echo 'Fail';
-                return redirect('/add_credit')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
+                //echo "fail";
+                $msg = 'ระบบได้ทำการตัดเงินบัตรเครดิตไม่สำเร็จ กรุณาตรวจสอบบัตรเครดิตและทำรายการใหม่อีกครั้ง สถานะรายการบัตรเครดิต '.$omiseResult['data']['status'];
+                return redirect('pickup_detail/'.$pickupId)->with('msg',$msg);
             }
         }else{
-            //echo 'Fail';
-            return redirect('/add_credit')->with('msg','จำนวนเงินไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
+            $msg = 'ยอดชำระขั้นต่ำที่สามารถทำรายการได้ต้อง 20 บาทขึ้นไป กรุณาทำรายการใหม่อีกครั้ง';
+            //echo $msg;
+            return redirect('pickup_detail/'.$pickupId)->with('msg',$msg);
         }
     }
 
@@ -1438,7 +1304,8 @@ class CreditBalanceController extends Controller
             
             //call api
             $url = 'https://admin.fastship.co/api/omise/CreditChargeAction.php';
-            $Response = Utils::callAPI("POST",$url, json_encode($apiParams));
+            //$Response = Utils::callAPI("POST",$url, json_encode($apiParams));
+            $Response = callAPI("POST",$url, json_encode($apiParams));
             //print_r($Response);
             //$omiseResult = json_decode($Response, true);
             $omiseResult = $Response;
