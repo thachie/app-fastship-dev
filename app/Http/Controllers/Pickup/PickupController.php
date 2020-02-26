@@ -522,7 +522,7 @@ class PickupController extends Controller
                     "source_type": "qr",
                     "reference_order": "'.$pickupId.'"
                 }';
-                alert($jsonCreateOrderId);
+                //alert($jsonCreateOrderId);
                 $method = "POST";
                 $url = "https://kpaymentgateway-services.kasikornbank.com/qr/v2/order";
                 $jsonData = $jsonCreateOrderId;
@@ -530,9 +530,7 @@ class PickupController extends Controller
                 $responseQr = callAPI_Kbank($method, $url, $jsonData);
                 $res = json_decode($responseQr, true);
                 $order_id = $res['id'];
-                alert('======================');
-                alert($res);
-                alert('======================');
+                //alert($res);
                 $data = array(
                     'pickupID' => $pickupId, 
                     'pickup_data' => $pickupData, 
