@@ -1174,10 +1174,12 @@ class CreditBalanceController extends Controller
         //get params
         $pickupId = $pickupId;
         $method = 'Credit_Card';
-        $customerOmise = 'cust_5j0jdesp2ul3q14i25x';
+        $customerOmise = 'cust_5j0jdesp2ul3q14i25x';//tae
+        //$customerOmise = 'cust_5ehe1wz2ysiv200f3ci';//earht
+
         Fastship::getToken($customerId);
         $response = FS_Pickup::get($pickupId);
-        $amount = $response['Amount'];
+        $amount = 20;//$response['Amount'];
         $amountSatang = ($amount)*100;
         $min = 2000;
         $max = 100000000;
@@ -1186,6 +1188,7 @@ class CreditBalanceController extends Controller
         alert('min = '.$min);
         alert('max = '.$max);
         alert('calAmount = '.$calAmount);
+
         if(empty($customerOmise)){
             return redirect('pickup_detail/'.$pickupId)->with('msg','ข้อมูลไม่ถูกต้อง ระบบไม่สามารถตัดเงินได้ กรุณาทำรายการใหม่อีกครั้งหรือติดต่อเจ้าหน้าที่');
         }
@@ -1196,16 +1199,20 @@ class CreditBalanceController extends Controller
                 "currency" => "thb",
                 "customer" => $customerOmise,
                 "pickupId" => $pickupId,
+                //"customerId" => $customerId,
             );
             //call api
             $url = 'https://admin.fastship.co/api/omise/CreditChargeAction.php';
             //$Response = Utils::callAPI("POST",$url, json_encode($apiParams));
             $Response = callAPI("POST",$url, json_encode($apiParams));
             $omiseResult = json_decode($Response, true);
-            //alert($omiseResult);
+            alert($omiseResult);
             
             //api success
             if($omiseResult['data']['status'] == "successful"){
+                $params = array("PickupId"=>$pickupId,"Status"=>1);
+                $updateStatus = FS_Pickup::updateStatus($params);
+                usleep(10);
                 //echo "successful";
                 return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำการตัดเงินบัตรเครดิตและสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
 
