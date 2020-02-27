@@ -215,15 +215,9 @@ class PickupController extends Controller
         }else{
             $address_select = "old";
         }
-        //alert($request->all());
-        $PaymentMethod = $request->input('payment_method');
-        $Card = $request->input('credit_card');
 
-        if ($PaymentMethod == 'Credit_Card' && $Card == "new") {
-            $pickupId = '298268';
-            return redirect('new_creditcard/'.$pickupId);
-        }
-        
+        $PaymentMethod = $request->input('payment_method');
+
         //get api token
         Fastship::getToken($customerId);
         
@@ -453,6 +447,14 @@ class PickupController extends Controller
 
             if ($PaymentMethod == 'QR') {
                 return redirect('pickup_detail_payment/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว กรุณาตรวจสอบรายการและชำระเงิน')->with('msg-type','success');
+            }else if ($PaymentMethod == 'Credit_Card_New'){
+                return redirect('new_creditcard/'.$pickupId);
+            }else if (substr($PaymentMethod, 0, 12) === 'Credit_Card_'){
+                
+                //credit card charge
+                $Card = substr($PaymentMethod, 12);
+                
+                return redirect('credit/omise_auto_charge/'.$pickupId.'/'.$Card);
             }else{
                 return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
             }

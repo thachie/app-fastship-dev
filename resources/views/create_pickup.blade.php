@@ -410,18 +410,15 @@
                                         <div class="text-left">
                                             <label><input type="radio" name="payment_method" id="QR" value="QR" checked>QR Payment</label>
                                         </div>
+                                        @if(credit)
+                                        @foreach($creditCards as $card)
                                         <div class="text-left">
-                                            <label>
-                                            	<input type="radio" name="payment_method" id="Credit_Card" value="Credit_Card" />{!! FT::translate('radio.payment.creditcard') !!}
-                                            	<select name="credit_card">
-                                            	@if(credit)
-                                            	@foreach($creditCards as $card)
-                                            	<option value="{{ $card->OMISE_LASTDIGITS }}">XXX-XXXX-{{ $card->OMISE_LASTDIGITS }}</option>
-                                            	@endforeach
-                                            	@endif
-                                            	<option value="new">เพิ่มบัตรใหม่</option>
-                                            	</select>
-                                            </label>
+                                            <label><input type="radio" name="payment_method" value="Credit_Card_{{ $card->OMISE_LASTDIGITS }}">{!! FT::translate('radio.payment.credit_card') !!} - XXXX-{{ $card->OMISE_LASTDIGITS }}</label>
+                                        </div>
+                                        @endforeach
+                                        @endif
+                                        <div class="text-left">
+                                            <label><input type="radio" name="payment_method" value="Credit_Card_New">{!! FT::translate('radio.payment.credit_card') !!} - เพิ่มบัตรใหม่</label>
                                         </div>
                                     </div>
                                 </div>

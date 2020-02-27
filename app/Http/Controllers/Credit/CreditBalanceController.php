@@ -1162,7 +1162,7 @@ class CreditBalanceController extends Controller
         //
     }
 
-    public function omiseAutoChargeAction($pickupId)
+    public function omiseAutoChargeAction($pickupId,$card)
     {
         if(session('customer.id') != null){
             $customerId = session('customer.id');
@@ -1172,11 +1172,12 @@ class CreditBalanceController extends Controller
         //http://devapp.fastship.co/credit/omise_auto_charge/298268
 
         //get params
-        $pickupId = $pickupId;
         $method = 'Credit_Card';
-        $customerOmise = 'cust_5j0jdesp2ul3q14i25x';//tae
+        //$customerOmise = 'cust_5j0jdesp2ul3q14i25x';//tae
         //$customerOmise = 'cust_5ehe1wz2ysiv200f3ci';//earht
-
+        $creditCard = FS_CreditCard::get($card);
+        $customerOmise = $creditCard->OMISE_ID;
+        
         Fastship::getToken($customerId);
         $response = FS_Pickup::get($pickupId);
         $amount = 20;//$response['Amount'];

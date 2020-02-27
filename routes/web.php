@@ -181,7 +181,7 @@ Route::group(['middleware' => 'loginsession'], function () {
 	Route::post('credit/delete_creditcard', 'Credit\CreditBalanceController@deleteCreditCard');
 
 	Route::post('credit/add_new_creditcard', 'Credit\CreditBalanceController@omiseAddNewCreditCard');
-	Route::get('credit/omise_auto_charge/{pickupId?}', 'Credit\CreditBalanceController@omiseAutoChargeAction');
+	Route::get('credit/omise_auto_charge/{pickupId}/{card}', 'Credit\CreditBalanceController@omiseAutoChargeAction');
 	
 	//payment submission
 	Route::get('payment_submission', 'Credit\CreditBalanceController@preparePaymentSubmission');
