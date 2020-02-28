@@ -215,14 +215,15 @@ class PickupController extends Controller
         }else{
             $address_select = "old";
         }
-
+        $PaymentMethod = $request->input('payment_method');
         if (substr($PaymentMethod, 0, 12) === 'Credit_Card_'){
             $Card = substr($PaymentMethod, 12);
             $PaymentMethod = "Credit_Card";
         }else{
-            $PaymentMethod = $request->input('payment_method');
+            $PaymentMethod = $PaymentMethod;
         }
-
+        //alert($request->all());
+        //alert($PaymentMethod);
         //get api token
         Fastship::getToken($customerId);
         
@@ -404,6 +405,7 @@ class PickupController extends Controller
             	'Longitude' => $data['longitude'],
             ),  
             'PaymentMethod' => $data['PaymentMethod'],
+            'PaymentCard' => $Card,
             'PickupType' => $data['agent'],
             'Coupon' => $data['coupon_code'],
             'Discount' => $data['discount'],
@@ -414,7 +416,10 @@ class PickupController extends Controller
         //alert($createDetails);
         //die();
         //create pickup
+        //alert($createDetails);
         $response = FS_Pickup::create($createDetails);
+        
+        //alert($response);die();
         //$response = false;
         if($response === false){
             return redirect('create_pickup')->with('msg','สร้างใบรับพัสดุไม่สำเร็จ');
