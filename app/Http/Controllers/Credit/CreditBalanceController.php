@@ -541,14 +541,14 @@ class CreditBalanceController extends Controller
         }else{
             return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
         }
-        alert('omiseAddNewCreditCard');
-        alert($request->all());
+        //alert('omiseAddNewCreditCard');
+        //alert($request->all());
         if (empty($request->pickupId)) {
             $pickupId = '';
         }else{
             $pickupId = $request->pickupId;
         }
-        alert($pickupId);
+        //alert($pickupId);
         //die();
         $this->validate($request, [
             'command' => 'required',
@@ -1179,7 +1179,7 @@ class CreditBalanceController extends Controller
         $customerOmise = $creditCard['OMISE_ID'];
                 
         $response = FS_Pickup::get($pickupId);
-        $amount = 20;//$response['Amount'];
+        $amount = $response['Amount'];
         $amountSatang = ($amount)*100;
         $min = 2000;
         $max = 100000000;
