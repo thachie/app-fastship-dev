@@ -1169,26 +1169,25 @@ class CreditBalanceController extends Controller
         }else{
             return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
         }
-        //http://devapp.fastship.co/credit/omise_auto_charge/298268
-
+        //http://devapp.fastship.co/credit/omise_auto_charge/298268/2863
+        Fastship::getToken($customerId);
         //get params
         $method = 'Credit_Card';
         //$customerOmise = 'cust_5j0jdesp2ul3q14i25x';//tae
         //$customerOmise = 'cust_5ehe1wz2ysiv200f3ci';//earht
         $creditCard = FS_CreditCard::get($card);
-        $customerOmise = $creditCard->OMISE_ID;
-        
-        Fastship::getToken($customerId);
+        $customerOmise = $creditCard['OMISE_ID'];
+                
         $response = FS_Pickup::get($pickupId);
         $amount = 20;//$response['Amount'];
         $amountSatang = ($amount)*100;
         $min = 2000;
         $max = 100000000;
         $calAmount = ($amount)*100;
-        alert('amount = '.$amount);
+        /*alert('amount = '.$amount);
         alert('min = '.$min);
         alert('max = '.$max);
-        alert('calAmount = '.$calAmount);
+        alert('calAmount = '.$calAmount);*/
 
         if(empty($customerOmise)){
             return redirect('pickup_detail/'.$pickupId)->with('msg','ข้อมูลไม่ถูกต้อง ระบบไม่สามารถตัดเงินได้ กรุณาทำรายการใหม่อีกครั้งหรือติดต่อเจ้าหน้าที่');
@@ -1200,14 +1199,15 @@ class CreditBalanceController extends Controller
                 "currency" => "thb",
                 "customer" => $customerOmise,
                 "pickupId" => $pickupId,
-                //"customerId" => $customerId,
+                "customerId" => $customerId,
             );
+            
             //call api
             $url = 'https://admin.fastship.co/api/omise/CreditChargeAction.php';
-            //$Response = Utils::callAPI("POST",$url, json_encode($apiParams));
+            //$url = 'https://admin.fastship.co/api/omise/DevCreditChargeAction.php';
             $Response = callAPI("POST",$url, json_encode($apiParams));
             $omiseResult = json_decode($Response, true);
-            alert($omiseResult);
+            //alert($omiseResult);
             
             //api success
             if($omiseResult['data']['status'] == "successful"){
@@ -1219,7 +1219,8 @@ class CreditBalanceController extends Controller
 
             }else{
                 //echo "fail";
-                $msg = 'ระบบได้ทำการตัดเงินบัตรเครดิตไม่สำเร็จ กรุณาตรวจสอบบัตรเครดิตและทำรายการใหม่อีกครั้ง สถานะรายการบัตรเครดิต '.$omiseResult['data']['status'];
+                //$msg = 'ระบบได้ทำการตัดเงินบัตรเครดิตไม่สำเร็จ กรุณาตรวจสอบบัตรเครดิตและทำรายการใหม่อีกครั้ง สถานะรายการบัตรเครดิต '.$omiseResult['data']['status'];
+                $msg = 'ระบบได้ทำการตัดเงินบัตรเครดิตไม่สำเร็จ กรุณาตรวจสอบบัตรเครดิตและทำรายการใหม่อีกครั้ง';
                 return redirect('pickup_detail/'.$pickupId)->with('msg',$msg);
             }
         }else{
