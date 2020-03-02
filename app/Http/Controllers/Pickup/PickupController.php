@@ -222,8 +222,6 @@ class PickupController extends Controller
         }else{
             $PaymentMethod = $PaymentMethod;
         }
-        //alert($request->all());
-        //alert($PaymentMethod);
         //get api token
         Fastship::getToken($customerId);
         
@@ -329,8 +327,6 @@ class PickupController extends Controller
             $arr[$key]['ShippingAgent'] = $shipment_data[$key]['ShipmentDetail']['ShippingAgent'];
         }
         
-        //alert($shipment_data);
-        //alert($arr);
         $Weight =0;
         $ShippingRate =0;
         $agents = array();
@@ -342,8 +338,6 @@ class PickupController extends Controller
             $ShippingRate+= $value['ShippingRate'];
             $agents[] = $value['ShippingAgent'];
         }
-        //alert($Weight);
-        //alert($ShippingRate);
         
         //$data['PaymentMethod'] = "Bank_Transfer";
         $data['PaymentMethod'] = $PaymentMethod;
@@ -480,7 +474,6 @@ class PickupController extends Controller
         }
         
         if(!empty($pickupId)){
-            
             //get api token
             Fastship::getToken($customerId);
             //get pickup by pickup_id
@@ -502,7 +495,6 @@ class PickupController extends Controller
                     $status = '';
                     $pickupData = $response;
                     $shipmentIds = $response['ShipmentDetail']['ShipmentIds'];
-                    //alert($pickupData);
                     
                     foreach ($shipmentIds as $key => $shipid) {
                         //$shipment_data[$key] = FS_Shipment::get($shipid);
@@ -510,7 +502,6 @@ class PickupController extends Controller
                         //$arr[$key]['Weight'] = $shipment_data[$key]['ShipmentDetail']['Weight'];
                         //$arr[$key]['ShippingRate'] = $shipment_data[$key]['ShipmentDetail']['ShippingRate'];
                     }
-                    //alert($shipment_data);
                 }
                 //QR
                 //Fastship::getToken($customerId);
@@ -520,8 +511,6 @@ class PickupController extends Controller
                 foreach ($shipmentIds as $key => $shipid) {
                     $pickup['ShipmentDetail']['ShipmentIds'][$key] = FS_Shipment::get($shipid);
                 }*/
-                //alert($pickupData['PaymentMethod']);
-                //alert($pickupData);
                 //prepare to Kbank
                 $amount = $pickupData['Amount'];
                 $description = "Pickup # " . $pickupData['ID'] . " - Pickup by " . $pickupData['PickupType'];
@@ -532,7 +521,6 @@ class PickupController extends Controller
                     "source_type": "qr",
                     "reference_order": "'.$pickupId.'"
                 }';
-                //alert($jsonCreateOrderId);
                 $method = "POST";
                 $url = "https://kpaymentgateway-services.kasikornbank.com/qr/v2/order";
                 $jsonData = $jsonCreateOrderId;
@@ -540,7 +528,6 @@ class PickupController extends Controller
                 $responseQr = callAPI_Kbank($method, $url, $jsonData);
                 $res = json_decode($responseQr, true);
                 $order_id = $res['id'];
-                //alert($res);
                 $data = array(
                     'pickupID' => $pickupId, 
                     'pickup_data' => $pickupData, 
@@ -550,52 +537,6 @@ class PickupController extends Controller
                     "kbankOrderId" => $order_id,
                 );
                 return view('pickup_detail_payment',$data);
-                /*if ($pickupData['PaymentMethod'] == 'Bank_Transfer' || $pickupData['PaymentMethod'] == 'QR') {
-                    //QR
-                    Fastship::getToken($customerId);
-                    $pickup = FS_Pickup::get($pickupId);
-                    $shipmentIds = $pickup['ShipmentDetail']['ShipmentIds'];
-                    foreach ($shipmentIds as $key => $shipid) {
-                        $pickup['ShipmentDetail']['ShipmentIds'][$key] = FS_Shipment::get($shipid);
-                    }
-                    //alert($pickupData['PaymentMethod']);
-                    //alert($pickupData);
-                    //prepare to Kbank
-                    $amount = $pickup['Amount'];
-                    $description = "Pickup # " . $pickup['ID'] . " - Pickup by " . $pickup['PickupType'];
-                    $jsonCreateOrderId = '{
-                        "amount": '.$amount.',
-                        "currency": "THB",
-                        "description": "'.$description.'",
-                        "source_type": "qr",
-                        "reference_order": "'.$pickupId.'"
-                    }';
-                    $method = "POST";
-                    $url = "https://kpaymentgateway-services.kasikornbank.com/qr/v2/order";
-                    $jsonData = $jsonCreateOrderId;
-
-                    $response = callAPI_Kbank($method, $url, $jsonData);
-                    $res = json_decode($response, true);
-                    $order_id = $res['id'];
-
-                    $data = array(
-                        'pickupID' => $pickupId, 
-                        'pickup_data' => $pickupData, 
-                        'status' => $status, 
-                        'labels' => $labels,
-                        "pickup" => $pickup,
-                        "kbankOrderId" => $order_id,
-                    );
-                    return view('pickup_detail_payment',$data);
-                }else{
-                    $data = array(
-                        'pickupID' => $pickupId, 
-                        'pickup_data' => $pickupData, 
-                        'status' => $status, 
-                        'labels' => $labels,
-                    );
-                    return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
-                }*/
             }
         }else{
             return 'Pickup id is null.';
@@ -605,7 +546,6 @@ class PickupController extends Controller
     //public function preparePickupDetail($data)
     public function preparePickupDetail($pickupId=null)
     {
-        
     	//check customer login
     	if (session('customer.id') != null){
     		$customerId = session('customer.id');
@@ -613,7 +553,6 @@ class PickupController extends Controller
     		return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
     	}
     	
-        //265412
         if(!empty($pickupId)){
             //get api token
             Fastship::getToken($customerId);
@@ -634,7 +573,6 @@ class PickupController extends Controller
                 $status = '';
                 $pickupData = $response;
                 $shipmentIds = $response['ShipmentDetail']['ShipmentIds'];
-                //alert($pickupData);
                 
                 foreach ($shipmentIds as $key => $shipid) {
                     //$shipment_data[$key] = FS_Shipment::get($shipid);
@@ -642,7 +580,6 @@ class PickupController extends Controller
                     //$arr[$key]['Weight'] = $shipment_data[$key]['ShipmentDetail']['Weight'];
                     //$arr[$key]['ShippingRate'] = $shipment_data[$key]['ShipmentDetail']['ShippingRate'];
                 }
-                //alert($shipment_data);
             }
             //alert($pickupData);
             $data = array(
