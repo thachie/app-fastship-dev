@@ -240,6 +240,8 @@
                     	   _displayAgent = "EMS World";
                        }else if(_displayAgent == "Thaipost Epacket"){
                     	   _displayAgent = "ThailandPost ePACKET";
+                       }else if(_displayAgent == "FS MASK"){
+                    	   _displayAgent = "Fastship for Mask";
                        }
 
                        content += '<fieldset>';

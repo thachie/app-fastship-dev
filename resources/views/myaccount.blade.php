@@ -86,86 +86,24 @@ if($customer_data['latitude'] == ""){
 	    	<div class="panel panel-primary">
 				<div class="panel-heading">{!! FT::translate('myaccount.panel.heading2') !!}</div>
 			    <div class="panel-body">
-			    	
-			    	<!-- <div class="row">
-				    	<div class="col-md-6"><h3>ประวัติการเงิน</h3></div>
-				    	<div class="col-md-6 text-right" >
-				    		<span class="balance col-xs-12">BALANCE: 4500 Baht</span>
-				    		<a href="#" class="col-xs-12"><i class="fa fa-plus"></i> เติมเงิน</a>
-				    	</div>
-				    	<table class="table">
-				    		<thead>
-				    		<tr>
-				    			<td>#</td>
-				    			<td>เวลาที่ทำรายการ</td>
-				    			<td>ยอดรับ</td>
-				    			<td>ยอดจ่าย</td>
-				    			<td>ยอดคงเหลือล่าสุด</td>
-				    			<td>ประเภทรายการ</td>
-				    			<td>เลขที่อ้างอิง</td>
-				    		</tr>
-				    		</thead>
-				    		<tbody>
-				    		<tr>
-				    			<td>1</td>
-				    			<td>20/03/2018</td>
-				    			<td></td>
-				    			<td>950</td>
-				    			<td>4500</td>
-				    			<td><div class="label label-danger ">DEBIT</div></td>
-				    			<td>112220000</td>
-				    		</tr>
-				    		<tr>
-				    			<td>2</td>
-				    			<td>19/03/2018</td>
-				    			<td></td>
-				    			<td>400</td>
-				    			<td>5450</td>
-				    			<td><div class="label label-success ">CREDIT</div></td>
-				    			<td>115021320</td>
-				    		</tr>
-				    		</tbody>
-				    	</table>
-			    	</div> -->
-			    	<!-- 
-			    	<div class="row">
-			    		<div class="col-md-12">
-			    			<h3>การโอนเงิน</h3>
-			    			<table class="table">
-				    		<thead>
-				    		<tr>
-				    			<td>#</td>
-				    			<td>เวลาที่ทำรายการ</td>
-				    			<td>ยอดที่โอน</td>
-				    			<td>สถานะ</td>
-				    		</tr>
-				    		</thead>
-				    		<tbody>
-				    		<tr>
-				    			<td>1</td>
-				    			<td>20/03/2018</td>
-				    			<td>950</td>
-				    			<td><div class="label label-success ">approved</div></td>
-				    		</tr>
-				    		<tr>
-				    			<td>2</td>
-				    			<td>19/03/2018</td>
-				    			<td>500</td>
-				    			<td><div class="label label-danger ">fail</div></td>
-				    		</tr>
-				    		<tr>
-				    			<td>3</td>
-				    			<td>19/03/2018</td>
-				    			<td>120</td>
-				    			<td><div class="label label-success ">approved</div></td>
-				    		</tr>
-				    		</tbody>
-				    	</table>
-			    		</div>
-			    	</div>
-			    	-->
 
-			    		<?php if(sizeof($creditCards) <= 0):?>
+						<div class="col-md-12">
+							<h3>{!! FT::translate('myaccount.panel.heading4') !!}</h3>
+							@if(sizeof($creditCards) > 0)
+							@foreach($creditCards as $card)
+							<div class="col-md-6">
+								<div class=" block-primary" style="position: relative;">
+									<span class="creditbar"></span>
+									<span class="close"><a href="javascript:deleteCreditCard('<?php echo $card->ID;?>');"><i class="fa fa-trash-o"></i></a></span>
+									<h5 class="accountno">XXXXX-XXX-<?php echo $card->OMISE_LASTDIGITS;?></h5>
+									<h6><?php echo $card->OMISE_CARDNAME;?></h6>
+									<p><?php echo $card->OMISE_BANK;?></p>
+								</div>
+							</div>
+							@endforeach
+							@endif
+						</div>
+	
 			    		<div class="col-md-12">
 				    		<h4>{!! FT::translate('myaccount.panel.heading3') !!}</h4>
 				    		<form id="checkout" name="creditcard_form"  class="form-horizontal" method="post" action="{{url ('/credit/add_creditcard')}}">	
@@ -205,26 +143,7 @@ if($customer_data['latitude'] == ""){
 			                    </div> 
 			                </form>
 				    	</div>
-				    	<?php else: ?>
-				    	<div class="col-md-12">
-							<h3>{!! FT::translate('myaccount.panel.heading4') !!}</h3>
-							<?php 
-								if(sizeof($creditCards) > 0):
-									foreach($creditCards as $card):
-							?>
-									<div class="col-md-6">
-										<div class=" block-primary" style="position: relative;">
-											<span class="creditbar"></span>
-											<span class="close"><a href="javascript:deleteCreditCard('<?php echo $card->ID;?>');"><i class="fa fa-trash-o"></i></a></span>
-											<h5 class="accountno">XXXXX-XXX-<?php echo $card->OMISE_LASTDIGITS;?></h5>
-											<h6><?php echo $card->OMISE_CARDNAME;?></h6>
-											<p><?php echo $card->OMISE_BANK;?></p>
-										</div>
-									</div>
-							<?php endforeach; ?>
-							<?php endif; ?>
-						</div>
-						<?php endif;?>
+
 			    </div>
 			</div>
 	    </div>

@@ -408,17 +408,17 @@
                                     <div class="col-md-7 col-xs-12">
                                         <!--<label><input type="radio" name="payment_method" id="Bank_Transfer" value="Bank_Transfer" checked>{!! FT::translate('radio.payment.bank_transfer') !!}</label>-->
                                         <div class="text-left">
-                                            <label><input type="radio" name="payment_method" id="QR" value="QR" checked>QR Payment</label>
+                                            <label><input type="radio" name="payment_method" id="QR" value="QR" required >QR Payment</label>
                                         </div>
                                         @if(credit)
                                         @foreach($creditCards as $card)
                                         <div class="text-left">
-                                            <label><input type="radio" name="payment_method" value="Credit_Card_{{ $card->OMISE_LASTDIGITS }}">{!! FT::translate('radio.payment.credit_card') !!} - XXXX-{{ $card->OMISE_LASTDIGITS }}</label>
+                                            <label><input type="radio" name="payment_method" value="Credit_Card_{{ $card->OMISE_LASTDIGITS }}" required >{!! FT::translate('radio.payment.creditcard') !!} - XXXX-{{ $card->OMISE_LASTDIGITS }}</label>
                                         </div>
                                         @endforeach
                                         @endif
                                         <div class="text-left">
-                                            <label><input type="radio" name="payment_method" value="Credit_Card_New">{!! FT::translate('radio.payment.credit_card') !!} - เพิ่มบัตรใหม่</label>
+                                            <label><input type="radio" name="payment_method" value="Credit_Card_New" required >{!! FT::translate('radio.payment.creditcard') !!} - เพิ่มบัตรใหม่</label>
                                         </div>
                                     </div>
                                 </div>
@@ -715,6 +715,14 @@
     	                	$("#pickup_form input[name='pickupdate']").css("border","1px solid #cacaca");
     	                }
             		}
+
+            		if($("#pickup_form input[name='payment_method']").val() == ""){
+                    	$("#pickup_form input[name='payment_method']").css("border","1px solid red");
+                    	error += "- {!! FT::translate('label.payment_method') !!}<br />";
+                    	valid = false;
+                    }else{
+                    	$("#pickup_form input[name='payment_method']").css("border","1px solid #ffffff");
+                    }
 	
 	            	if(address_select == "new"){
 	                    if($("#pickup_form input[name='firstname']").val() == ""){

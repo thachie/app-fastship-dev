@@ -27,8 +27,8 @@ if(isset($ref) && $ref != ""){
 <div class="row" style="margin-bottom: 0;">     
     <div class="col-md-10 col-12 col-md-offset-1 ">
 
-	        <div class="row">
-	        	<div class="col-md-6" style="padding: 40px;background-color: #eee;">
+	        <div class="row" style="background-color: #eee;">
+	        	<div class="col-md-6" style="padding: 40px;">
 	        	    <div class="text-center" style="padding: 0 0 25px;"><img src="../images/joinus/fastship_register.png" style="max-width: 200px;"/></div>
             	
 	            	<h2 class="text-center orange">{!! FT::translate('register.content.heading') !!}</h2>
@@ -159,7 +159,7 @@ if(isset($ref) && $ref != ""){
 
 	    </div>
 	    <div class="row">
-	    	<div class="col-md-10 col-12 col-md-offset-1 text-center" style="background-color: #f15a22;padding:20px 20px 0 20px;color:#fff;">
+	    	<div class="col-md-10 col-12 col-md-offset-1 text-center" style="background-color: #ddd;padding:20px 20px 0 20px;">
             	<form name="login_form" class="form-inline" method="post" action="{{url ('/customer/login')}}">
                     
         	        {{ csrf_field() }}
@@ -174,7 +174,7 @@ if(isset($ref) && $ref != ""){
                         <input type="password" id="password" class="form-control input-sm required" style="width: 200px;" placeholder="{!! FT::translate('placeholder.password') !!}" name="password" required value="" />
                     </div>
             		<div class="form-group">
-    					<button type="submit" name="submit" class="btn btn-sm btn-info">{!! FT::translate('button.login') !!}</button>
+    					<button type="submit" name="submit" class="btn btn-sm btn-secondary">{!! FT::translate('button.login') !!}</button>
     				</div>
                 	
             	</form>
