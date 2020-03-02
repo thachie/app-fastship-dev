@@ -223,7 +223,7 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                 	<div class="panel-body">
                 		<h2>{!! FT::translate('label.status') !!}: <?php echo $PickupStatus; ?></h2>
                 		<h3>{!! FT::translate('label.pickup_id') !!} : <span style="color: #f15a22;"><?php echo $pickupID; ?></span></h3>
-                		<?php if ($pickup_data['Status'] == 'Unpaid' && strtoupper($pickup_data['PaymentMethod']) == 'QR')  { ?>
+                		<?php if ($pickup_data['Status'] == 'Unpaid')  { ?>
                 			<div class="timeline timeline-single-column">
                 				<div class="timeline-item">
 		                            <div class="timeline-point timeline-point-default">

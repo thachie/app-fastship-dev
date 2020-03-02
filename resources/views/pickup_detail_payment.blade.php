@@ -23,7 +23,8 @@
 		                data-currency="THB"
 		                data-payment-methods="qr"
 		                data-name="Fastship Co., Ltd."
-		                data-order-id="{{ $kbankOrderId }}"
+                        data-order-id="{{ $kbankOrderId }}"
+		                data-ref-number="{{ $pickup_data['ID'] }}"
 		                data-description="{{ 'Pickup # ' . $pickup_data['ID'] . ' - Pickup by ' . $pickup_data['PickupType'] }}"
 		                data-show-button="false" ></script>
 		                <input type="button" class="btn btn-success btn-lg btn-block" role="button" value="กดเพื่อชำระเงินผ่าน QR" onclick="KPayment.show()">
