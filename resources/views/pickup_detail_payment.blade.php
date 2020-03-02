@@ -29,7 +29,6 @@
 		                data-show-button="false" ></script>
 		                <input type="button" class="btn btn-success btn-lg btn-block" role="button" value="กดเพื่อชำระเงินผ่าน QR" onclick="KPayment.show()">
 		            </form>
-                    <!--data-description="{{ 'Pickup # ' . $pickup_data['ID'] . ' - Pickup by ' . $pickup_data['PickupType'] }}"-->
 				</div>
 				<div class="clearfix"></div>
 				
