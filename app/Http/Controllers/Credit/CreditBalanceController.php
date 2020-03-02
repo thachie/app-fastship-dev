@@ -1211,7 +1211,12 @@ class CreditBalanceController extends Controller
             
             //api success
             if($omiseResult['data']['status'] == "successful"){
-                $params = array("PickupId"=>$pickupId,"Status"=>1,"Card"=>$card);
+                $params = array(
+                    "PickupId"=>$pickupId,
+                    "Status"=>1,
+                    "Card"=>$card,
+                    "ActualPayment"=> "Credit_Card",
+                );
                 $updateStatus = FS_Pickup::updateStatus($params);
                 usleep(10);
                 //echo "successful";
