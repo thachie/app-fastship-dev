@@ -242,6 +242,8 @@
                     	   _displayAgent = "ThailandPost ePACKET";
                        }else if(_displayAgent == "FS MASK"){
                     	   _displayAgent = "Fastship for Mask";
+                       }else if(_displayAgent == "Thaipost Logis"){
+                    	   _displayAgent = "LogisPost";
                        }
 
                        content += '<fieldset>';

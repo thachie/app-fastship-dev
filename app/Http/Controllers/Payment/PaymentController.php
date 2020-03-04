@@ -37,7 +37,11 @@ class PaymentController extends Controller
         }
         
         //prepare to Kbank
-        $amount = $pickup['Amount'];
+        if($request->has("amount")){
+            $amount = $request->input("amount");
+        }else{
+            $amount = $pickup['Amount'];
+        }
         $description = "Pickup # " . $pickup['ID'] . " - Pickup by " . $pickup['PickupType'];
         $jsonCreateOrderId = '{
             "amount": '.$amount.',
@@ -66,6 +70,7 @@ class PaymentController extends Controller
         
         $data = array(
             "pickup" => $pickup,
+            "amount" => $amount,
             "kbankOrderId" => $order_id,
         );
         return view('payment_qr',$data);
