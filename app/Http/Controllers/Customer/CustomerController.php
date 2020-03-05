@@ -390,6 +390,7 @@ class CustomerController extends Controller
 			$request->session()->put('customer.id', $customerId);
 			$request->session()->put('customer.name', $data['firstname']);
 			$request->session()->put('customer.line', $data['line_id']);
+			$request->session()->forget('login.ref');
 			    
 		    //set shipment in cart
 			$shipment_data = 0;
@@ -856,6 +857,7 @@ class CustomerController extends Controller
 	    $data = array();
 	    
 	    return view('login',$data);
+	    
 	}
 	
 	public function prepareRegister($ref="",Request $request)
@@ -1605,15 +1607,15 @@ class CustomerController extends Controller
 	    $res2 = json_decode($Response2,true);
 	    
 	    if(!isset($res2)){
-	        return redirect('/login')->with('msg','ไม่สามารถเชื่อมต่อได้');
+	        return redirect('/login')->with('msg','บัญชี Line ของคุณ ไม่สามารถเชื่อมต่อได้');
 	    }
 	    $userId = $res2['sub'];
 	    
 	    if(!$userId){
-	        return redirect('/login')->with('msg','ไม่สามารถเชื่อมต่อได้');
+	        return redirect('/login')->with('msg','ไม่พบบัญชีที่สามารถเชื่อมต่อได้');
 	    }
 	    
-	    Fastship::getToken($customerId);
+	    Fastship::getToken();
 	    $checkLineId = FS_Customer::checkLineUserId($userId);
     
         if($checkLineId > 0){
