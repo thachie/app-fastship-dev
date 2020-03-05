@@ -389,6 +389,7 @@ class CustomerController extends Controller
 			//save to session
 			$request->session()->put('customer.id', $customerId);
 			$request->session()->put('customer.name', $data['firstname']);
+			$request->session()->put('customer.line', $data['line_id']);
 			    
 		    //set shipment in cart
 			$shipment_data = 0;
@@ -762,44 +763,6 @@ class CustomerController extends Controller
 
 		return view('channel_list',$data);
 	}
-	
-	//Prepare for check rate page
-	public function prepareChannelList2()
-	{
-	    
-	    if (session('customer.id') != null){
-	        $customerId = session('customer.id');
-	    }else{
-	        return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
-	    }
-
-	    Fastship::getToken($customerId);
-	    $channel_data = FS_Customer::getChannel($customerId);
-
-	    if($channel_data == false){
-	        $channel_data = array();
-	    }
-
-	    $ebays = array();
-	    $etsys = array();
-	    foreach($channel_data as $channel){
-	        $channels[] = $channel;
-	        
-	        if( substr( $channel['ChannelType'] , 0, 4 ) === "EBAY" ){
-	            $ebays[] = $channel;
-	        }else if($channel['ChannelType'] == "ETSY"){
-	            $etsys[] = $channel;
-	        }
-	    }
-	    
-	    $data = array(
-	        "channels" => $channel_data,
-	        "ebays" => $ebays,
-	        "etsys" => $etsys,
-	    );
-	    
-	    return view('channel_list2',$data);
-	}
 
 	//Prepare for check rate page
 	public function prepareAddChannel()
@@ -883,6 +846,18 @@ class CustomerController extends Controller
 		return view('promotion',$data);
 	}
 
+	public function prepareLoginWithCode($ref="",Request $request)
+	{
+	    
+	    //check ref
+	    $request->session()->put('login.ref', $ref);
+
+	    //prepare to view
+	    $data = array();
+	    
+	    return view('login',$data);
+	}
+	
 	public function prepareRegister($ref="",Request $request)
 	{
 
@@ -957,6 +932,7 @@ class CustomerController extends Controller
 	    }else{
 	        $code = $ref;
 	    }
+	    
 	    
 	    if($request->has('line_id')){
 	        $lineId = $request->input('line_id');
@@ -1530,6 +1506,7 @@ class CustomerController extends Controller
 		Session::flush();
 
 		return redirect('/');
+		
 	}
 
 
@@ -1615,7 +1592,7 @@ class CustomerController extends Controller
 	    $res1 = json_decode($Response1,true);
 
 	    if(!isset($res1) || !isset($res1['id_token'])){
-	        return redirect('/login')->with('msg','ไม่สามารถเชื่อมต่อได้1');
+	        return redirect('/login')->with('msg','ไม่สามารถเชื่อมต่อได้');
 	    }
 	    
 	    $apiParam = array(
@@ -1628,12 +1605,12 @@ class CustomerController extends Controller
 	    $res2 = json_decode($Response2,true);
 	    
 	    if(!isset($res2)){
-	        return redirect('/login')->with('msg','ไม่สามารถเชื่อมต่อได้2');
+	        return redirect('/login')->with('msg','ไม่สามารถเชื่อมต่อได้');
 	    }
 	    $userId = $res2['sub'];
 	    
 	    if(!$userId){
-	        return redirect('/login')->with('msg','ไม่สามารถเชื่อมต่อได้3');
+	        return redirect('/login')->with('msg','ไม่สามารถเชื่อมต่อได้');
 	    }
 	    
 	    Fastship::getToken($customerId);
@@ -1646,10 +1623,15 @@ class CustomerController extends Controller
             $customer = FS_Customer::get($checkLineId);
             
         }else{
-
-            //return redirect('register_line?line_id='.$userId)->with('msg','ไม่พบผู้ใช้ในระบบ กรุณาสมัครสมาชิกใหม่');
-            return redirect('register_line?line_id='.$userId);
-
+            
+            //new customer
+            if(session('login.ref') != null){
+                $code = session('login.ref');
+            }else{
+                $code = "";
+            }
+            return redirect('register_line/' . $code . '?line_id='.$userId);
+            
         }
 
 	    //save to session

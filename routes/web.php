@@ -19,9 +19,11 @@ Route::post('customer/login', 'Customer\CustomerController@login');
 Route::post('customer/register', 'Customer\CustomerController@register');
 Route::match(['get', 'post'], 'joinus', 'Customer\CustomerController@prepareRegister');
 Route::get('joinus/{refercode}',  'Customer\CustomerController@prepareRegisterWithCode');
-Route::get('register/{refercode}',  'Customer\CustomerController@prepareRegister');
+#Route::get('register/{refercode}',  'Customer\CustomerController@prepareRegister');
+Route::get('register/{refercode}', 'Customer\CustomerController@prepareLoginWithCode');
 Route::get('register_line/{refercode?}',  'Customer\CustomerController@prepareRegisterLine');
 Route::get('register_complete', function () {  return view('register_complete'); });
+Route::get('a/{refercode}',  'Customer\CustomerController@prepareRegister');
 
 //customer & password
 Route::get('forget_password', function () {  return view('forget_password'); });
@@ -94,6 +96,7 @@ Route::get('upgrading', function () {  return view('underconstruction'); });
 Route::group(['middleware' => 'loginsession'], function () {
 	
 	Route::get('/', function () {  return view('index'); });
+	Route::get('/testHome', function () {  return view('index1'); });
 
 	//customer
 	Route::get('customer/logout', 'Customer\CustomerController@logout');
