@@ -25,9 +25,6 @@
     
 		<div class="col-md-6 col-xs-12">
 
-			
-			
-			
 			<div class="panel panel-primary">
                 <div class="panel-heading">Warehouse/Account Info</div>
             	<div class="panel-body row-no-padding">
@@ -94,8 +91,27 @@
         	</div>
 		</div>
 		
+		@if($country == "USA")
+		<div class="col-md-6 col-xs-12">
+			<a class="hidden-xs" data-toggle="modal" data-target="#ModalTerm"><img src="{{ url('images/fba_us_price_table.jpg') }}" style="max-width: 100%;border: 10px solid #e5e5e5;"/></a>
+			<div class="modal fade" id="ModalTerm" tabindex="-1" role="dialog" aria-labelledby="ModalTerm_Label" aria-hidden="true">
+            	<div class="modal-dialog"  style="width: 1000px;">
+            		<div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title text-left" id="ModalTerm_Label">ตารางราคาการให้บริการขนส่ง FBA United States</h4>
+                        </div>
+                        <div class="modal-body">
+                        	<img src="{{ url('images/fba_us_price_table.jpg') }}" style="max-width: 100%;"/>
+                        </div>
+                    </div>
+            	</div>
+            </div>
+            <div class="hidden-lg hidden-md"><img src="{{ url('images/fba_us_price_table.jpg') }}" style="max-width: 100%;"/></div>
+		</div>
+		@else
 		<div class="col-md-6 col-xs-12 small well">
-			
+
 			<h4>Amazon FBA คืออะไร</h4>
 			<p class="">Amazon FBA หรือ Fulfilment by Amazon คือรูปแบบการขายของผ่านเว็บ Amazon.com โดยเรา (supplier) ส่งสิ้นค้าไปเก็บไว้ที่โกดัง (warehouse) ของ Amazon ที่อเมริกา เมื่อสินค้าขายได้ทางทีมงาน FBA จะแพ๊คและส่งสินค้าให้ด้วย ซึ่งทาง Amazon จะคิดค่าใช้จ่ายหลักๆคือ</p>
 			<ul class="">
@@ -114,9 +130,11 @@
 			</ul>
 			<br />
 			
+			
 			<div class=" text-center"><a href="https://fastship.co/helps/how-to-send-products-to-amazon-fba/" target="_blank">รายละเอียดเพิ่มเติม</a></div>
 			
 		</div>
+		@endif
 		
 	</div>
 	<div class="row">
@@ -286,7 +304,7 @@
 
     </form>
 </div>
-
+         
 <script type="text/javascript">
 $(document).ready(function() {
 

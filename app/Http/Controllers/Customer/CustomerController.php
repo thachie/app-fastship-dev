@@ -354,6 +354,7 @@ class CustomerController extends Controller
 			        'for' => $data['for'],
 			        'behavior' => $data['behavior'],
 			        'state' => $data['state'],
+			        'lineId' => $data['line_id'],
 			    );
 			    $leadId = ZohoApiV2::createLead($params);
 
