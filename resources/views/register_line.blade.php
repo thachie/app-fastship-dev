@@ -35,8 +35,8 @@ if(isset($ref) && $ref != ""){
                     <div class="" style="padding: 10px 0 0 0;">
                         <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> {!! FT::translate('register.content.list1') !!}</h3>
                         <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> {!! FT::translate('register.content.list2') !!}</h3>
-                        <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> เชื่อมต่อ <span class="orange">Marketplace</span> ง่ายๆ</h3>
-                        <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> {!! FT::translate('register.content.list3') !!}</h3>             
+                        <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> {!! FT::translate('register.content.list3') !!}</h3>
+                        <h3><img class="check_mark" src="../images/joinus/check-mark.png" /> {!! FT::translate('register.content.list4') !!}</h3>             
                     </div>
             		
 	        	</div>
@@ -47,8 +47,8 @@ if(isset($ref) && $ref != ""){
         	        
         	        <input type="hidden" name="line_id" value="{{ $lineId }}" />
 
-            		<h1>เริ่มต้นใช้งานกับเรา เปิดบัญชีฟรี!</h1>
-            		<p class="gray">กรุณากรอกข้อมูลให้ครบถ้วน</p>
+            		<h1>{!! FT::translate('register.panel.heading') !!}</h1>
+            		<p class="gray">{!! FT::translate('register.panel.subheading') !!}</p>
             		
             		<div class="col-md-6">
             			<input type="text" class="form-control required" placeholder="{!! FT::translate('placeholder.firstname') !!}" name="firstname" id="firstname" required value="{{ old('firstname',$default['firstname']) }}" />
@@ -58,7 +58,6 @@ if(isset($ref) && $ref != ""){
             		</div>
             		
             		<div class="col-md-6">
-                        <!-- <label for="email" class="col-12 control-label">อีเมล์ที่ใช้งาน/Email</label> -->
                         <input type="text" class="form-control required" placeholder="{!! FT::translate('placeholder.email') !!}" name="email" id="email" required value="{{ old('email',$default['email']) }}" />
                     </div>
                                 
@@ -91,7 +90,7 @@ if(isset($ref) && $ref != ""){
                     <div class="col-md-6">
                     @if(old('referral',$referCode) == "SOOK")
                     	<select name="for" class="form-control required" required>
-                    		<option value="thaitrade">ขายใน Thaitrade</option>
+                    		<option value="thaitrade">{!! FT::translate('option.for.thaitrade') !!}</option>
                     	</select>
                     @else
                         <select name="for" class="form-control required" required>
@@ -131,7 +130,7 @@ if(isset($ref) && $ref != ""){
                     
                     @if(!isset($code) || $code == "")
                     <div class="col-md-12">
-                    	<div class="small" style="font-weight: 600;">ใส่รหัสผู้แนะนำเพื่อรับส่วนลด</div>
+                    	<div class="small" style="font-weight: 600;">{!! FT::translate('register.form.referral') !!}</div>
                     	<input type="text" class="form-control" placeholder="{!! FT::translate('placeholder.referral') !!}" name="referral" id="referral" value="{{ old('referral',$referCode) }}"  />
                     </div>
                     @else
@@ -166,7 +165,7 @@ if(isset($ref) && $ref != ""){
         	        
         	        <input type="hidden" name="line_id" value="{{ $lineId }}" />
     
-            		<label class="input-sm ">เข้าสู่ระบบเพื่อ เชื่อมต่อบัญชีกับ Line: </label>
+            		<label class="input-sm ">{!! FT::translate('register.form.connect_line') !!} </label>
             		<div class="form-group">
             			<input type="text" id="email" class="form-control input-sm required" style="width: 200px;" placeholder="{!! FT::translate('placeholder.email') !!}" name="username" required value="{{ old('email',$default['email']) }}" />
             		</div>
