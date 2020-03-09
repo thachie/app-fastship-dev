@@ -154,7 +154,7 @@
         			<div class="clearfix"></div>
         			<br />
         			
-					<span class="small" style="margin-left: 10px;">ยังไม่ได้เป็นสมาชิก? สมัครเลยไม่มีค่าใช้จ่าย <a href="/joinus">สมัครด้วยอีเมล์</a></span>
+					<span class="small" style="margin-left: 10px;">ยังไม่ได้เป็นสมาชิก? สมัครเลยไม่มีค่าใช้จ่าย <a href="/register_email">สมัครด้วยอีเมล์</a></span>
 					
 					{{ session('login.ref') }}
     			</div>
