@@ -45,8 +45,8 @@ class AddressController extends Controller
 
         Fastship::getToken($customerId);
         
-        $states = FS_Address::get_states($request->get("country_id"));
-        
+        $states = FS_Address::get_states_query($request->get("country_id"),$request->get("term"));
+
         return response()->json(['states'=>$states]);
     }
     
@@ -61,7 +61,7 @@ class AddressController extends Controller
         
         Fastship::getToken($customerId);
         
-        $cities = FS_Address::get_cities($request->get("country_id"),$request->get("state_id"));
+        $cities = FS_Address::get_cities_query($request->get("country_id"),$request->get("state_id"),$request->get("term"));
 
         return response()->json(['cities'=>$cities]);
     }

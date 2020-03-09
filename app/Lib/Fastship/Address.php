@@ -108,6 +108,25 @@ class FS_Address extends FS_ApiResource
      *
      * @return Fastship_Retrieve Get a States.
      */
+    public static function get_cities_query($country,$state,$query="",$apiToken = null)
+    {
+        $requestor = new FS_ApiRequestor($apiToken);
+        $url = "address_query/" . $country . "/" . $state . "/city/" . $query;
+        
+        list($response, $rcode) = $requestor->request('get', $url);
+        
+        if($rcode != 200){
+            return false;
+        }else{
+            return $response;
+        }
+    }
+    /**
+     * @param string $id
+     * @param string|null $apiToken
+     *
+     * @return Fastship_Retrieve Get a States.
+     */
     public static function get_postcodes($country,$city,$apiToken = null)
     {
         $requestor = new FS_ApiRequestor($apiToken);

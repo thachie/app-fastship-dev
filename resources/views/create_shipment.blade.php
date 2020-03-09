@@ -27,7 +27,7 @@
             </div>
         </div>
     </div>
-    <form id="shipment_form" name="shipment_form" class="form-horizontal" method="post" action="{{url ('shipment/create')}}">
+    <form id="shipment_form" name="shipment_form" class="form-horizontal" method="post" action="{{url ('shipment/create')}}" autocomplete="false">
         
         {{ csrf_field() }}
         
@@ -151,7 +151,7 @@
                             </div>
                             <?php endif; ?>
                             
-                            <?php if(in_array($default['agent'] , array("Ecom_PD","FS_FBA","FS_FBA_JP","FS_FBA_SG","FS_FBA_UK","FS_FBA_AU","FS_FBA_FR"))): ?>
+                            <?php if(in_array($default['agent'] , array("Ecom_PD","FS_FBA","FS_FBA_PLUS","FS_FBA_JP","FS_FBA_SG","FS_FBA_UK","FS_FBA_AU","FS_FBA_FR"))): ?>
                             <input type="hidden" name="term" id="ddp" value="DDP">
                             <?php else: ?>
                             <input type="hidden" name="term" id="ddu" value="DDU">
@@ -163,26 +163,7 @@
                             </div>
                             @endif
 
-                            <!-- <label class="col-md-6 control-label label-top">ซื้อประกันเพิ่ม : </label>
-                            <div class="col-md-6">
-                                <div class="radio">
-                                <?php 
-                                    //if($default['insurance'] == "0"){ ?>
-                                        <label><input type="radio" name="insurance" id="insurance_no" value="0" checked> ไม่ซื้อ</label>
-                                        &nbsp;
-                                        <label><input type="radio" name="insurance" id="insurance_yes" value="<?php //echo $default['insurance'] ?>"> ซื้อเพิ่ม (<span id="value-insurance"><?php //echo $default['insurance'] ?></span> บาท)</label>
-                                    <?php //}else{ ?>
-                                        <label><input type="radio" name="insurance" id="insurance_no" value="0"> ไม่ซื้อ</label>
-                                        &nbsp;
-                                        <label><input type="radio" name="insurance" id="insurance_yes" value="<?php //echo $default['insurance'] ?>" checked> ซื้อเพิ่ม (<span id="value-insurance"><?php //echo $default['insurance'] ?></span> บาท)</label>
-                                    <?php //} ?>
-                                </select>
-                                </div>
-                            </div>
-
-                        <label class="col-md-6 control-label label-top">มูลค่าสูงสุด ที่ส่งโดยไม่ต้องเสียภาษี : </label>
-                        <label class="col-md-6 control-label" style="text-align: left;">{{ $deminimis }}</label>
-                       -->
+                            
                         <div class="clearfix"></div><br /> 
                         
                         <div class="col-md-6 pull-right visible-xs"><a href="http://fastship.co/helps/prohibited-items/" target="_blank"><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item') !!}</a></div>
@@ -195,36 +176,6 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">{!! FT::translate('create_shipment.panel.heading2') !!}</div>
                     <div class="panel-body row-no-padding">
-                    
-                    	<?php if($default['country'] == "USA"): ?>
-                    	<div class="form-group col-md-12 text-right">
-                            <button type="button" class="btn btn-xs btn-default" onclick="openFBA();">
-                            	 <img src="{{ url('images/FBA.jpg') }}" />
-                            </button>
-                        </div>
-                        
-                        <div id="fba" class="text-center" style="display: none;">
-                			
-                			<h4>{!! FT::translate('create_shipment.fba.intro') !!}</h4>
-						
-							<div class="col-md-6 col-md-offset-2"><input type="text" id="fba_input" class="form-control text-center" placeholder="{!! FT::translate('placeholder.fbacode') !!}" /></div>
-							<div class="col-md-2 text-left"><button type="button" class="btn btn-info" onclick="getFBAAddress();">{!! FT::translate('create_shipment.fba.button') !!}</button></div>
-							<div class="clearfix"></div><br />
-							
-    						<div id="fba_detail" class="col-md-10 col-md-offset-1 text-center well" style="display:none;">
-    							
-    						</div>
-    						<input type="hidden" id="tmp_code" />
-    						<input type="hidden" id="tmp_address" />
-    						<input type="hidden" id="tmp_city" />
-    						<input type="hidden" id="tmp_state" />
-    						<input type="hidden" id="tmp_postcode" />
-    						
-                        	<div class="clearfix"></div>
-                    	
-                    		<hr />
-                		</div>
-                		<?php endif; ?>
 
                         <div class="form-group col-md-6">
                             <input name="firstname" type="text" placeholder="Firstname" class="form-control required input-count" pattern="<?php echo $validateEnglish; ?>" oninvalid="this.setCustomValidity('{!! FT::translate('error.english_only') !!}')" oninput="setCustomValidity('')" maxlength="80" value="<?php echo $default['receiver']['firstname']; ?>" />
@@ -262,14 +213,15 @@
                             <div class="gray tiny text-right col-md-2 no-padding"><span id="address2-count">0</span>/80</div>
                         </div>
                         <div class="form-group col-md-6">
-                            <input name="city" type="text" placeholder="City" class="form-control required input-count" pattern="<?php echo $validateEnglish; ?>" oninvalid="this.setCustomValidity('{!! FT::translate('error.english_only') !!}')" oninput="setCustomValidity('')" maxlength="50" value="<?php echo $default['receiver']['city']; ?>" />
-                            <div class="red tiny text-left col-md-10 no-padding"><span id="city-error" class="error-msg"></span></div> 
-                            <div class="gray tiny text-right col-md-2 no-padding"><span id="city-count">0</span>/50</div>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <input name="state" type="text" placeholder="State" class="form-control required input-count" pattern="<?php echo $validateEnglish; ?>" oninvalid="this.setCustomValidity('{!! FT::translate('error.english_only') !!}')" oninput="setCustomValidity('')" maxlength="50" value="<?php echo $default['receiver']['state']; ?>" />
+                            <input id="rec_state" name="state" type="text" placeholder="State" class="form-control required input-count" pattern="<?php echo $validateEnglish; ?>" oninvalid="this.setCustomValidity('{!! FT::translate('error.english_only') !!}')" oninput="setCustomValidity('')" maxlength="50" value="<?php echo $default['receiver']['state']; ?>" />
+                        	<input id="rec_state_code" name="state_code" type="hidden" />
                         	<div class="red tiny text-left col-md-10 no-padding"><span id="state-error" class="error-msg"></span></div> 
                             <div class="gray tiny text-right col-md-2 no-padding"><span id="state-count">0</span>/50</div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input id="rec_city" name="city" type="text" placeholder="City" class="form-control required input-count" pattern="<?php echo $validateEnglish; ?>" oninvalid="this.setCustomValidity('{!! FT::translate('error.english_only') !!}')" oninput="setCustomValidity('')" maxlength="50" value="<?php echo $default['receiver']['city']; ?>" />
+                            <div class="red tiny text-left col-md-10 no-padding"><span id="city-error" class="error-msg"></span></div> 
+                            <div class="gray tiny text-right col-md-2 no-padding"><span id="city-count">0</span>/50</div>
                         </div>
                         <div class="form-group col-md-6">
                             <input name="postcode" type="text" placeholder="Postcode" class="form-control required input-count" maxlength="10" value="<?php echo $default['receiver']['postcode']; ?>" />
@@ -299,54 +251,121 @@
     </form>
 
 </div>
-<div class="modal fade" id="fba1" tabindex="-1" role="dialog" aria-labelledby="ModalFBA_Label" aria-hidden="true">
-        	<div class="modal-dialog">
-            	<div class="modal-content">
-                	
-                	
-            	</div>
-        	</div>
-        </div>
 <script type="text/javascript">
-    function checkZero(valueElement){
-        if((valueElement.value) <= 0){valueElement.focus();}
-    }
-    function calculateInsurance(value){
-        if((value) <= 0){ alert('กรุณากรอกตัวเลขค่ามากกว่า 0'); value='';}
-        var total = 0;
-        var insure = 0;
+
+    $(document).ready(function() {
         
-        $(".declare-value").each(function(){
-            if($(this).val() != ""){
-                total+=parseInt($(this).val());
+    	autocompleteState();
+    	//autocompleteCity();
+
+    	$(window).keydown(function(event){
+		    if(event.keyCode == 13) {
+		      event.preventDefault();
+		      return false;
+		    }
+		});
+		
+    });
+    
+    $('#rec_state').on('change',function(){
+    	$('#rec_city').val("");
+    	autocompleteCity();
+    });
+    
+    function autocompleteState(){
+    
+    	var _country = "{{ $default['country'] }}";
+
+    	$('#rec_state').autocomplete({
+            minLength: 0,
+            source: function( request, response ) {
+              $.ajax({
+                url: "{{ url('/address/states') }}",
+                type: "POST",
+                dataType: "json",
+                data: {
+                  term : request.term,
+                  country_id: _country,
+                  _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+
+    				var array = $.map(data['states'], function (item) { 
+                        return {
+                          label: item['stateName'],
+                          value: item['stateName'],
+                          data : item
+                        }
+                    });
+                  	response(array);
+                  	
+                }
+              });
+            },
+            select: function( event, ui ) {
+                
+               	var data = ui.item.data;   
+
+               	if(data.stateCode === 0){
+               		$(this).val("");
+               	}else{
+               		$(this).val(data.stateName);
+               		$("#rec_state_code").val(data.stateCode);
+               	}
+        		
+        		//$("#state_desc").text("state code: " + data.code);
+        		//$("#admin_state_hidden").val(data.code);
             }
-        });
-        insure = total * 0.022;
-        insure = Math.max(500,insure).toFixed(2);
-        
-        $('#insurance_yes').val(insure);
-        $('#value-insurance').text(insure);
+          });
     }
+    function autocompleteCity(){
 
-    function hidedimension(){
-        $("#dimension").hide();
-    }
+    	var _country = "{{ $default['country'] }}";
+    	var _state = $("#rec_state_code").val();
+    	
+    	$('#rec_city').autocomplete({
+            minLength: 0,
+            source: function( request, response ) {
+              $.ajax({
+                url: "{{ url('/address/cities') }}",
+                type: "POST",
+                dataType: "json",
+                data: {
+                  term : request.term,
+                  country_id: _country,
+                  state_id: _state,
+                  _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
 
-    function showdimension(){
-        $("#dimension").show();
+    				var array = $.map(data['cities'], function (item) {
+                        return {
+                          label: item['cityName'],
+                          value: item['cityName'],
+                          data : item
+                        }
+                    });
+
+                  	response(array);
+                }
+              });
+            },
+            select: function( event, ui ) {
+               	var data = ui.item.data;   
+               	console.log(data.cityId);
+               	if(data.cityId === 0){
+               		$(this).val("");
+               	}else{
+               		$(this).val(data.cityName);
+               	}
+            }
+    	});
     }
 
     function add(){
         var table_size = $("#product_table" ).children().length;
         var row = "<tr id='row"+table_size+"'>"+
                         "<td>"+
-                            // "<select name='category["+table_size+"]' class='category form-control category-not-other' onchange='checkOtherType(this.value," + table_size + ");'>"+
-                            // "<option value='' >เลือกประเภท</option>"+
-                            // <?php //foreach ($declareType as $deId=>$cate): ?>
-                            // "<option value='<?php //echo $deId; ?>' ><?php //echo $cate; ?></option>"+
-                            // <?php //endforeach; ?>
-                            // "</select>"+
-                        	// "<input type='text' name='other["+table_size+"]' class='form-control other pull-right' style='display: none;' placeholder='โปรดระบุ' />" +
                             "<input id='category-"+table_size+"' type='text' name='category["+table_size+"]' class='category form-control required' required />"+                                
                         "</td>"+
                         "<td><input type='number' min='1' name='amount["+table_size+"]' class='form-control required declare-qty' required /></td>"+
@@ -354,84 +373,10 @@
                         "<td><span class='glyphicon glyphicon-minus-sign text-danger' onclick='rmv("+table_size+")'></span></td>"+
                     "</tr>";
         $( "#product_table" ).append(row);
-        //$("#category-"+table_size ).attr("pattern","<?php echo $validateEnglish; ?>");
     }
     function rmv(id){
         $( "#row"+id ).remove();
-        calculateInsurance();
     }
-    
-	function checkOtherType(type,key){
-
-		if(type != "OTHERS") {
-			$("#row"+key+" .category").removeClass("category-other");
-			$("#row"+key+" .category").addClass("category-not-other");
-            $("#row"+key+" .other").attr("required",false);
-			$("#row"+key+" .other").hide();
-		}else{
-			$("#row"+key+" .category").addClass("category-other");
-			$("#row"+key+" .category").removeClass("category-not-other");
-            $("#row"+key+" .other").attr("required",true);
-			$("#row"+key+" .other").show();
-		}
-	}
-	<?php if($default['country'] == "USA"): ?>
-	function openFBA(){
-		$('#fba').fadeIn(500);
-		$('#fba_input').focus();
-	}
-	function getFBAAddress(){
-
-		var _code = $("#fba_input").val();
-		$.post("{{url ('shipment/get_fba_address')}}",
-		{
-			_token: $("[name=_token]").val(),
-			code: _code,
-		},function(data){
-
-			console.log(data);
-
-    		content = "";
-    		content += "<h3>" + data.Code + " <img src='{{ url('images/FBA.jpg') }}' style='vertical-align:top;' /></h3>";
-    		content += "<h4>" + data.Address + "</h4>";
-    		content += "<h4>" + data.City + " " + data.State + "</h4>";
-    		content += "<div class='clearfix'></div><br /><input type='button' class='btn btn-success ' value='เลือกที่อยู่นี้' onclick='selectFBAAddress();' />";
-
-    		$("#tmp_code").val(data.Code);
-    		$("#tmp_address").val(data.Address);
-    		$("#tmp_city").val(data.City);
-    		$("#tmp_state").val(data.State);
-    		$("#tmp_postcode").val(data.Postcode);
-    		
-    		$("#fba_detail").show();
-            $("#fba_detail").html(content);
-
-		},"json");
-	}
-	function selectFBAAddress(){
-
-		$("#shipment_form input[name=company]").val("Amazon Fulfillment Center [" + $("#tmp_code").val()+"]");
-		$("#shipment_form input[name=address1]").val( $("#tmp_address").val() );
-		$("#shipment_form input[name=city]").val( $("#tmp_city").val() );
-		$("#shipment_form input[name=state]").val( $("#tmp_state").val() );
-		$("#shipment_form input[name=postcode]").val( $("#tmp_postcode").val() );
-
-		$("#fba_input").val("");
-		$("#fba_detail").html("");
-		$("#fba_detail").hide();
-		$("#fba").slideUp(500);
-
-	}
-	<?php endif; ?>
-	
-	$(document).ready(function() {
-		$(window).keydown(function(event){
-		    if(event.keyCode == 13) {
-		      event.preventDefault();
-		      return false;
-		    }
-		  });
-	});
 
 	//validate
 	var validateEnglish = new RegExp(/<?php echo $validateEnglish; ?>/);
@@ -613,5 +558,4 @@
     	
 	});
 </script>
- 
 @endsection
