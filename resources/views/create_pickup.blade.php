@@ -164,21 +164,7 @@
                                 <input onchange="hideAddress();" class="selector" type="radio" name="agent" id="drop-thaipost" value="Drop_AtThaiPost"> 
                                 <?php endif; ?>
                                 
-                                <?php if(isset($rates['Drop_AtSkybox']) && false):?>
-                                <label for="drop-skybox">
-                                    <div class="col-4 col-xs-5"><img src="/images/skybox.png"></div>
-                                    <div class="col-8 col-xs-7 text-left">
-                                        <h3>SKYBOX</h3>
-                                        <p class="slogan col-md-6 no-padding">{!! FT::translate('create_pickup.text.free') !!}</p>
-                                        <div class="text-right col-md-6">
-                                            <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalSKB">
-                                            	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </label>
-                                <input onchange="hideAddress();" class="selector" type="radio" name="agent" id="drop-skybox" value="Drop_AtSkybox">
-                                <?php endif; ?>
+
 
                             </fieldset>
                         </div>
@@ -187,32 +173,26 @@
                             <div class="row">
                                 <label class="col-md-4 control-label">{!! FT::translate('label.pickup_date') !!}</label>
                                 <div class="col-md-6">
-                                    <div class='input-group pickup_date' id='pickupdate'>
-                                        <input type='text' class="form-control required" name="pickupdate"/>
-                                        <span class="input-group-addon">
-                                        <span class="fa fa-calendar"></span>
-                                        </span>
-                                    </div>
+
+                                    @foreach($availableExpectTime as $date=>$periods)
+                                    <label class="pick-date-{{ $date }}" for="pick-date-{{ $date }}" style="padding:5px;min-height: 30px;">
+                                		{{ date("M d (D)",strtotime($date)) }}
+                                    </label>
+                                    <input class="selector" type="radio" name="pickupdate" id="pick-date-{{ $date }}" value="{{ $date }}" onchange="getPickupTime(this.value)"/>
+                            		@endforeach
+                                    
                                 </div>
                             </div>
                             <div class="row">
                                 <label class="col-md-4 control-label">{!! FT::translate('label.pickup_time') !!}</label>
                                 <div class="col-md-6">
-                                    <select name="pickuptime" class="form-control required">
-                                        <option value="">{!! FT::translate('dropdown.default.pickuptime') !!}</option>
-                                        <option value="09:00">9.01-10.00 น.</option>
-                                        <option value="10:00">10.01-11.00 น.</option>
-                                        <option value="11:00">11.01-12.00 น.</option>
-                                        <option value="12:00">12.01-13.00 น.</option>
-                                        <option value="13:00">13.01-14.00 น. พัสดุจะส่งในวันถัดไป</option>
-                                        <option value="14:00">14.01-15.00 น. พัสดุจะส่งในวันถัดไป</option>
-                                        <option value="15:00">15.01-16.00 น. พัสดุจะส่งในวันถัดไป</option>
-                                        <option value="16:00">16.01-17.00 น. พัสดุจะส่งในวันถัดไป</option>
-                                    </select>
+
+                            		<div id="result-panel"><span class="text-light small" style="line-height: 40px;">เลือกวันที่นัดรับก่อน</span></div>
                                     
                                 </div>
                             </div>
                             <br />
+
                       </div>
                       <div id="address_section" class="row">
 
@@ -474,6 +454,49 @@
     <script type="text/javascript" src="./js/jquery.Thailand.min.js"></script>
 	<script type="text/javascript">
 
+    	function getPickupTime(_date){
+    
+    		$.post("{{url ('pickup/get_time')}}",
+    		{
+    			_token: $("[name=_token]").val(),
+    			pick_date: _date,
+    			postcode: '{{ $customer_data["postcode"] }}'
+    		},function(data){
+    
+        		console.log(data);
+    
+        		var content = "";
+        		$("#result-panel").empty();
+        		
+        		if(data !== false){
+    	            var dataArray = $.map(data, function(value, index) {
+    	                return [value];
+    	            });
+    	            var keyArray = $.map(data, function(value, index) {
+    	                return [index];
+    	            });   
+        		}
+    
+                if(data !== false && dataArray.length > 0){
+                    for (key in dataArray) {
+                    	content += '<label for="pick-time-' + dataArray[key] + '" style="padding:5px;min-height: 30px;">';
+                       	content += dataArray[key] + '.00 - ' + (parseInt(dataArray[key])+1) + '.00 น.'; 
+                        content += '</label>';
+                       	content += '<input class="selector" type="radio" name="pickuptime" id="pick-time-' + dataArray[key] + '" value="' + dataArray[key] + ':00" >';
+                    }
+                }else{
+                    content = "";
+                }
+                
+                $("#result-panel").append(content);
+
+                $( ".selector" ).checkboxradio({
+                    classes: { "ui-checkboxradio": "highlight" }
+                });
+
+        	},"json");
+        }
+
     	$.Thailand({
     		$district: $('#pickup_form [name="address2"]'),
     		$amphoe: $('#pickup_form [name="city"]'),
@@ -664,6 +687,9 @@
         }
 
         $(document).ready( function() {
+
+            $(".pick-date-{{ array_values($availableExpectTime)[0] }}").click();
+            
             $( ".selector" ).checkboxradio({
                 classes: {
                     "ui-checkboxradio": "highlight"
@@ -671,8 +697,8 @@
             });
 
             showDiscount();
-            
             showDelivery();
+            
             $("#submit").attr("disabled",true);
 
             <?php if(isset($rates['Drop_AtThaiPost'])):?>

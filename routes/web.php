@@ -168,6 +168,8 @@ Route::group(['middleware' => 'loginsession'], function () {
 	Route::get('pickup_invoice_print/{id?}', 'Pickup\PickupController@preparePickupInvoicePrint');
 	Route::get('thaipost/label/{id?}', 'Pickup\PickupController@getThaiPostLabel');
 	Route::post('pickup/get_coupon', 'Pickup\PickupController@getCoupon');
+	Route::post('pickup/get_time', 'Pickup\PickupController@getPickupTime');
+	
 
 	//Feature Prepaid System
 	Route::get('pickup_detail_payment/{id?}', 'Pickup\PickupController@preparePickupDetailPayment');

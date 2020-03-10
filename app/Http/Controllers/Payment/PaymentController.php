@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Lib\Fastship\FS_Pickup;
 use App\Lib\Fastship\FS_Shipment;
-use App\Lib\Fastship\FS_Payment;
 use App\Lib\Fastship\Fastship;
 use App\Lib\Encryption;
 

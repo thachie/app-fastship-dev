@@ -184,6 +184,64 @@ class PickupController extends Controller
         }else{
             $rates = array();
         }
+        
+        //availableExpectTime
+        $availableExpectTime = array();
+        $postcode = $customer['Postcode'];
+        
+        $sundaySkip = 0;
+        //check today is Sunday ?
+        if(date("D") == "Sun"){
+            $firstD = date("Y-m-d",strtotime("+1days"));
+            $sundaySkip = 1;
+            $startH = 7;
+        }else{
+            $firstD = date("Y-m-d");
+            $startH = date("H") + 2;
+            if(date("i") > 30) $startH = $startH+1;
+        }
+        
+        $next2D = date("Y-m-d",strtotime("+" . (2+$sundaySkip) . "days"));
+        if(date("D",strtotime("+" . (1+$sundaySkip) . "days")) == "Sun"){
+            $nextD = date("Y-m-d",strtotime("+2days"));
+            $sundaySkip = 1;
+        }else{
+            $nextD = date("Y-m-d",strtotime("+" . (1+$sundaySkip) . "days"));
+        }
+        
+        if(date("D",strtotime("+" . (2+$sundaySkip) . "days")) == "Sun"){
+            $next2D = date("Y-m-d",strtotime("+3days"));
+            $sundaySkip = 1;
+        }else{
+            $next2D = date("Y-m-d",strtotime("+" . (2+$sundaySkip) . "days"));
+        }
+
+        if(substr($postcode,0,2) == "10" || substr($postcode,0,2) == "11" || substr($postcode,0,2) == "12"){
+            
+            if($startH < 17){
+                for($i = max(9,$startH);$i < 17;$i++){
+                    $availableExpectTime[$firstD][] = $i;
+                }
+                for($i = 9;$i < 17;$i++){
+                    $availableExpectTime[$nextD][] = $i;
+                }
+            }else if(date("H") < 17){
+                for($i = 9;$i < 17;$i++){
+                    $availableExpectTime[$nextD][] = $i;
+                }
+            }else{
+                for($i = 10;$i < 17;$i++){
+                    $availableExpectTime[$nextD][] = $i;
+                }
+            }
+            for($i = 9;$i < 17;$i++){
+                $availableExpectTime[$next2D][] = $i;
+            }
+        }else{
+            $availableExpectTime[$nextD][] = 13;
+            $availableExpectTime[$next2D][] = 13;
+        }
+        
         $data = array(
         	'status' => $status,
             'sources' => $sources,
@@ -194,6 +252,7 @@ class PickupController extends Controller
         	'creditCards' => $creditCardsObj,
         	'discount' => $discount,
             'rates' => $rates,
+            'availableExpectTime' => $availableExpectTime,
         );
         return view('create_pickup',$data);
     }
@@ -754,6 +813,61 @@ class PickupController extends Controller
         echo $discount;
         
         exit();
+        
+    }
+    
+    public function getPickupTime(Request $request)
+    {
+        //check customer login
+        if (session('customer.id') != null){
+            $customerId = session('customer.id');
+        }else{
+            return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+        }
+        
+        //availableExpectTime
+        $availableExpectTime = array();
+        $postcode = $request->get("postcode");
+        $pickDate = $request->get("pick_date");
+        
+        if(substr($postcode,0,2) == "10" || substr($postcode,0,2) == "11" || substr($postcode,0,2) == "12"){
+            if($pickDate == date("Y-m-d")){
+                $startH = date("H") + 2;
+                if($startH < 17){
+                    for($i = max(9,$startH);$i < 17;$i++){
+                        $availableExpectTime[] = $i;
+                    }
+                }else if(date("H") < 17){
+                    for($i = 9;$i < 17;$i++){
+                        $availableExpectTime[$nextD][] = $i;
+                    }
+                }else{
+                    for($i = 10;$i < 17;$i++){
+                        $availableExpectTime[$nextD][] = $i;
+                    }
+                }
+            }else if($pickDate == date("Y-m-d",strtotime("+1day"))){
+                    if(date("H") < 17){
+                        for($i = 9;$i < 17;$i++){
+                            $availableExpectTime[] = $i;
+                        }
+                    }else{
+                        for($i = 10;$i < 17;$i++){
+                            $availableExpectTime[] = $i;
+                        }
+                    }
+            }else{
+                for($i = 9;$i < 17;$i++){
+                    $availableExpectTime[] = $i;
+                }
+            }
+        }else{
+            $availableExpectTime[] = 13;
+        }
+        
+        echo json_encode($availableExpectTime);
+        
+        //exit();
         
     }
     
