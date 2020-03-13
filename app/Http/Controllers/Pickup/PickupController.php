@@ -216,31 +216,16 @@ class PickupController extends Controller
             $next2D = date("Y-m-d",strtotime("+" . (2+$sundaySkip) . "days"));
         }
 
+        //bangkok
         if(substr($postcode,0,2) == "10" || substr($postcode,0,2) == "11" || substr($postcode,0,2) == "12"){
             
             if($startH < 17){
-                for($i = max(9,$startH);$i < 17;$i++){
-                    $availableExpectTime[$firstD][] = $i;
-                }
-                for($i = 9;$i < 17;$i++){
-                    $availableExpectTime[$nextD][] = $i;
-                }
-            }else if(date("H") < 17){
-                for($i = 9;$i < 17;$i++){
-                    $availableExpectTime[$nextD][] = $i;
-                }
-            }else{
-                for($i = 10;$i < 17;$i++){
-                    $availableExpectTime[$nextD][] = $i;
-                }
+                $availableExpectTime[] = $firstD;
             }
-            for($i = 9;$i < 17;$i++){
-                $availableExpectTime[$next2D][] = $i;
-            }
-        }else{
-            $availableExpectTime[$nextD][] = 13;
-            $availableExpectTime[$next2D][] = 13;
+ 
         }
+        $availableExpectTime[] = $nextD;
+        $availableExpectTime[] = $next2D;
         
         $data = array(
         	'status' => $status,
@@ -835,34 +820,34 @@ class PickupController extends Controller
                 $startH = date("H") + 2;
                 if($startH < 17){
                     for($i = max(9,$startH);$i < 17;$i++){
-                        $availableExpectTime[] = $i;
+                        $availableExpectTime[$i] = $i . ":00 - " . ($i+1) . ":00 น.";
                     }
                 }else if(date("H") < 17){
                     for($i = 9;$i < 17;$i++){
-                        $availableExpectTime[$nextD][] = $i;
+                        $availableExpectTime[$nextD][$i] = $i . ":00 - " . ($i+1) . ":00 น.";
                     }
                 }else{
                     for($i = 10;$i < 17;$i++){
-                        $availableExpectTime[$nextD][] = $i;
+                        $availableExpectTime[$nextD][$i] = $i . ":00 - " . ($i+1) . ":00 น.";
                     }
                 }
             }else if($pickDate == date("Y-m-d",strtotime("+1day"))){
                     if(date("H") < 17){
                         for($i = 9;$i < 17;$i++){
-                            $availableExpectTime[] = $i;
+                            $availableExpectTime[$i] = $i . ":00 - " . ($i+1) . ":00 น.";
                         }
                     }else{
                         for($i = 10;$i < 17;$i++){
-                            $availableExpectTime[] = $i;
+                            $availableExpectTime[$i] = $i . ":00 - " . ($i+1) . ":00 น.";
                         }
                     }
             }else{
                 for($i = 9;$i < 17;$i++){
-                    $availableExpectTime[] = $i;
+                    $availableExpectTime[$i] = $i . ":00 - " . ($i+1) . ":00 น.";
                 }
             }
         }else{
-            $availableExpectTime[] = 13;
+            $availableExpectTime[13] = "13:00 - 17:00 น.";
         }
         
         echo json_encode($availableExpectTime);

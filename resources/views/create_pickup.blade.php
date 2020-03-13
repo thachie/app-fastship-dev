@@ -174,7 +174,7 @@
                                 <label class="col-md-4 control-label">{!! FT::translate('label.pickup_date') !!}</label>
                                 <div class="col-md-6">
 
-                                    @foreach($availableExpectTime as $date=>$periods)
+                                    @foreach($availableExpectTime as $date)
                                     <label class="pick-date-{{ $date }}" for="pick-date-{{ $date }}" style="padding:5px;min-height: 30px;">
                                 		{{ date("M d (D)",strtotime($date)) }}
                                     </label>
@@ -479,10 +479,10 @@
     
                 if(data !== false && dataArray.length > 0){
                     for (key in dataArray) {
-                    	content += '<label for="pick-time-' + dataArray[key] + '" style="padding:5px;min-height: 30px;">';
-                       	content += dataArray[key] + '.00 - ' + (parseInt(dataArray[key])+1) + '.00 น.'; 
+                    	content += '<label for="pick-time-' + keyArray[key] + '" style="padding:5px;min-height: 30px;">';
+                       	content += dataArray[key]; 
                         content += '</label>';
-                       	content += '<input class="selector" type="radio" name="pickuptime" id="pick-time-' + dataArray[key] + '" value="' + dataArray[key] + ':00" >';
+                       	content += '<input class="selector" type="radio" name="pickuptime" id="pick-time-' + keyArray[key] + '" value="' + keyArray[key] + ':00" >';
                     }
                 }else{
                     content = "";

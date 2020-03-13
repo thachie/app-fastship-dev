@@ -76,7 +76,10 @@ class TaxDutyController extends Controller
         $query = strtoupper($request->get('term'));
         $category = trim($request->get('category'));
         
+        $query = str_replace("'","",$query);
+        
         if(strlen($query) < 3) return ;
+        
         
         if(preg_match('/^\d/', $query) === 1){
             
