@@ -1002,7 +1002,7 @@ class CustomerController extends Controller
 	    
 	}
 	
-	public function prepareRegisterWithCode($ref="")
+	public function prepareRegisterWithCode($refercode="")
 	{
 	    
 	    $provinces = DB::table('provinces')->select("name_in_thai as name_th","name_in_english as name_en")->orderBy('name_in_thai')->get();
@@ -1016,7 +1016,7 @@ class CustomerController extends Controller
 	    
 	    $data = array(
 	        'provinces' => $provinces,
-	        'ref' => $ref,
+	        'code' => $refercode,
 	        'marketplaceRefId' => $marketplaceRefId,
 	        'default' => array(
 	            "firstname" => $defaultFirstname,
@@ -1025,6 +1025,7 @@ class CustomerController extends Controller
 	            "telephone" => $defaultTelephone,
 	        ),
 	    );
+	    
 	    
 	    return view('register',$data);
 	}

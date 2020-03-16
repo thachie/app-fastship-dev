@@ -154,9 +154,9 @@
         			<div class="clearfix"></div>
         			<br />
         			
-					<span class="small" style="margin-left: 10px;">{!! FT::translate('login.registerlink') !!} <a href="/register_email">{!! FT::translate('button.register_email') !!}</a></span>
+					<span class="small" style="margin-left: 10px;">{!! FT::translate('login.registerlink') !!} <a href="/register_email/{{ session('login.ref') }}">{!! FT::translate('button.register_email') !!}</a></span>
 					
-					{{ session('login.ref') }}
+					
     			</div>
 			</div>
 	    </div>
