@@ -24,8 +24,8 @@
 		                data-payment-methods="qr"
 		                data-name="Fastship Co., Ltd."
                         data-order-id="{{ $kbankOrderId }}"
-		                data-ref-number="{{ $pickup_data['ID'] }}"
-		                data-description="{{ 'Pickup # ' . $pickup_data['ID'] . ' - Pickup by ' . $pickup_data['PickupType'] }}"
+		                data-ref-number="{{ $reference }}"
+		                data-description="{{ $pickup_data['ID'] }}"
 		                data-show-button="false" ></script>
 		                <input type="button" class="btn btn-success btn-lg btn-block" role="button" value="กดเพื่อชำระเงินผ่าน QR" onclick="KPayment.show()">
 		            </form>
@@ -167,7 +167,7 @@
     function cancelPickup(pick_id){
 
     	if(confirm("{!! FT::translate('confirm.delete_pickup') !!}")){
-    		$.post('{{url ('pickup/cancel')}}',
+    		$.post('{{url ("pickup/cancel")}}',
     	    {
     	    	_token: $("[name=_token]").val(),
     	        pickupId: pick_id
@@ -180,7 +180,7 @@
 
     @if(session('msg-type') && session('msg-type') == "success")
     fbq('track', 'Purchase', {
-    	value: 200,
+    	value: {{ $pickup_data['Amount'] }},
     	currency: 'THB',
     });
     @endif

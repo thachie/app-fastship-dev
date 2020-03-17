@@ -41,13 +41,16 @@ class PaymentController extends Controller
         }else{
             $amount = $pickup['Amount'];
         }
-        $description = "Pickup # " . $pickup['ID'] . " - Pickup by " . $pickup['PickupType'];
+        //$description = "Pickup # " . $pickup['ID'] . " - Pickup by " . $pickup['PickupType'];
+        $description = $pickup['ID'];
+        $reference = $pickupId . "_" . date("YmdH");
+        
         $jsonCreateOrderId = '{
             "amount": '.$amount.',
             "currency": "THB",
             "description": "'.$description.'",
             "source_type": "qr",
-            "reference_order": "'.$pickupId.'"
+            "reference_order": "'.$reference.'"
         }';
         $method = "POST";
         $url = "https://kpaymentgateway-services.kasikornbank.com/qr/v2/order";
@@ -64,6 +67,7 @@ class PaymentController extends Controller
             'pickupID' => $pickupId,
             'pickup_data' => $pickup,
             "kbankOrderId" => $order_id,
+            "reference" => $reference,
         );
         return view('pickup_detail_payment',$data);
         

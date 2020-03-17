@@ -16,6 +16,7 @@
                 data-payment-methods="qr"
                 data-name="Fastship Co., Ltd."
                 data-order-id="{{ $kbankOrderId }}"
+                data-ref-number="{{ $pickup['ID'] }}"
                 data-description="{{ 'Pickup # ' . $pickup['ID'] . ' - Pickup by ' . $pickup['PickupType'] }}"
                 data-show-button="false" ></script>
                 <input type="button" class="btn btn-success btn-lg" style="padding: 10px 100px;" role="button" value="Pay Now" onclick="KPayment.show()">

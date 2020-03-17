@@ -13,3 +13,9 @@
     <div class="clearfix"></div>
 </div>
 @endsection
+<script type="text/javascript">
+    fbq('track', 'Purchase', {
+    	value: {{ $pickup_data['Amount'] }},
+    	currency: 'THB',
+    });
+</script>

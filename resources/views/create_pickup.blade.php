@@ -102,14 +102,18 @@
                         	{!! FT::translate('label.destination') !!} : <?php echo $countries[$data['ReceiverDetail']['Country']];?>
                         </div>
                         <div class="clearfix"></div>
-                        <div class="col-xs-12 text-right small"> 
-                        	<a style="text-decoration: none; font-size: 10px; font-weight: 600;" href="javascript:cancelShipment(<?php echo $data['ID'];?>);"><i class="fa fa-trash"></i> {!! FT::translate('label.delete') !!}</a>
+
+                        <div class="col-xs-12">
+                        	<a href="javascript:cancelShipment(<?php echo $data['ID'];?>);"><i class="fa fa-trash"></i> {!! FT::translate('label.delete') !!}</a> | 
+                        	<a href="{{ url('/shipment/clone/?shipment_id='.$data['ID']) }}">{!! FT::translate('button.clone') !!}</a>
                         </div>
+
                     </div>
     	            <?php 
     	            endforeach;
     	            endif;
     	            ?>
+    	            <div class="clearfix"></div><br />
     	            <div class="col-md-12 text-center"><a href="{{ url('calculate_shipment_rate') }}">+ {!! FT::translate('button.add_shipment') !!}</a></div>
     	            </div>
             	</div>
@@ -809,7 +813,8 @@
                 }
 
                 $("#error_text").text("");
-                $("#submit").attr("readonly",true);
+                //$("#submit").attr("readonly",true);
+                $("#submit").attr("disabled",true);
 
             });
             

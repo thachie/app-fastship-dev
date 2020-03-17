@@ -285,6 +285,7 @@
                 dataType: "json",
                 data: {
                   term : request.term,
+                  agent : "{{ $default['agent'] }}",
                   country_id: _country,
                   _token: "{{ csrf_token() }}"
                 },
@@ -332,6 +333,7 @@
                 dataType: "json",
                 data: {
                   term : request.term,
+                  agent : "{{ $default['agent'] }}",
                   country_id: _country,
                   state_id: _state,
                   _token: "{{ csrf_token() }}"
@@ -393,26 +395,10 @@
 	$("input[name=note]").keyup(validateOptional);
 	$("input[name=orderref]").keyup(validateOptional);
 
-	function submitForm(){
-		var validate = true;
-		
-		$("#shipment_form .required").each(validateRequired);
-		$("#shipment_form input").each(validateOptional);
-		$("input[name=email]").each(validateEmailFormat);
-
-		$(".error-msg").each(function(){
-			if($(this).text() != ""){
-				validate = false;
-			}
-		});
-   
-		if(validate){
-			$("#shipment_form").submit();
-			$("#shipment_form [name=submit]").attr("disabled",true);
-		}
-	}
-
 	$("#shipment_form").submit( function() {
+
+		alert("A");
+		
 		var validate = true;
 		
 		$("#shipment_form .required").each(validateRequired);
@@ -426,7 +412,9 @@
 		});
 
 		if(!validate) return false;
-   
+
+		$("#shipment_form [name=submit]").attr("disabled",true);
+
 	});
 	
 	$('.input-count').keyup(inputCount);

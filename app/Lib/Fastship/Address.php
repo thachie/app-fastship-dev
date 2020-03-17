@@ -88,6 +88,26 @@ class FS_Address extends FS_ApiResource
      *
      * @return Fastship_Retrieve Get a States.
      */
+    public static function get_states_smart($country,$query="",$agent="",$apiToken = null)
+    {
+        $requestor = new FS_ApiRequestor($apiToken);
+        $url = "address_query/" . $country . "/state_smart/" . $query . "/" . $agent;
+        
+        list($response, $rcode) = $requestor->request('get', $url);
+        
+        if($rcode != 200){
+            return false;
+        }else{
+            return $response;
+        }
+    }
+    
+    /**
+     * @param string $id
+     * @param string|null $apiToken
+     *
+     * @return Fastship_Retrieve Get a States.
+     */
     public static function get_cities($country,$state,$apiToken = null)
     {
     	$requestor = new FS_ApiRequestor($apiToken);
@@ -121,6 +141,27 @@ class FS_Address extends FS_ApiResource
             return $response;
         }
     }
+    
+    /**
+     * @param string $id
+     * @param string|null $apiToken
+     *
+     * @return Fastship_Retrieve Get a States.
+     */
+    public static function get_cities_smart($country,$state,$query="",$agent="",$apiToken = null)
+    {
+        $requestor = new FS_ApiRequestor($apiToken);
+        $url = "address_query/" . $country . "/" . $state . "/city_smart/" . $query . "/" . $agent;
+        
+        list($response, $rcode) = $requestor->request('get', $url);
+        
+        if($rcode != 200){
+            return false;
+        }else{
+            return $response;
+        }
+    }
+    
     /**
      * @param string $id
      * @param string|null $apiToken
