@@ -162,7 +162,6 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                             <?php 
                             if(sizeof($pickup_data['ShipmentDetail']['ShipmentIds']) > 0): 
                             foreach($pickup_data['ShipmentDetail']['ShipmentIds'] as $data):
-                                
                             ?>
                             <tr>
                             	<td>
@@ -177,7 +176,7 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                             	<td class="hidden-xs"><?php echo $countries[$data['ReceiverDetail']['Country']];?></td>
                             	<td><?php echo isset($shipmentStatus[$data['Status']])?$shipmentStatus[$data['Status']]:$data['Status']; ?></td>
                             	<?php 
-                            	if($isSeperateLabel && isset($data) && isset($labels[$data['ID']]) && isset($labels[$data['ID']]['barcode'])): 
+                            	if($pickup_data['Status'] != 11 && $isSeperateLabel && isset($data) && isset($labels[$data['ID']]) && isset($labels[$data['ID']]['barcode'])): 
                             	   $barcodeURL = "https://app.fastship.co/thaipost/label/" . $labels[$data['ID']]['barcode'];
                             	?>
                             	<td class="small" >

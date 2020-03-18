@@ -245,6 +245,8 @@ Route::post('address/states','Shipment\AddressController@getStates');
 Route::post('address/cities','Shipment\AddressController@getCities');
 Route::post('address/postcodes','Shipment\AddressController@getPostcodes');
 
+Route::post('shipment/declarations','Shipment\ShipmentController@getDeclarations');
+
 //kbank payment
 Route::post('kbank/payment_completed','Payment\PaymentController@paymentCompleted');
 Route::post('kbank/payment_status/card','Payment\PaymentController@paymentStatusCard');

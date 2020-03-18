@@ -33,7 +33,6 @@ class ShipmentController extends Controller
 
     }
 
-
     //Prepare for check rate page
     public function prepareCalculateShipmentRate()
     {
@@ -2844,6 +2843,22 @@ class ShipmentController extends Controller
         
         return redirect('/calculate_shipment_rate')->with('msg','ระบบทำการคัดลอกข้อมูลพัสดุต้นแบบไว้แล้ว เริ่มสร้างพัสดุใหม่ได้เลย')->with('msg-type','success');
 
+    }
+    
+    public function getDeclarations(Request $request)
+    {
+        
+        if (session('customer.id') != null){
+            $customerId = session('customer.id');
+        }else{
+            return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+        }
+        
+        Fastship::getToken($customerId);
+        
+        $declares = FS_Shipment::get_declarations($request->get("term"));
+        
+        return response()->json(['declares'=>$declares]);
     }
 
     private function checkEnglishOnly($str){

@@ -518,8 +518,10 @@ class PickupController extends Controller
         }
         
         if(!empty($pickupId)){
+            
             //get api token
             Fastship::getToken($customerId);
+            
             //get pickup by pickup_id
             $response = FS_Pickup::get($pickupId);
             if ($response['Status'] != "Unpaid" && $response['PaymentMethod'] != "QR") {
@@ -541,29 +543,20 @@ class PickupController extends Controller
                     $shipmentIds = $response['ShipmentDetail']['ShipmentIds'];
                     
                     foreach ($shipmentIds as $key => $shipid) {
-                        //$shipment_data[$key] = FS_Shipment::get($shipid);
                         $pickupData['ShipmentDetail']['ShipmentIds'][$key] = FS_Shipment::get($shipid);
-                        //$arr[$key]['Weight'] = $shipment_data[$key]['ShipmentDetail']['Weight'];
-                        //$arr[$key]['ShippingRate'] = $shipment_data[$key]['ShipmentDetail']['ShippingRate'];
                     }
                 }
-                //QR
-                //Fastship::getToken($customerId);
-                //$pickup = FS_Pickup::get($pickupId);
-                //alert($pickup);
-                /*$shipmentIds = $pickup['ShipmentDetail']['ShipmentIds'];
-                foreach ($shipmentIds as $key => $shipid) {
-                    $pickup['ShipmentDetail']['ShipmentIds'][$key] = FS_Shipment::get($shipid);
-                }*/
+
                 //prepare to Kbank
                 $amount = $pickupData['Amount'];
-                $description = "Pickup # " . $pickupData['ID'] . " - Pickup by " . $pickupData['PickupType'];
+                $description = $pickupData['ID'];
+                $reference = $pickupId . "_" . date("YmdH");
                 $jsonCreateOrderId = '{
                     "amount": '.$amount.',
                     "currency": "THB",
                     "description": "'.$description.'",
                     "source_type": "qr",
-                    "reference_order": "'.$pickupId.'"
+                    "reference_order": "'.$reference.'"
                 }';
                 $method = "POST";
                 $url = "https://kpaymentgateway-services.kasikornbank.com/qr/v2/order";
@@ -577,10 +570,12 @@ class PickupController extends Controller
                     'pickup_data' => $pickupData, 
                     'status' => $status, 
                     'labels' => $labels,
-                    //"pickup" => $pickup,
                     "kbankOrderId" => $order_id,
+                    "reference" => $reference,
                 );
+                
                 return view('pickup_detail_payment',$data);
+                
             }
         }else{
             return 'Pickup id is null.';

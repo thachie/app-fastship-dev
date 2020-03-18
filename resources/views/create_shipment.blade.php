@@ -257,6 +257,8 @@
         
     	autocompleteState();
     	//autocompleteCity();
+    	
+    	autocompleteDeclare($("#row0 input.category"));
 
     	$(window).keydown(function(event){
 		    if(event.keyCode == 13) {
@@ -364,6 +366,42 @@
     	});
     }
 
+    function autocompleteDeclare(elem){
+
+    	
+    	$(elem).autocomplete({
+            minLength: "3",
+            source: function( request, response ) {
+              $.ajax({
+            	url: "{{ url('/shipment/declarations') }}",
+                type: "POST",
+                dataType: "json",
+                data: {
+                  term : request.term,
+                  _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+
+    				var array = $.map(data['declares'], function (item) { 
+                        return {
+                          label: item['desc'],
+                          value: item['code'],
+                          data : item
+                        }
+                    });
+                    
+                    console.log(array);
+                  	response(array);
+                }
+              });
+            },
+            select: function( event, ui ) {
+               	var data = ui.item.data;   
+        		$(this).val(data.code);
+            }
+        });
+    }
+
     function add(){
         var table_size = $("#product_table" ).children().length;
         var row = "<tr id='row"+table_size+"'>"+
@@ -397,8 +435,6 @@
 
 	$("#shipment_form").submit( function() {
 
-		alert("A");
-		
 		var validate = true;
 		
 		$("#shipment_form .required").each(validateRequired);

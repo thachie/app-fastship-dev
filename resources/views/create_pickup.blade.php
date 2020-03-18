@@ -383,6 +383,7 @@
                                 <div class="col-md-4 col-xs-2">{!! FT::translate('unit.baht') !!}</div>
                             </div>
                             @if($customer_data['invoice'] == 1)
+                            	<div class="row text-center">ชำระโดยการวางบิล</div>
                                 <input type="hidden" name="payment_method" id="invoice" value="Invoice" />
                             @else
                                 <div class="radio text-center">
@@ -392,18 +393,18 @@
                                     <div class="col-md-7 col-xs-12">
                                         <!--<label><input type="radio" name="payment_method" id="Bank_Transfer" value="Bank_Transfer" checked>{!! FT::translate('radio.payment.bank_transfer') !!}</label>-->
                                         <div class="text-left">
-                                            <label><input type="radio" name="payment_method" id="QR" value="QR" required >QR Payment</label>
+                                            <label><input type="radio" name="payment_method" id="QR" value="QR" required checked>QR Payment</label>
                                         </div>
                                         @if(credit)
                                         @foreach($creditCards as $card)
                                         <div class="text-left">
-                                            <label><input type="radio" name="payment_method" value="Credit_Card_{{ $card->OMISE_LASTDIGITS }}" required >{!! FT::translate('radio.payment.creditcard') !!} - XXXX-{{ $card->OMISE_LASTDIGITS }}</label>
+                                            <label><input type="radio" name="payment_method" value="Credit_Card_{{ $card->OMISE_LASTDIGITS }}" required checked>{!! FT::translate('radio.payment.creditcard') !!} - XXXX-{{ $card->OMISE_LASTDIGITS }}</label>
                                         </div>
                                         @endforeach
                                         @endif
-                                        <div class="text-left">
-                                            <label><input type="radio" name="payment_method" value="Credit_Card_New" required >{!! FT::translate('radio.payment.creditcard') !!} - เพิ่มบัตรใหม่</label>
-                                        </div>
+<!--                                         <div class="text-left"> -->
+<!--                                             <label><input type="radio" name="payment_method" value="Credit_Card_New" required >{!! FT::translate('radio.payment.creditcard') !!} - เพิ่มบัตรใหม่</label> -->
+<!--                                         </div> -->
                                     </div>
                                 </div>
                             @endif
@@ -492,9 +493,8 @@
                     content = "";
                 }
                 
-                $("#result-panel").append(content);
-
-                $( ".selector" ).checkboxradio({
+                $("#result-panel").append(content).delay(5);
+            	$( ".selector" ).checkboxradio({
                     classes: { "ui-checkboxradio": "highlight" }
                 });
 
@@ -563,23 +563,24 @@
         		$("#address_section").show();
         	}
         }
-        function submitForm(){
+        
+//         function submitForm(){
 
-        	var valid = true;
-            if($("#pickup_form input[name='firstname']").val() == ""){
-            	$("#pickup_form input[name='firstname']").css("border","1px solid red");
-            	valid = false;
-            }
+//         	var valid = true;
+//             if($("#pickup_form input[name='firstname']").val() == ""){
+//             	$("#pickup_form input[name='firstname']").css("border","1px solid red");
+//             	valid = false;
+//             }
 
-            console.log($("#pickup_form").submit());
-            if(valid){
-                $("#pickup_form").submit();
-                $("#submit").addClass("disabled");
-                $("#submit").attr("readonly",true);
-            }
+//             console.log($("#pickup_form").submit());
+//             if(valid){
+//                 $("#pickup_form").submit();
+//                 $("#submit").addClass("disabled");
+//                 $("#submit").attr("readonly",true);
+//             }
 
             
-        }
+//         }
 
         function acceptTerm(){
     		if($("#condition").is(":checked")){
@@ -733,7 +734,14 @@
             	var address_select = $("#pickup_form input[name='address_select']:checked").val();
             	var type = $("#pickup_form input[name='type']:checked").val();
             	var agent = $("#pickup_form input[name='agent']:checked").val();
+            	var payment = $("#pickup_form input[name='payment_method']:checked").val();
+            	var amount = $("#totalpickup").text();
 
+            	if(payment.startsWith("Credit_Card")){
+					if(!confirm("ยืนยันการตัดบัตรเครดิต ยอดชำระ " + amount + " บาท")){
+						return false;
+					}
+            	}
             	if(type == "pickup" || agent == "Drop_AtThaiPost"){
 
             		if(type == "pickup"){

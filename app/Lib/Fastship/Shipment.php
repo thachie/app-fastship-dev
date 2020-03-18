@@ -190,4 +190,25 @@ class FS_Shipment extends FS_ApiResource
     		return $response;
     	}
     }
+    
+    /**
+     * @param array|null $params
+     * @param string|null $apiToken
+     *
+     * @return Fastship_Get_Shipping_Rates Get the rates for a Shipment.
+     */
+    public static function get_declarations($declare, $apiToken = null)
+    {
+        
+        $requestor = new FS_ApiRequestor($apiToken);
+        $url = "shipment/get_declare/" . $declare;
+        
+        list($response, $rcode) = $requestor->request('get', $url);
+        
+        if($rcode != 200 && $rcode != 404){
+            return $rcode;
+        }else{
+            return $response;
+        }
+    }
 }
