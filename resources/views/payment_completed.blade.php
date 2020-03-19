@@ -9,11 +9,19 @@
     		<span class="text-danger">ชำระเงินไม่สำเร็จ กรุณาติดต่อ  <a href="tel:020803999">020803999</a> หรือ <a href="mailto:cs@fastship.co">cs@fastship.co</a></span>
     	@endif
     	</h2>
+    	<div class="clearfix"></div>
+    	
+    	<h4 class="text-center">กรุณาพิมพ์ใบปะหน้า ระบบกำลังเปลียนหน้าใน 5 วินาที</h4>
+    	
     </div>
     <div class="clearfix"></div>
 </div>
 @endsection
 <script type="text/javascript">
+    $( document ).ready(function() {
+    	var delay = 5000;
+    	setTimeout(function(){ window.location = "{{ url('/pickup_detail/' . $pickupId) }}"; }, delay);
+    });
     fbq('track', 'Purchase', {
     	value: {{ $pickup_data['Amount'] }},
     	currency: 'THB',

@@ -100,7 +100,7 @@
 									</div>
 									<div class="col-md-6 col-print-6 dashy-right">
 										<h3 class="text-right" style="font-weight: 600; margin: 0;">
-											ใบกำกับภาษี/ใบเสร็จรับเงิน
+											ใบส่งของ
 										</h3>
 									</div>
 								</div>
@@ -129,7 +129,7 @@
 									</div>
 
 									<div class="col-md-5 col-print-5" style="padding-left: 28px;">
-										<div class="col-md-5 col-print-5" style="color: #f15a22;">
+										<div class="col-md-5 col-print-5 text-right" style="color: #f15a22;">
 											เลขที่ <br />
 											วันที่ <br />
 											ผู้ขาย <br />

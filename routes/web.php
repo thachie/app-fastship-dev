@@ -161,7 +161,7 @@ Route::group(['middleware' => 'loginsession'], function () {
 	//pickup
 	Route::get('create_pickup', 'Pickup\PickupController@prepareCreatePickup');
 	Route::post('pickup/create', 'Pickup\PickupController@createPickup');
-	Route::get('pickup_detail/{id?}', 'Pickup\PickupController@preparePickupDetail');
+	Route::match(['get', 'post'],'pickup_detail/{id?}', 'Pickup\PickupController@preparePickupDetail');
 	Route::get('pickup_detail_print/{id?}', 'Pickup\PickupController@preparePickupDetailPrint');
 	Route::match(['get', 'post'],'pickup_list/{page?}', 'Pickup\PickupController@preparePickupList');
 	Route::post('pickup/cancel', 'Pickup\PickupController@cancelPickup');

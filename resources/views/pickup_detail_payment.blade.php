@@ -16,7 +16,7 @@
 			    	<h1>ยอดชำระ <span class="orange"><?php echo number_format($pickup_data['Amount'],0); ?></span> {!! FT::translate('unit.baht') !!}</h1>
 				</div>
 				<div class="col-12 col-md-8 col-md-offset-2">
-					<form method="POST" action="https://app.fastship.co/kbank/payment_completed">
+					<form method="POST" action="https://app.fastship.co/pickup_detail/{{ $pickup_data['ID'] }}">
 		                <script type="text/javascript" src="https://kpaymentgateway.kasikornbank.com/ui/v2/kpayment.min.js"
 		                data-apikey="pkey_prod_321btQojbQkYbi9bjSTHRpt0T76CxYrHrkw"
 		                data-amount="{{ $pickup_data['Amount'] }}"
@@ -120,35 +120,16 @@
                             
                         ?>
                             <tr>
-                            	<td>
-                                	<!--<a href="/shipment_detail/<?php echo $data['ID'];?>" target="_blank"><i class="fa fa-search"></i></a>
-                                	<a href="/shipment_detail/<?php echo $data['ID'];?>" target="_blank"><i class="fa fa-search"></i></a>-->
-                                	<?php echo $data['ID'];?>
-                            	</td>
+                            	<td><?php echo $data['ID'];?></td>
                             	<?php if($data['ReceiverDetail']['Firstname'] != ""): ?>
                             	<td class="hidden-xs"><?php echo $data['ReceiverDetail']['Firstname'];?> <?php echo $data['ReceiverDetail']['Lastname'];?></td>
                             	<?php else: ?>
                             	<td class="hidden-xs"><?php echo $data['ReceiverDetail']['Custname'];?></td>
                             	<?php endif; ?>
                             	<td class="hidden-xs"><?php echo $countries[$data['ReceiverDetail']['Country']];?></td>
-                            	<!--<td><?php echo isset($data['Reference'])?$data['Reference']:'-';?></td>-->
                             	<td><img src="{{ url('/images/agent/' . $data['ShipmentDetail']['ShippingAgent'] . '.gif') }}" style="max-width: 80px;"/></td>
                             	<td><?php echo $data['ShipmentDetail']['ShippingRate']; ?></td>
-                            	<!--<td><?php echo isset($shipmentStatus[$data['Status']])?$shipmentStatus[$data['Status']]:$data['Status']; ?></td>
-                            	<?php 
-                            	if($isSeperateLabel && isset($data) && isset($labels[$data['ID']]) && isset($labels[$data['ID']]['barcode'])): 
-                            	   $barcodeURL = "https://app.fastship.co/thaipost/label/" . $labels[$data['ID']]['barcode'];
-                            	?>
-                            	<td class="small" >
-                                	<a href="<?php echo $barcodeURL; ?>" target="_blank"><i class="fa fa-print"></i></a> 
-                                	<a href="<?php echo $barcodeURL; ?>" target="_blank" style="font-weight: 100;">{!! FT::translate('pickup_detail.print_label') !!}</a>
-                            	</td>
-                            	<?php else: ?>
-                            	<td class="small" ></td>
-                            	<?php endif; ?>
-                            	<td>
-                            		<a href="{{ url('/shipment/clone/?shipment_id='.$data['ID']) }}"><button type="button" class="btn btn-xs btn-secondary">{!! FT::translate('button.clone') !!}</button></a>
-                            	</td>-->
+                            	
                             </tr>
                         <?php 
                         endforeach;
