@@ -152,7 +152,7 @@
         			<div class="clearfix"></div>
         			<br />
 
-					<span class="small" style="margin-left: 10px;">{!! FT::translate('login.registerlink') !!} <a href="/register_email/{{ session('login.ref') }}">{!! FT::translate('button.register_email') !!}</a> | <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653844645&redirect_uri=https%3A%2F%2Fapp.fastship.co%2Fliff%2Floginline&state={{ uniqid() }}&scope=openid%20profile">สมัครผ่านไลน์</a></span>
+					<span class="small" style="margin-left: 10px;">{!! FT::translate('login.registerlink') !!} <a href="/register_email/{{ session('login.ref') }}" style="display: none !important;">{!! FT::translate('button.register_email') !!}</a> <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653844645&redirect_uri=https%3A%2F%2Fapp.fastship.co%2Fliff%2Floginline&state={{ uniqid() }}&scope=openid%20profile">สมัครผ่านไลน์</a></span>
 
     			</div>
 			</div>

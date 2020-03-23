@@ -13,9 +13,10 @@
         	<div class="row text-center">
         		<h2>ชำระเงิน ใบรับพัสดุ {{ $pickup_data['ID'] }}</h2>
 				<div class="col-12">
-			    	<h1>ยอดชำระ <span class="orange"><?php echo number_format($amount,0); ?></span> {!! FT::translate('unit.baht') !!}</h1>
+			    	<h1>ยอดชำระ <span class="orange"><?php echo number_format(max(0,$amount),0); ?></span> {!! FT::translate('unit.baht') !!}</h1>
 				</div>
 				<div class="col-12 col-md-8 col-md-offset-2">
+				@if($kbankOrderId != "")
 					<form method="POST" action="https://app.fastship.co/pickup_detail/{{ $pickup_data['ID'] }}">
 		                <script type="text/javascript" src="https://kpaymentgateway.kasikornbank.com/ui/v2/kpayment.min.js"
 		                data-apikey="pkey_prod_321btQojbQkYbi9bjSTHRpt0T76CxYrHrkw"
@@ -29,6 +30,9 @@
 		                data-show-button="false" ></script>
 		                <input type="button" class="btn btn-success btn-lg btn-block" role="button" value="กดเพื่อชำระเงินผ่าน QR" onclick="KPayment.show()">
 		            </form>
+		        @else
+		        	<h4>ไม่มียอดค้างชำระ</h4>
+		        @endif
 				</div>
 				<div class="clearfix"></div>
 				
@@ -161,7 +165,30 @@
 
             </div>
         </div>
-	</div>   
+	</div>
+	
+	
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3" style="background: #eee;padding: 40px;margin-top:0px;margin-bottom:40px;">
+			
+        	<h3>ขั้นตอนการชำระเงิน</h3>
+        	
+        	<ol style="font-size:18px;">
+        		<li>ทำการตรวจสอบข้อมูล หากข้อมูลครบถ้วนให้กด  “กดเพื่อชำระเงินผ่าน QR”</li>
+        		<li>หน้าจอจะโชว์ QR และยอดที่ต้องชำระ (กรณีใช้งานบนมือถือให้กด เซฟรูป QR ก่อนใช้งานขั้นตอนต่อไป)</li>
+        		<li><b class="text-success">เปิดหน้า Application ธนาคารบนมือถือ</b></li>
+        		<li>เลือกเมนู “SCAN” เพื่อชำระเงิน<br />
+        		<img src="https://fastship.co/wp-content/uploads/2017/05/SCB-QR_C-350x650.jpg" style="width: 250px;margin: 5px;"/>
+        		<img src="https://fastship.co/wp-content/uploads/2017/05/KTB-QR_C-350x650.jpg" style="width: 250px;margin: 5px;"/>
+        		<img src="https://fastship.co/wp-content/uploads/2017/05/Krungsri_QR_C-350x650.jpg" style="width: 250px;margin: 5px;"/>
+        		<img src="https://fastship.co/wp-content/uploads/2017/05/221187-1-350x650.jpg" style="width: 250px;margin: 5px;"/>
+        		</li>
+        		<li>Scan QR บนหน้าจอ หรือเลือกไฟล์รูปที่เซฟไว้</li>
+        		<li>หลังจากชำระเรียบร้อยแล้ว ระบบจะไปยังหน้ารายการเสร็จสมบูรณ์</li>
+        	</ol>
+    	</div>
+	</div>
+
 </div>
 <script>
 
