@@ -383,7 +383,7 @@
                                 <div class="col-md-4 col-xs-2">{!! FT::translate('unit.baht') !!}</div>
                             </div>
                             @if($customer_data['invoice'] == 1)
-                            	<div class="row text-center">ชำระโดยการวางบิล</div>
+                            	<div class="row text-center small text-success">ชำระโดยการวางบิล</div>
                                 <input type="hidden" name="payment_method" id="invoice" value="Invoice" />
                             @else
                                 <div class="radio text-center">
@@ -395,7 +395,7 @@
                                         <div class="text-left">
                                             <label><input type="radio" name="payment_method" id="QR" value="QR" required checked>QR Payment</label>
                                         </div>
-                                        @if(credit)
+                                        @if(sizeof($creditCards) > 0)
                                         @foreach($creditCards as $card)
                                         <div class="text-left">
                                             <label><input type="radio" name="payment_method" value="Credit_Card_{{ $card->OMISE_LASTDIGITS }}" required checked>{!! FT::translate('radio.payment.creditcard') !!} - XXXX-{{ $card->OMISE_LASTDIGITS }}</label>
@@ -484,10 +484,14 @@
     
                 if(data !== false && dataArray.length > 0){
                     for (key in dataArray) {
-                    	content += '<label for="pick-time-' + keyArray[key] + '" style="padding:5px;min-height: 30px;">';
+                    	var keyArrayKey = keyArray[key];
+                        if(keyArray[key] < 10){
+                            keyArrayKey = "0" + keyArray[key];
+                        }
+                    	content += '<label for="pick-time-' + keyArrayKey + '" style="padding:5px;min-height: 30px;">';
                        	content += dataArray[key]; 
                         content += '</label>';
-                       	content += '<input class="selector" type="radio" name="pickuptime" id="pick-time-' + keyArray[key] + '" value="' + keyArray[key] + ':00" >';
+                       	content += '<input class="selector" type="radio" name="pickuptime" id="pick-time-' + keyArrayKey + '" value="' + keyArrayKey + ':00" >';
                     }
                 }else{
                     content = "";
@@ -856,6 +860,51 @@
 		<h4>{!! FT::translate('create_pickup.warning.noshipment') !!}</h4>
 		<a href="calculate_shipment_rate" class="btn btn-lg btn-primary">{!! FT::translate('button.create_shipment') !!}</a>
 	</div>
+	
+	<div class="row">      
+    	<div class="col-md-8 col-md-offset-2 col-xs-12" style="margin-top: 50px;">
+        	<div class="panel panel-danger">
+            	<div class="panel-heading">ใบรับพัสดุที่รอชำระ</div>
+            	<div class="panel-body">
+                	<table class="table table-hover table-striped">
+                    <thead>
+                    	<tr>
+                    		<td>{!! FT::translate('label.pickup_id') !!}</td>
+                    		<td>{!! FT::translate('label.create_date') !!}</td>
+                    		<td>วิธีการเข้ารับ</td>
+                    		<td>{!! FT::translate('label.grand_total') !!}</td>
+                    		<td>{!! FT::translate('label.number_shipment') !!}</td>
+                    		<td></td>
+                    	</tr>
+                    </thead>
+                    <tbody>
+                    <?php 
+                    if(is_array($unpaidPickups) && sizeof($unpaidPickups) > 0):
+                    foreach($unpaidPickups as $pickup):
+                    ?>
+                    	<tr>
+                    		<td><a href="/pickup_detail/{{ $pickup['ID'] }}" target="_blank">{{ $pickup['ID'] }}</a></td>
+                    		<td>{{ date("d/m/Y",strtotime($pickup['CreateDate']['date'])) }}</td>
+                    		<td>{{ $pickupType[$pickup['PickupType']] }}</td>
+                    		<td>{{ number_format($pickup['Amount']) }}</td>
+                    		<td>{{ $pickup['TotalShipment'] }}</td>
+                    		<td><a href="{{ url('/pickup_detail_payment/'.$pickup['ID'])}}"><button type="button" class="btn btn-info btn-sm">ชำระเงิน</button></a></td>
+                    	</tr>
+                    <?php 
+                    endforeach;
+                    else:
+                    ?>
+                    <tr><td colspan="6" class="text-center">{!! FT::translate('error.shipment.notfound') !!}</td></tr>
+                    <?php
+                    endif;
+                    ?>
+                    </tbody>
+                    </table>
+                </div>
+        	</div>
+    	</div>
+    </div>
+	
 <?php endif; //endif shipment size ?> 
 </div>
 @endsection

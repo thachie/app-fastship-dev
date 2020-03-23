@@ -13,7 +13,8 @@ use Mail;
 use Session;
 use CodeItNow\BarcodeBundle\Utils\BarcodeGenerator;
 use PDF;
-
+use App\Lib\Encryption;
+use App\Lib\Line\LineManager;
 
 class PickupController extends Controller
 {
@@ -217,7 +218,7 @@ class PickupController extends Controller
         }
 
         //bangkok
-        if(substr($postcode,0,2) == "10" || substr($postcode,0,2) == "11" || substr($postcode,0,2) == "12"){
+        if(substr($postcode,0,2) == "10" || substr($postcode,0,2) == "11" || substr($postcode,0,2) == "12" || $postcode == ""){
             
             if($startH < 17){
                 $availableExpectTime[] = $firstD;
@@ -226,6 +227,25 @@ class PickupController extends Controller
         }
         $availableExpectTime[] = $nextD;
         $availableExpectTime[] = $next2D;
+        
+        $unpaidPickups = array();
+        if(sizeof($shipment_data)==0){
+            
+            //prepare request data
+            $searchDetails = array(
+                'Status' => "Unpaid",
+            );
+            
+            //call api
+            $resDetails = FS_Pickup::search($searchDetails);
+
+            if($resDetails === false){
+                $unpaidPickups = array();
+            }else{
+                $unpaidPickups = $resDetails;
+            }
+            
+        }
         
         $data = array(
         	'status' => $status,
@@ -238,10 +258,10 @@ class PickupController extends Controller
         	'discount' => $discount,
             'rates' => $rates,
             'availableExpectTime' => $availableExpectTime,
+            'unpaidPickups' => $unpaidPickups,
         );
         return view('create_pickup',$data);
     }
-    
 
     public function createPickup(Request $request)
     {
@@ -264,6 +284,7 @@ class PickupController extends Controller
             $Card = substr($PaymentMethod, 12);
             $PaymentMethod = "Credit_Card";
         }else{
+            $Card = "";
             $PaymentMethod = $PaymentMethod;
         }
         //get api token
@@ -306,6 +327,7 @@ class PickupController extends Controller
             $data['longitude'] = $customerObj['Longitude'];
             $data['PickupDate'] = "";
             $data['PickupTime'] = "";
+            
         }
 
         $shipmentIds = $request->input('shipment_id');
@@ -375,15 +397,11 @@ class PickupController extends Controller
         $ShippingRate =0;
         $agents = array();
         foreach ($arr as $key => $value) {
-            //alert($value);
-            //$Weight = $value[$key]['Weight'];
-            //$Weight = $value[$key]['Weight'];
-            $Weight+= $value['Weight'];
-            $ShippingRate+= $value['ShippingRate'];
+            $Weight += $value['Weight'];
+            $ShippingRate += $value['ShippingRate'];
             $agents[] = $value['ShippingAgent'];
         }
         
-        //$data['PaymentMethod'] = "Bank_Transfer";
         $data['PaymentMethod'] = $PaymentMethod;
         
         $firstTime = array();
@@ -403,19 +421,6 @@ class PickupController extends Controller
             "agents" => $agents,
         );
         $data['discount'] = $this->calculateDiscount($args);
-        /*
-        echo abs($request->input('discount'));
-        if(  !empty($request->input('discount'))  && $request->input('discount') < 0){
-            if($referDiscount >= abs($request->input('discount'))){
-                $data['discount'] = $referDiscount;
-            }else{
-                $data['discount'] = abs($request->input('discount'));
-            }
-        }else{
-            $data['discount'] = 0;
-        }
-        echo  $data['discount']; exit();*/
-        
         $data['coupon_code'] = strtoupper($request->input('coupon_code'));
 
         //prepare request data
@@ -450,15 +455,9 @@ class PickupController extends Controller
             'ScheduleDatetime' => $schedule,
             'Remark' => "",
         );
-        //alert('<h2>ยอดชำระรายการ xxx รวม '.$createDetails['ShipmentDetail']['TotalShippingRate'].' บาท</h2>');
-        //alert($createDetails);
-        //die();
-        //create pickup
-        //alert($createDetails);
+
         $response = FS_Pickup::create($createDetails);
-        
-        //alert($response);die();
-        //$response = false;
+
         if($response === false){
             return redirect('create_pickup')->with('msg','สร้างใบรับพัสดุไม่สำเร็จ');
         }else{
@@ -491,6 +490,48 @@ class PickupController extends Controller
             	$message->from('cs@fastship.co', 'FastShip');
             	$message->subject('FastShip - ใบรับพัสดุหมายเลข '. $data['pickupId'] ." ถูกสร้างแล้ว");
             });
+            
+            $customer = FS_Customer::get($customerId);
+            if($customer['LineId'] != null && $customer['LineId'] != ""){
+                
+                $unpaid = FS_Pickup::getUnpaid($pickupId);
+                
+                //payment notify link
+                $converter = new Encryption;
+                $code1 = $converter->encode_short($pickupId);
+                $code2 = $converter->encode_short($customerId);
+                $notifyPaymentUrl = "https://app.fastship.co/kbank/qr/".$code1."/".$code2;
+                
+                $text = "แจ้งชำระค่ะ #".$pickupId;
+                $arrayPostData['to'] = $customer['LineId'];
+                $args = array(
+                    "pickupId" => $pickupId,
+                    "shipping" => $unpaid['TotalShippingRate'],
+                    "pickcost" => $unpaid['PickupCost'],
+                    "additioncost" => $unpaid['AdditionCost'],
+                    "discount" => $unpaid['Discount'],
+                    "packcost" => $unpaid['PackingCost'],
+                    "insurance" => $unpaid['Insurance'],
+                    "total" => $unpaid['Amount'],
+                    "paid" => $unpaid['Paid'],
+                    "unpaid" => $unpaid['Unpaid'],
+                    "paymentNotifyUrl" => $notifyPaymentUrl,
+                );
+                $arrayPostData['messages'][0] = LineManager::getFormatFlexMessage(LineManager::jsonPayment($args),$text);
+                
+                $result = LineManager::pushMessage($arrayPostData);
+                
+                $lineNotify = "กรุณาชำระเงิน " . $amount . " บาท ผ่านทางลิ้งก์ \n" . $notifyPaymentUrl . "\n\n วิธีการชำระเงินผ่าน QR: https://fastship.co/helps/payment-2";
+
+                //reply to Line
+                $arrayPostData['to'] = $customer['LineId'];
+                $arrayPostData['messages'][0]['type'] = "text";
+                $arrayPostData['messages'][0]['text'] = $lineNotify;
+                
+                $result = LineManager::pushMessage($arrayPostData);
+
+            }
+
             // ####
 
             if ($PaymentMethod == 'QR') {
@@ -517,6 +558,15 @@ class PickupController extends Controller
             return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
         }
         
+        //payment notify link
+        $converter = new Encryption;
+        $code1 = $converter->encode_short($pickupId);
+        $code2 = $converter->encode_short($customerId);
+        $notifyPaymentUrl = "/kbank/qr/".$code1."/".$code2;
+        
+        return redirect($notifyPaymentUrl);
+        
+        //check pickup is valid
         if(!empty($pickupId)){
             
             //get api token
@@ -524,31 +574,28 @@ class PickupController extends Controller
             
             //get pickup by pickup_id
             $response = FS_Pickup::get($pickupId);
+            
+            if($response === false){
+                return redirect('pickup_detail/'.$pickupId)->with('msg','error');
+            }
+            //check pickup status and payment method is QR
             if ($response['Status'] != "Unpaid" && $response['PaymentMethod'] != "QR") {
-                return redirect('pickup_detail/'.$pickupId);
-            }else{
-                $isSeperateLabel = ($response['PickupType'] == "Drop_AtThaiPost" || $response['PickupType'] == "Pickup_AtKerry");
                 
-                if($isSeperateLabel){
-                    $labels = FS_Pickup::getLabels($pickupId);
-                }else{
-                    $labels = array();
-                }
-                if($response === false){
-                    $pickupData = null;
-                    $status = 'nopickupData';
-                }else{
-                    $status = '';
-                    $pickupData = $response;
-                    $shipmentIds = $response['ShipmentDetail']['ShipmentIds'];
-                    
-                    foreach ($shipmentIds as $key => $shipid) {
-                        $pickupData['ShipmentDetail']['ShipmentIds'][$key] = FS_Shipment::get($shipid);
-                    }
+                return redirect('pickup_detail/'.$pickupId);
+                
+            }else{
+                
+                $pickupData = $response;
+                $shipmentIds = $response['ShipmentDetail']['ShipmentIds'];
+                foreach ($shipmentIds as $key => $shipid) {
+                    $pickupData['ShipmentDetail']['ShipmentIds'][$key] = FS_Shipment::get($shipid);
                 }
 
+                //get pickup by pickup_id
+                $unpaid = FS_Pickup::getUnpaid($pickupId);
+                
                 //prepare to Kbank
-                $amount = $pickupData['Amount'];
+                $amount = $unpaid['Unpaid'];
                 $description = $pickupData['ID'];
                 $reference = $pickupId . "_" . date("YmdH");
                 $jsonCreateOrderId = '{
@@ -567,11 +614,11 @@ class PickupController extends Controller
                 $order_id = $res['id'];
                 $data = array(
                     'pickupID' => $pickupId, 
-                    'pickup_data' => $pickupData, 
-                    'status' => $status, 
-                    'labels' => $labels,
+                    'pickup_data' => $pickupData,
                     "kbankOrderId" => $order_id,
                     "reference" => $reference,
+                    "unpaid" => $unpaid,
+                    "amount" => $amount,
                 );
                 
                 return view('pickup_detail_payment',$data);
@@ -810,16 +857,26 @@ class PickupController extends Controller
         $postcode = $request->get("postcode");
         $pickDate = $request->get("pick_date");
         
-        if(substr($postcode,0,2) == "10" || substr($postcode,0,2) == "11" || substr($postcode,0,2) == "12"){
+        if(substr($postcode,0,2) == "10" || substr($postcode,0,2) == "11" || substr($postcode,0,2) == "12" || $postcode == ""){
             if($pickDate == date("Y-m-d")){
                 $startH = date("H") + 2;
                 if($startH < 17){
                     for($i = max(9,$startH);$i < 17;$i++){
-                        $availableExpectTime[$i] = $i . ":00 - " . ($i+1) . ":00 น.";
+                        if($i < 10){
+                            $ii = "0".$i;
+                        }else{
+                            $ii = $i;
+                        }
+                        $availableExpectTime[$i] = $ii . ":00 - " . ($i+1) . ":00 น.";
                     }
                 }else if(date("H") < 17){
                     for($i = 9;$i < 17;$i++){
-                        $availableExpectTime[$nextD][$i] = $i . ":00 - " . ($i+1) . ":00 น.";
+                        if($i < 10){
+                            $ii = "0".$i;
+                        }else{
+                            $ii = $i;
+                        }
+                        $availableExpectTime[$nextD][$i] = $ii . ":00 - " . ($i+1) . ":00 น.";
                     }
                 }else{
                     for($i = 10;$i < 17;$i++){
@@ -829,7 +886,12 @@ class PickupController extends Controller
             }else if($pickDate == date("Y-m-d",strtotime("+1day"))){
                     if(date("H") < 17){
                         for($i = 9;$i < 17;$i++){
-                            $availableExpectTime[$i] = $i . ":00 - " . ($i+1) . ":00 น.";
+                            if($i < 10){
+                                $ii = "0".$i;
+                            }else{
+                                $ii = $i;
+                            }
+                            $availableExpectTime[$i] = $ii . ":00 - " . ($i+1) . ":00 น.";
                         }
                     }else{
                         for($i = 10;$i < 17;$i++){
@@ -838,7 +900,12 @@ class PickupController extends Controller
                     }
             }else{
                 for($i = 9;$i < 17;$i++){
-                    $availableExpectTime[$i] = $i . ":00 - " . ($i+1) . ":00 น.";
+                    if($i < 10){
+                        $ii = "0".$i;
+                    }else{
+                        $ii = $i;
+                    }
+                    $availableExpectTime[$i] = $ii . ":00 - " . ($i+1) . ":00 น.";
                 }
             }
         }else{

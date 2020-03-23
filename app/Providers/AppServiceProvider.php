@@ -25,7 +25,6 @@ class AppServiceProvider extends ServiceProvider
     	foreach ($countryQuery as $val) {
             $countries[$val->CNTRY_CODE] = $val->CNTRY_NAME;
         }
-        //$countries = 'THA';
     	view()->share('countries', $countries);
     	
     	//share payment method data
@@ -34,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
     		"Credit_Card" => "จ่ายผ่านบัตรเครดิต",
     	    "Invoice" => "วางบิล",
     	    "Cash" => "เงินสด",
+    	    "QR" => "ชำระผ่าน QR Code",
     	);
     	view()->share('paymentMethod', $paymentMethod);
 
@@ -62,11 +62,11 @@ class AppServiceProvider extends ServiceProvider
     	    $view_name = str_replace('.', '-', $view->getName());
     	    view()->share('view_name', $view_name);
     	});
-    	    	
+    	
     	$trafficTracker = new TrafficTracker(
 	        'localhost',
 	        'root',
-	        'Q6wphQ30tvgp',
+	        '59lAdf91XTaU',
 	        'fastship_app',
 	        'ttcpc',
     	    60
@@ -81,7 +81,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-    	//$this->app['url']->forceScheme("https");
+    	$this->app['url']->forceScheme("https");
     	
     }
 }

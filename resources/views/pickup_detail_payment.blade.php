@@ -13,13 +13,13 @@
         	<div class="row text-center">
         		<h2>ชำระเงิน ใบรับพัสดุ {{ $pickup_data['ID'] }}</h2>
 				<div class="col-12">
-			    	<h1>ยอดชำระ <span class="orange"><?php echo number_format($pickup_data['Amount'],0); ?></span> {!! FT::translate('unit.baht') !!}</h1>
+			    	<h1>ยอดชำระ <span class="orange"><?php echo number_format($amount,0); ?></span> {!! FT::translate('unit.baht') !!}</h1>
 				</div>
 				<div class="col-12 col-md-8 col-md-offset-2">
 					<form method="POST" action="https://app.fastship.co/pickup_detail/{{ $pickup_data['ID'] }}">
 		                <script type="text/javascript" src="https://kpaymentgateway.kasikornbank.com/ui/v2/kpayment.min.js"
 		                data-apikey="pkey_prod_321btQojbQkYbi9bjSTHRpt0T76CxYrHrkw"
-		                data-amount="{{ $pickup_data['Amount'] }}"
+		                data-amount="{{ $amount }}"
 		                data-currency="THB"
 		                data-payment-methods="qr"
 		                data-name="Fastship Co., Ltd."
@@ -54,6 +54,24 @@
     		    			<td class="text-left" style="text-align: left;">ค่าเข้ารับ ({{ (isset($pickupType[$pickup_data['PickupType']]))?$pickupType[$pickup_data['PickupType']]:$pickup_data['PickupType'] }})</td>
     		    			<td class="text-right text-info" style="text-align: right;">{{ $pickup_data['PickupCost'] }}</td>
     		    		</tr>
+    		    		@if($pickup_data['PackingCost'] > 0)
+    		    		<tr>
+    		    			<td class="text-left" style="text-align: left;">ค่าหีบห่อพัสดุ</td>
+    		    			<td class="text-right text-info" style="text-align: right;">{{ $pickup_data['PackingCost'] }}</td>
+    		    		</tr>
+    		    		@endif
+    		    		@if($pickup_data['Insurance'] > 0)
+    		    		<tr>
+    		    			<td class="text-left" style="text-align: left;">ค่าประกันพัสดุ</td>
+    		    			<td class="text-right text-info" style="text-align: right;">{{ $pickup_data['Insurance'] }}</td>
+    		    		</tr>
+    		    		@endif
+    		    		@if($pickup_data['AdditionCost'] > 0)
+    		    		<tr>
+    		    			<td class="text-left" style="text-align: left;">ค่าบริการเพิ่มเติม</td>
+    		    			<td class="text-right text-info" style="text-align: right;">{{ $pickup_data['AdditionCost'] }}</td>
+    		    		</tr>
+    		    		@endif
     		    		@if($pickup_data['Discount'] > 0)
     		    		<tr>
     		    			<td class="text-left" style="text-align: left;">ส่วนลด</td>
@@ -64,6 +82,13 @@
     		    			<td class="text-left" style="text-align: left;">รวม</td>
     		    			<td class="text-right text-success" style="text-align: right;"><h4 class="text-success">{{ $pickup_data['Amount'] }}</h4></td>
     		    		</tr>
+    		    		@if($unpaid['Paid'] > 0)
+    		    		<tr>
+    		    			<td class="text-left" style="text-align: left;"><strong>ชำระแล้ว</strong></td>
+    		    			<td class="text-right text-danger" style="text-align: right;"><h3 class="text-danger"><strong>{{ $unpaid['Paid'] }}</strong></h3></td>
+    		    		</tr>
+    		    		@endif
+    		    		
     		    	</tbody>
     		    	</table>
     		    </div>
@@ -95,12 +120,7 @@
     			</div>
     			<div class="clearfix"></div>
     			<?php endif; ?>
-    
-    		    <?php if(isset($pickup_data['Remark']) && $pickup_data['Remark']): ?>
-    			<div class="col-12 text-center text-danger" style="margin-bottom: 20px;"><?php echo $pickup_data['Remark'];?></div>
-    			<div class="clearfix"></div>
-    			<?php endif; ?>
-    			
+
     			<h3>{!! FT::translate('pickup_detail.panel.heading2') !!}</h3>
                 <table class="table table-stripe table-hover">
                     <thead>
@@ -110,7 +130,7 @@
                         	<td class="hidden-xs">{!! FT::translate('label.destination') !!}</td>
                         	<!--<td>{!! FT::translate('label.reference') !!}</td>-->
                         	<td>{!! FT::translate('label.agent') !!}</td>
-                        	<td>{!! FT::translate('label.amount') !!}</td>
+                        	<td>{!! FT::translate('label.shipping') !!}</td>
                         </tr>
                     </thead>
                     <tbody>

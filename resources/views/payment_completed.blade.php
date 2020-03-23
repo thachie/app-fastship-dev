@@ -11,19 +11,20 @@
     	</h2>
     	<div class="clearfix"></div>
     	
-    	<h4 class="text-center">กรุณาพิมพ์ใบปะหน้า ระบบกำลังเปลียนหน้าใน 5 วินาที</h4>
+    	<h4 class="text-center">กรุณาพิมพ์ใบปะหน้า ระบบกำลังเปลียนหน้าใน 5 วินาที หรือกด <a href="{{ url('/pickup_detail/' . $pickupId) }}">ที่นี่</a></h4>
     	
     </div>
     <div class="clearfix"></div>
 </div>
 @endsection
 <script type="text/javascript">
-    $( document ).ready(function() {
-    	var delay = 5000;
-    	setTimeout(function(){ window.location = "{{ url('/pickup_detail/' . $pickupId) }}"; }, delay);
-    });
-    fbq('track', 'Purchase', {
-    	value: {{ $pickup_data['Amount'] }},
-    	currency: 'THB',
-    });
+$( document ).ready(function() {
+    var delay = 5000;
+    setTimeout(function(){ window.location = "{{ url('/pickup_detail/' . $pickupId) }}"; }, delay);
+});
+    
+fbq('track', 'Purchase', {
+	value: {{ $amount }},
+	currency: 'THB'
+});
 </script>

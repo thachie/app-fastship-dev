@@ -35,11 +35,14 @@ class PaymentController extends Controller
             $pickup['ShipmentDetail']['ShipmentIds'][$key] = FS_Shipment::get($shipid);
         }
         
+        //get pickup by pickup_id
+        $unpaid = FS_Pickup::getUnpaid($pickupId);
+
         //prepare to Kbank
         if($request->has("amount")){
             $amount = $request->input("amount");
         }else{
-            $amount = $pickup['Amount'];
+            $amount = $unpaid['Unpaid'];
         }
         //$description = "Pickup # " . $pickup['ID'] . " - Pickup by " . $pickup['PickupType'];
         $description = $pickup['ID'];
@@ -68,15 +71,10 @@ class PaymentController extends Controller
             'pickup_data' => $pickup,
             "kbankOrderId" => $order_id,
             "reference" => $reference,
+            "amount" => $amount,
+            "unpaid" => $unpaid,
         );
         return view('pickup_detail_payment',$data);
-        
-        $data = array(
-            "pickup" => $pickup,
-            "amount" => $amount,
-            "kbankOrderId" => $order_id,
-        );
-        return view('payment_qr',$data);
 
     }
     
@@ -102,12 +100,14 @@ class PaymentController extends Controller
         //check completed
         $completed = ($transaction['status'] == "success" && $transaction['transaction_state'] == "Authorized");
         $transaction_state = $transaction['transaction_state'];
-        $pickupId = $transaction['reference_order'];
+        $pickupId = $transaction['description'];
+        $amount = $transaction['amount'];
 
         $data = array(
             "completed" => $completed,
             "transaction_state" => $transaction_state,
             "pickupId" => $pickupId,
+            "amount" => $amount,
         );
         return view('payment_completed',$data);
         

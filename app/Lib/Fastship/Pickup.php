@@ -49,6 +49,26 @@ class FS_Pickup extends FS_ApiResource
      *
      * @return Fastship_Retrieve Get a Shipment.
      */
+    public static function getUnpaid($id, $apiToken = null)
+    {
+        $requestor = new FS_ApiRequestor($apiToken);
+        $url = "pickup/unpaid/" . $id;
+        
+        list($response, $rcode) = $requestor->request('get', $url);
+        
+        if($rcode != 200){
+            return false;
+        }else{
+            return $response;
+        }
+    }
+    
+    /**
+     * @param string $id
+     * @param string|null $apiToken
+     *
+     * @return Fastship_Retrieve Get a Shipment.
+     */
     public static function getLabels($id, $apiToken = null)
     {
         $requestor = new FS_ApiRequestor($apiToken);

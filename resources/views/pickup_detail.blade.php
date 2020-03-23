@@ -234,7 +234,7 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
 			                <div class="row text-center">
 			                    <div class="col-md-12"><h4>{!! FT::translate('pickup_detail.pickup_total') !!} <span class="orange"><?php echo number_format($pickup_data['Amount'],0); ?></span> {!! FT::translate('unit.baht') !!}</h4></div>
 			                    <?php if ($pickup_data['Status'] != 'Unpaid' && $pickup_data['Status'] != 'Cancelled') { ?>
-									<a href="/pickup_detail_invoice/<?php echo $pickupID; ?>" target="_blank"><button type="button" class="btn btn-default">พิมพ์ใบส่งของ</button></a>
+									<a href="/pickup_invoice_print/{{ $pickupID }}" target="_blank"><button type="button" class="btn btn-default">พิมพ์ใบส่งของ</button></a>
 								<?php }?>
 			                </div>
 			                <div class="clearfix"></div><br />
@@ -266,7 +266,7 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
 		                                    <h4>รอชำระเงิน</h4>
 		                                </div>
 		                                <div class="timeline-body">
-		                                    
+		                                    <p>ยอดชำระทั้งหมด <?php echo number_format($pickup_data['ShipmentDetail']['TotalShippingRate']+$pickup_data['PickupCost']-$pickup_data['Discount'],0); ?> {!! FT::translate('unit.baht') !!}</p>
 		                                </div>
 		                                <!--<div class="timeline-body">
 		                                <?php if($pickup_data['PickupType'] == "Pickup_AtHome"):?>
@@ -352,7 +352,7 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
 		                                    <h4>{!! FT::translate('pickup_detail.track.step4') !!}</h4>
 		                                </div>
 		                                <div class="timeline-body">
-		                                    <p><?php echo $paymentMethod[$pickup_data['PaymentMethod']]; ?> {!! FT::translate('pickup_detail.track.step4_1') !!} <?php echo number_format($pickup_data['Amount'],0); ?> {!! FT::translate('unit.baht') !!}</p>
+		                                    <p>ยอดชำระเพิ่มเติม <?php echo number_format($pickup_data['Amount']-($pickup_data['ShipmentDetail']['TotalShippingRate']+$pickup_data['PickupCost']-$pickup_data['Discount']),0); ?> {!! FT::translate('unit.baht') !!}</p>
 		                                </div>
 		                                <div class="timeline-footer">
 		

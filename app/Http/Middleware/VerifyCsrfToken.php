@@ -17,6 +17,7 @@ class VerifyCsrfToken extends BaseVerifier
         'joinus',
         'liff/*',
         'kbank/*',
+        'pickup_detail/*',
         'checkout',
     ];
 }
