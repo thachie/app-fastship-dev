@@ -1,24 +1,29 @@
 @extends('layout')
 @section('content')
 <div class="conter-wrapper">
-<?php if(sizeof($shipment_data) > 0): ?>
+@if(sizeof($shipment_data) > 0)
 	<div class="row">
-    	<div class="col-md-7 pad8"><h2>{!! FT::translate('create_pickup.heading') !!}</h2></div>
-    	<div class="col-md-5 text-right">
+    	<div class="col-md-6 pad8"><h2>{!! FT::translate('create_pickup.heading') !!}</h2></div>
+    	<div class="col-md-6 text-right">
         	<div class="bs-wizard dot-step" style="border-bottom:0;">
-                <div class="col-xs-4 bs-wizard-step complete">
+                <div class="col-xs-3 bs-wizard-step complete">
                     <div class="progress"><div class="progress-bar"></div></div>
                     <a href="#" class="bs-wizard-dot" style="text-align: center; line-height: 30px;"><span style="z-index: 995; position: relative; color: #fff;">1</span></a>
                     <p class="text-center">{!! FT::translate('step.step1') !!}</p>
             	</div> 
-            	<div class="col-xs-4 bs-wizard-step complete">
+            	<div class="col-xs-3 bs-wizard-step active">
                     <div class="progress"><div class="progress-bar"></div></div>
                     <a href="#" class="bs-wizard-dot" style="text-align: center; line-height: 30px;"><span style="z-index: 995; position: relative; color: #fff;">2</span></a>
                     <p class="text-center">{!! FT::translate('step.step2') !!}</p>
                 </div>
-                <div class="col-xs-4 bs-wizard-step active">
+                <div class="col-xs-3 bs-wizard-step ">
                     <div class="progress"><div class="progress-bar"></div></div>
                     <a href="#" class="bs-wizard-dot" style="text-align: center; line-height: 30px;"><span style="z-index: 995; position: relative; color: #fff;">3</span></a>
+                    <p class="text-center">ชำระเงิน</p>
+        		</div> 
+                <div class="col-xs-3 bs-wizard-step">
+                    <div class="progress"><div class="progress-bar"></div></div>
+                    <a href="#" class="bs-wizard-dot" style="text-align: center; line-height: 30px;"><span style="z-index: 995; position: relative; color: #fff;">4</span></a>
                     <p class="text-center">{!! FT::translate('step.step3') !!}</p>
         		</div>       
     		</div>
@@ -123,60 +128,123 @@
         <div class="row"> 
         	<div class="col-md-6">
             	<div class="panel panel-primary">
-                    <div class="panel-heading">{!! FT::translate('create_pickup.panel.heading2') !!}</div>
+                    <div class="panel-heading">การเข้ารับพัสดุ</div>
                     <div class="panel-body">
-                        <div class="radio text-center pickup-type">     
-                            <label><input type="radio" name="type" id="delivery" value="pickup" onclick="showDelivery();" checked>{!! FT::translate('radio.pickup_athome') !!}</label>
-                            &nbsp;
-                            <label><input type="radio" name="type" id="droppoint" value="drop" onclick="showDroppoint();">{!! FT::translate('radio.dropoff') !!}</label>
-                        </div><br />
+                    
+                    	<h2>1. เลือกวิธีการรับพัสดุ</h2>
 
-                        <div id="agentsdrop" style="display: none;">
-                            <fieldset>
+                        <fieldset>
                             
-                            	<label for="drop-fs">
-                                    <span class="col-4 col-xs-5"><img src="/images/fastship.png"></span>
-                                    <div class="col-8 col-xs-7 text-left">
-                                        <h3>FastShip</h3>
-                                        <p class="slogan col-md-6 no-padding">{!! FT::translate('create_pickup.text.free') !!}</p>
-                                        <div class="text-right col-md-6">
-                                            <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalFS">
-                                            	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
-                                            </button>
-                                        </div>
+                            <label for="pick-nextday-fs">
+                                <div class="col-2 col-xs-2"><img src="/images/fastship.png"></div>
+                                <div class="col-8 col-xs-8 text-left">
+                                    
+                                    <h3>ให้ FastShip ไปรับ (1-2 วันทำการ)</h3>
+                                    
+                                    <div class="text-right col-md-6">
+                                        <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalFS">
+                                        	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
+                                        </button>
                                     </div>
-                                </label>
-                                <input onchange="hideAddress();" class="selector" type="radio" name="agent" id="drop-fs" value="Drop_AtFastship" checked="checked" />
+                                </div>
+                                <div class="col-2 col-xs-2 text-right">
+                                	<h2 class="slogan text-success no-padding">{!! FT::translate('create_pickup.text.free') !!}</h2>
+                                </div>
+                            </label>
+                            <input onchange="hideAddress();" class="selector" type="radio" name="agent" id="pick-nextday-fs" value="Pickup_AtHomeNextday" checked="checked" />
+                            
+                            <label for="pick-standard-fs">
+                                <div class="col-2 col-xs-2"><img src="/images/fastship.png"></div>
+                                <div class="col-8 col-xs-8 text-left">
                                 
-                                <?php if(isset($rates['Drop_AtThaiPost'])):?>
-                                <label for="drop-thaipost">
-                                    <div class="col-4 col-xs-5"><img src="/images/thaipost.png" /></div>
-                                    <div class="col-8 col-xs-7 text-left">
-                                        <h3>{!! FT::translate('radio.dropoff.thaipost') !!}</h3>
-                                        <?php if($rates['Drop_AtThaiPost']['AccountRate'] == 0): ?>
-                                        <p class="slogan col-md-6 no-padding">{!! FT::translate('create_pickup.text.free') !!}</p>
-                                        <?php else: ?>
-                                        <p class="slogan col-md-6 no-padding"><?php echo $rates['Drop_AtThaiPost']['AccountRate']; ?> {!! FT::translate('unit.baht') !!}</p>
-                                        <?php endif; ?>
-                                        <div class="text-right col-md-6">
-                                            <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalTP">
-                                            	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
-                                            </button>
-                                        </div>
+                                    <h3>ให้ FastShip ไปรับ (ภายในวัน)</h3>
+                                    
+                                    <div class="text-right col-md-6">
+                                        <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalFS">
+                                        	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
+                                        </button>
                                     </div>
-                                </label>
-                                <input onchange="hideAddress();" class="selector" type="radio" name="agent" id="drop-thaipost" value="Drop_AtThaiPost"> 
-                                <?php endif; ?>
+                                </div>
+                                <div class="col-2 col-xs-2 text-right">
+                                	<h2 class="slogan text-info no-padding">200.-</h2>
+                                </div>
+                            </label>
+                            <input onchange="hideAddress();" class="selector" type="radio" name="agent" id="pick-standard-fs" value="Pickup_AtHomeStandard" />
+                            
+                            <label for="pick-express-fs">
+                                <div class="col-2 col-xs-2"><img src="/images/fastship.png"></div>
+                                <div class="col-8 col-xs-8 text-left">
+                                    
+                                    <h3>ให้ FastShip ไปรับ (ด่วน)</h3>
+
+                                    <div class="text-right col-md-6">
+                                        <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalFS">
+                                        	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-2 col-xs-2 text-right">
+                                	<h2 class="slogan text-info no-padding">300.-</h2>
+                                </div>
+                            </label>
+                            <input onchange="hideAddress();" class="selector" type="radio" name="agent" id="pick-express-fs" value="Pickup_AtHomeStandard"  />
+                            
+                            
+                        	<label for="drop-fs">
+                                <div class="col-2 col-xs-2"><img src="/images/fastship.png"></div>
+                                <div class="col-8 col-xs-8 text-left">
+                                    
+                                    <h3>นำมาส่งเองที่ FastShip</h3>
+                                    
+                                    <div class="text-right col-md-6">
+                                        <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalFS">
+                                        	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
+                                        </button>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-2 col-xs-2 text-right">
+                                	<h2 class="slogan text-success no-padding">{!! FT::translate('create_pickup.text.free') !!}</h2>
+                                </div>
+                            </label>
+                            <input onchange="hideAddress();" class="selector" type="radio" name="agent" id="drop-fs" value="Drop_AtFastship" />
+                            
+                            <?php if(isset($rates['Drop_AtThaiPost'])):?>
+                            <label for="drop-thaipost">
+                                <div class="col-2 col-xs-2"><img src="/images/thaipost.png" /></div>
+                                <div class="col-8 col-xs-8 text-left">
+                                
+                                    <h3>นำมาส่งเองที่ ไปรษณีย์ไทย</h3>
+
+                                    <div class="text-right col-md-6">
+                                        <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalTP">
+                                        	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-2 col-xs-2 text-right">
+                                	<?php if($rates['Drop_AtThaiPost']['AccountRate'] == 0): ?>
+                                    <h2 class="slogan text-success no-padding">{!! FT::translate('create_pickup.text.free') !!}</h2>
+                                    <?php else: ?>
+                                    <h2 class="slogan text-info no-padding"><?php echo $rates['Drop_AtThaiPost']['AccountRate']; ?> {!! FT::translate('unit.baht') !!}</h2>
+                                    <?php endif; ?>
+                                </div>
+                            </label>
+                            <input onchange="hideAddress();" class="selector" type="radio" name="agent" id="drop-thaipost" value="Drop_AtThaiPost"> 
+                            <?php endif; ?>
                                 
 
 
-                            </fieldset>
-                        </div>
+                        </fieldset>
+                        
+                        <div class="clearfix"></div><br />
                         
                         <div id="fspickup">
+                        
+                        	<h2>2. เลือกเวลาเข้ารับ</h2>
                             <div class="row">
-                                <label class="col-md-4 control-label">{!! FT::translate('label.pickup_date') !!}</label>
-                                <div class="col-md-6">
+                                <label class="col-md-3 control-label">วันเวลาที่นัดรับพัสดุ</label>
+                                <div class="col-md-4">
 
                                     @foreach($availableExpectTime as $date)
                                     <label class="pick-date-{{ $date }}" for="pick-date-{{ $date }}" style="padding:5px;min-height: 30px;">
@@ -186,19 +254,20 @@
                             		@endforeach
                                     
                                 </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-md-4 control-label">{!! FT::translate('label.pickup_time') !!}</label>
-                                <div class="col-md-6">
+                                <div class="col-md-5">
 
                             		<div id="result-panel"><span class="text-light small" style="line-height: 40px;">เลือกวันที่นัดรับก่อน</span></div>
                                     
                                 </div>
                             </div>
-                            <br />
-
+        
                       </div>
-                      <div id="address_section" class="row">
+                      
+                      <div class="clearfix"></div><br />
+                      
+                      <div id="address_section">
+                      
+                      		<h2>3. ระบุที่อยู่เข้ารับ</h2>
 
                                 <?php if($customer_data['address1'] != ""):?>
                                 <label><input type="radio" name="address_select" checked value="old" onclick="checkAddressSelect()" /> {!! FT::translate('radio.address.account') !!}</label>
@@ -330,6 +399,7 @@
                     </div>
                 </div>
           	</div>
+            
             <div class="col-md-6">
                     <div class="panel panel-primary">
                         <div class="panel-heading">{!! FT::translate('create_pickup.panel.heading3') !!}</div>
@@ -483,6 +553,12 @@
         		}
     
                 if(data !== false && dataArray.length > 0){
+                    
+                	content += '<label for="pick-time-all" style="padding:5px;min-height: 30px;">';
+                   	content += 'เวลาใดก็ได้ในช่วง 9:00 - 17:00 น.';
+                    content += '</label>';
+                   	content += '<input class="selector" type="radio" name="pickuptime" id="pick-time-all" value="00:00" checked >';
+
                     for (key in dataArray) {
                     	var keyArrayKey = keyArray[key];
                         if(keyArray[key] < 10){
@@ -493,8 +569,11 @@
                         content += '</label>';
                        	content += '<input class="selector" type="radio" name="pickuptime" id="pick-time-' + keyArrayKey + '" value="' + keyArrayKey + ':00" >';
                     }
+                    
                 }else{
+                    
                     content = "";
+                    
                 }
                 
                 $("#result-panel").append(content).delay(5);
@@ -511,53 +590,6 @@
     		$province: $('#pickup_form [name="state"]'),
     		$zipcode: $('#pickup_form [name="postcode"]'),
     	});
-	
-        function showDroppoint(){
-
-        	$("#fspickup").fadeOut(300).delay(300);
-            $("#agentsdrop").fadeIn(300);
-
-            agent = $("input[name=agent]:checked");
-
-            hideAddress();
-            
-            var total_rate = (($("#total_rate").text()).trim()).replace(",","");
-            var discount = parseInt($("#discount").text());
-			var cost = 0;
-            <?php if(isset($rates['Drop_AtThaiPost'])):?>
-            if(agent.val() == "Drop_AtThaiPost"){
-                $("#cost").html(<?php echo $rates['Drop_AtThaiPost']['AccountRate']; ?>);
-                cost = <?php echo $rates['Drop_AtThaiPost']['AccountRate']; ?>;
-			}else{
-                $("#cost").html("0");
-			}
-            <?php else: ?>
-            	$("#cost").html("0");
-            <?php endif; ?>
-
-            $("#totalpickup").html((Math.max(0,parseInt(total_rate)+discount+cost)).format());
-        }
-
-        function showDelivery(){
-            $("#agentsdrop").fadeOut(300).delay(300);
-            $("#fspickup").fadeIn(300);
-            
-            $("#address_section").show();
-            // $("#pickupaddress").hide();
-            $("#pickupcost").show();
-            
-            <?php if($total_rate < 2000){ ?>
-                $("#cost").html("200");
-            <?php }else{ ?>
-                $("#cost").html("0");
-            <?php } ?>
-
-            var total_rate = parseInt((($("#total_rate").text()).trim()).replace(",",""));
-            var cost = parseInt($("#cost").text());
-            var discount = parseInt($("#discount").text());
-            var total_pickup = (Math.max(0,cost+total_rate+discount)).format();
-            $("#totalpickup").html(total_pickup);
-        }
 
         function hideAddress(){
         	agent = $("input[name=agent]:checked");
@@ -567,24 +599,6 @@
         		$("#address_section").show();
         	}
         }
-        
-//         function submitForm(){
-
-//         	var valid = true;
-//             if($("#pickup_form input[name='firstname']").val() == ""){
-//             	$("#pickup_form input[name='firstname']").css("border","1px solid red");
-//             	valid = false;
-//             }
-
-//             console.log($("#pickup_form").submit());
-//             if(valid){
-//                 $("#pickup_form").submit();
-//                 $("#submit").addClass("disabled");
-//                 $("#submit").attr("readonly",true);
-//             }
-
-            
-//         }
 
         function acceptTerm(){
     		if($("#condition").is(":checked")){
@@ -630,9 +644,7 @@
             	$("#totalpickup").html((Math.max(0,total_rate+discount+cost)).format());    
             	
             }else{
- 
-                console.log("{{ session('customer.id') }}");
-                
+
         		$.post("{{url ('pickup/get_coupon')}}",
         		{
         			_token: $("[name=_token]").val(),
@@ -642,9 +654,7 @@
         			sources: "{{ implode(';',$sources) }}",
         			agents: "{{ implode(';',$agents) }}",
         		},function(data){
-    
-        			console.log("discount: " + data);
-        			
+
         			if(data > accountDiscount){
             			$("#pickupdiscount").show();
             			$("#coupon_error").hide();
@@ -697,8 +707,6 @@
 
         $(document).ready( function() {
 
-            $(".pick-date-{{ array_values($availableExpectTime)[0] }}").click();
-            
             $( ".selector" ).checkboxradio({
                 classes: {
                     "ui-checkboxradio": "highlight"
@@ -706,8 +714,7 @@
             });
 
             showDiscount();
-            showDelivery();
-            
+
             $("#submit").attr("disabled",true);
 
             <?php if(isset($rates['Drop_AtThaiPost'])):?>
@@ -837,22 +844,17 @@
             return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
         };
 
-        $(function () {
-        	var someDate = new Date();
-        	var numberOfDaysToAdd = 2;
-        	someDate.setDate(someDate.getDate() + numberOfDaysToAdd); 
-        	
-            $('.pickup_date').datetimepicker({format: 'YYYY-MM-DD',minDate: new Date(),maxDate: someDate});
-        });
-
         @if(session('msg-type') && session('msg-type') == "shipment-success")
             fbq('track', 'AddToCart', {
-            	value: 200,
+            	value: 1,
             	currency: 'THB',
             });
         @endif
+        
 	</script>
-<?php else: ?>
+	
+@else
+
 	<div class="row">
 		<div class="col-md-7 pad8"><h2>{!! FT::translate('create_pickup.heading') !!}</h2></div>
     </div>
@@ -905,6 +907,6 @@
     	</div>
     </div>
 	
-<?php endif; //endif shipment size ?> 
+@endif
 </div>
 @endsection

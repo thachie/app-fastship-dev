@@ -270,12 +270,6 @@
 			<div id="sidenav-overlay" style="display: none;"></div>
 			
 	       	<div id="body-container">
-	       	
-	       		<div class="col-12 col-md-10 col-md-offset-1 alert alert-danger" role="alert">
-                  	Updates COVID-19 <a href="https://fastship.co/annoucement/" target="_blank" class="alert-link">More ...</a>
-                </div>
-                
-
 	       		@if (session('msg'))
 				@if (session('msg-type'))
 				<div class="col-12 col-md-10 col-md-offset-1 alert alert-<?php echo  session('msg-type'); ?>" style="top: 30px;">

@@ -521,7 +521,7 @@ class PickupController extends Controller
                 
                 $result = LineManager::pushMessage($arrayPostData);
                 
-                $lineNotify = "กรุณาชำระเงิน " . $amount . " บาท ผ่านทางลิ้งก์ \n" . $notifyPaymentUrl . "\n\n วิธีการชำระเงินผ่าน QR: https://fastship.co/helps/payment-2";
+                $lineNotify = "กรุณาชำระเงิน " . $unpaid['Unpaid'] . " บาท ผ่านทางลิ้งก์ \n" . $notifyPaymentUrl . "\n\n วิธีการชำระเงินผ่าน QR: https://fastship.co/helps/payment-2";
 
                 //reply to Line
                 $arrayPostData['to'] = $customer['LineId'];

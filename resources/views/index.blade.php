@@ -2,6 +2,10 @@
 @section('content')
 <div class="conter-wrapper">
 
+	<div class="col-12 col-md-10 col-md-offset-1 alert alert-primary" role="alert">
+        Updates Related to COVID-19 <a href="https://fastship.co/annoucement/" target="_blank" class="alert-link">More ...</a>
+        </div>
+
 	@if(session('customer.line') == "")
 	<div class="col-12 col-md-6 col-md-offset-3 alert" style="top: 25px;background: #fff;margin-bottom: 50px;">
 		<div class="col-md-6 col-xs-12">
