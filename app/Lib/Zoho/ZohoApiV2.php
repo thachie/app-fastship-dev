@@ -124,10 +124,10 @@ class ZohoApiV2{
                     'Mobile' => $params['phone'],
                     'State' => $params['state'],
                     'Referal_Code' => $params['refcode'],
-                    'Traffic_Source' => $params['traffic_src'],
+                    'Traffic_Source' => isset( $params['traffic_src'] ) ? $params['traffic_src']:"",
                     'Register_For' => $params['for'],
                     'Lead_Source' => "app.fastship.co",
-                    'Ads_Campaign' => $params['campaign'],
+                    'Ads_Campaign' => isset( $params['campaign'] ) ? $params['campaign']:"",
                     'Behavior' => $params['behavior'],
                     'Owner' => array(
                         'id' => "2330098000005563023", //dew

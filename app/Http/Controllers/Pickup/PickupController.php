@@ -189,6 +189,7 @@ class PickupController extends Controller
         //availableExpectTime
         $availableExpectTime = array();
         $postcode = $customer['Postcode'];
+        $isBangkok = (substr($postcode,0,2) == "10" || substr($postcode,0,2) == "11" || substr($postcode,0,2) == "12" || $postcode == "");
         
         $sundaySkip = 0;
         //check today is Sunday ?
@@ -217,13 +218,15 @@ class PickupController extends Controller
             $next2D = date("Y-m-d",strtotime("+" . (2+$sundaySkip) . "days"));
         }
 
-        //bangkok
-        if(substr($postcode,0,2) == "10" || substr($postcode,0,2) == "11" || substr($postcode,0,2) == "12" || $postcode == ""){
-            
+        //available time
+        if($isBangkok){
             if($startH < 17){
                 $availableExpectTime[] = $firstD;
             }
- 
+        }else{
+            if($startH <= 11){
+                $availableExpectTime[] = $firstD;
+            }
         }
         $availableExpectTime[] = $nextD;
         $availableExpectTime[] = $next2D;
@@ -258,6 +261,7 @@ class PickupController extends Controller
         	'discount' => $discount,
             'rates' => $rates,
             'availableExpectTime' => $availableExpectTime,
+            'isBangkok' => $isBangkok,
             'unpaidPickups' => $unpaidPickups,
         );
         return view('create_pickup',$data);
@@ -854,10 +858,14 @@ class PickupController extends Controller
         
         //availableExpectTime
         $availableExpectTime = array();
-        $postcode = $request->get("postcode");
+        $isBangkok = $request->get("is_bangkok");
         $pickDate = $request->get("pick_date");
+        $agent = $request->get("agent");
         
-        if(substr($postcode,0,2) == "10" || substr($postcode,0,2) == "11" || substr($postcode,0,2) == "12" || $postcode == ""){
+        if($agent != "Pickup_AtHomeNextday"){
+            
+            $availableExpectTime['all'] = "เวลาใดก็ได้ 09:00 - 17:00 น.";
+            
             if($pickDate == date("Y-m-d")){
                 $startH = date("H") + 2;
                 if($startH < 17){
@@ -909,7 +917,7 @@ class PickupController extends Controller
                 }
             }
         }else{
-            $availableExpectTime[13] = "13:00 - 17:00 น.";
+            $availableExpectTime['all'] = "เวลาใดก็ได้ 13:00 - 17:00 น.";
         }
         
         echo json_encode($availableExpectTime);

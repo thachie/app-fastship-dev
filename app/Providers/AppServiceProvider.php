@@ -47,6 +47,9 @@ class AppServiceProvider extends ServiceProvider
     		"Drop_AtChiangmai" => "ส่งที่สาขาเชียงใหม่",
     		
     		"Pickup_AtHome" => "ให้ไปรับที่บ้าน",
+    	    "Pickup_AtHomeNextday" => "ให้ไปรับที่บ้าน 1-2 วัน",
+    	    "Pickup_AtHomeStandard" => "ให้ไปรับที่บ้าน ภายในวัน",
+    	    "Pickup_AtHomeExpress" => "ให้ไปรับที่บ้าน ด่วน",
     		"Pickup_BySkootar" => "รับโดย Skootar",
     		"Pickup_ByLalamove" => "รับโดย Lalamove",
     		"Pickup_ByFlash" => "รับโดย Flash",
@@ -55,6 +58,7 @@ class AppServiceProvider extends ServiceProvider
     		"Pickup_ByOther" => "รับโดยวิธีอื่นๆ",
     	    "Pickup_ByAirPortels" => "รับโดย Air Portels",
     	    "Pickup_ByPolite" => "รับโดย Polite",
+    	    
     	);
     	view()->share('pickupType', $pickupType);
     	
@@ -66,7 +70,7 @@ class AppServiceProvider extends ServiceProvider
     	$trafficTracker = new TrafficTracker(
 	        'localhost',
 	        'root',
-	        '59lAdf91XTaU',
+	        'Q6wphQ30tvgp',
 	        'fastship_app',
 	        'ttcpc',
     	    60
@@ -81,7 +85,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-    	$this->app['url']->forceScheme("https");
+    	//$this->app['url']->forceScheme("https");
     	
     }
 }
