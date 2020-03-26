@@ -102,7 +102,7 @@
 								<ul class="dropdown-menu top-dropdown-menu import import-dropdown" role="menu">
 									<li><a href="{{url ('/import_shipment')}}"><i class="fa fa-file"></i> From File (xls)</a></li>
 <!-- 									<li><a href="{{url ('/import_ebay')}}"><i class="fa fa-level-down"></i> eBay (autofeed)</a></li> -->
-									<li><a href="{{url ('/shipment/create_ebay')}}"><i class="fa fa-level-down"></i> eBay (new)</a></li>
+									<li><a href="{{url ('/shipment/create_ebay')}}"><i class="fa fa-level-down"></i> eBay</a></li>
 									<li><a href="{{url ('/import_sook')}}"><i class="fa fa-download"></i> Thaitrade.com</a></li>
 								</ul>
 							</li>
@@ -192,7 +192,7 @@
 											<ul class="nav sidenav-sub-menu">
 												<li><a href="{{url ('/import_shipment')}}"><i class="fa fa-excel"></i> From File (xls)</a></li>
 <!-- 												<li><a href="{{url ('/import_ebay')}}"><i class="fa fa-level-down"></i> eBay (autofeed)</a></li>	 -->
-												<li><a href="{{url ('/shipment/create_ebay')}}"><i class="fa fa-level-down"></i> eBay (new)</a></li>
+												<li><a href="{{url ('/shipment/create_ebay')}}"><i class="fa fa-level-down"></i> eBay</a></li>
 												<li><a href="{{url ('/import_sook')}}"><i class="fa fa-download"></i> Thaitrade.com</a></li>	
 											</ul>
 										</li>

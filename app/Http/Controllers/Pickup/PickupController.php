@@ -343,8 +343,9 @@ class PickupController extends Controller
             }
         }
         
-        if($type == 'pickup'){
-            $data['agent'] = 'Pickup_AtHome';
+        $data['agent'] = $request->input('agent');
+        
+        if(substr($data['agent'],0,13) == "Pickup_AtHome"){
             
             if( !empty($request->input('pickupdate')) ){
             	$data['PickupDate'] = $request->input('pickupdate');
@@ -365,8 +366,9 @@ class PickupController extends Controller
             }
             
             $schedule = $data['PickupDate'] . " " . $data['PickupTime']  .":00";
+            
         }else{
-            $data['agent'] = $request->input('agent');
+
             $schedule = "";
         }
         
@@ -847,6 +849,70 @@ class PickupController extends Controller
         
     }
     
+    public function getPickupDate(Request $request)
+    {
+        //check customer login
+        if (session('customer.id') != null){
+            $customerId = session('customer.id');
+        }else{
+            return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+        }
+        
+        //availableExpectTime
+        $availableExpectTime = array();
+        $isBangkok = $request->get("is_bangkok");
+        $agent = $request->get("agent");
+
+        //check today is Sunday ?
+        $sundaySkip = 0;
+        if(date("D") == "Sun"){
+            $firstD = date("Y-m-d",strtotime("+1days"));
+            $sundaySkip = 1;
+            $startH = 7;
+        }else{
+            $firstD = date("Y-m-d");
+            $startH = date("H") + 2;
+            if(date("i") > 30) $startH = $startH+1;
+        }
+        
+        $next2D = date("Y-m-d",strtotime("+" . (2+$sundaySkip) . "days"));
+        if(date("D",strtotime("+" . (1+$sundaySkip) . "days")) == "Sun"){
+            $nextD = date("Y-m-d",strtotime("+2days"));
+            $sundaySkip = 1;
+        }else{
+            $nextD = date("Y-m-d",strtotime("+" . (1+$sundaySkip) . "days"));
+        }
+        
+        if(date("D",strtotime("+" . (2+$sundaySkip) . "days")) == "Sun"){
+            $next2D = date("Y-m-d",strtotime("+3days"));
+            $sundaySkip = 1;
+        }else{
+            $next2D = date("Y-m-d",strtotime("+" . (2+$sundaySkip) . "days"));
+        }
+        
+        //available time
+        if($isBangkok){
+            if($startH < 17){
+                if($agent != "Pickup_AtHomeNextday"){
+                    $availableExpectTime[$firstD] = date("M d (D)",strtotime($firstD));
+                }else if($agent == "Pickup_AtHomeNextday" && date("H") <= 11){
+                    $availableExpectTime[$firstD] = date("M d (D)",strtotime($firstD));
+                }
+            }
+        }else{
+            if($agent == "Pickup_AtHomeNextday" && date("H") <= 11){
+                $availableExpectTime[$firstD] = date("M d (D)",strtotime($firstD));
+            }
+        }
+        $availableExpectTime[$nextD] = date("M d (D)",strtotime($nextD));
+        $availableExpectTime[$next2D] = date("M d (D)",strtotime($next2D));
+        
+        echo json_encode($availableExpectTime);
+        
+        //exit();
+        
+    }
+    
     public function getPickupTime(Request $request)
     {
         //check customer login
@@ -860,13 +926,17 @@ class PickupController extends Controller
         $availableExpectTime = array();
         $isBangkok = $request->get("is_bangkok");
         $pickDate = $request->get("pick_date");
+        
         $agent = $request->get("agent");
         
         if($agent != "Pickup_AtHomeNextday"){
             
+            $nextDay = date("Y-m-d",strtotime($pickDate) + 86400);
+
             $availableExpectTime['all'] = "เวลาใดก็ได้ 09:00 - 17:00 น.";
-            
+
             if($pickDate == date("Y-m-d")){
+
                 $startH = date("H") + 2;
                 if($startH < 17){
                     for($i = max(9,$startH);$i < 17;$i++){
@@ -875,7 +945,7 @@ class PickupController extends Controller
                         }else{
                             $ii = $i;
                         }
-                        $availableExpectTime[$i] = $ii . ":00 - " . ($i+1) . ":00 น.";
+                        $availableExpectTime[$i] =  $ii . ":00 - " . ($i+1) . ":00 น.";
                     }
                 }else if(date("H") < 17){
                     for($i = 9;$i < 17;$i++){
@@ -884,11 +954,11 @@ class PickupController extends Controller
                         }else{
                             $ii = $i;
                         }
-                        $availableExpectTime[$nextD][$i] = $ii . ":00 - " . ($i+1) . ":00 น.";
+                        $availableExpectTime[$nextD][$i] =  $ii . ":00 - " . ($i+1) . ":00 น.";
                     }
                 }else{
                     for($i = 10;$i < 17;$i++){
-                        $availableExpectTime[$nextD][$i] = $i . ":00 - " . ($i+1) . ":00 น.";
+                        $availableExpectTime[$nextD][$i] =  $i . ":00 - " . ($i+1) . ":00 น.";
                     }
                 }
             }else if($pickDate == date("Y-m-d",strtotime("+1day"))){
@@ -899,11 +969,11 @@ class PickupController extends Controller
                             }else{
                                 $ii = $i;
                             }
-                            $availableExpectTime[$i] = $ii . ":00 - " . ($i+1) . ":00 น.";
+                            $availableExpectTime[$i] =  $ii . ":00 - " . ($i+1) . ":00 น.";
                         }
                     }else{
                         for($i = 10;$i < 17;$i++){
-                            $availableExpectTime[$i] = $i . ":00 - " . ($i+1) . ":00 น.";
+                            $availableExpectTime[$i] =  $i . ":00 - " . ($i+1) . ":00 น.";
                         }
                     }
             }else{
@@ -913,17 +983,61 @@ class PickupController extends Controller
                     }else{
                         $ii = $i;
                     }
-                    $availableExpectTime[$i] = $ii . ":00 - " . ($i+1) . ":00 น.";
+                    $availableExpectTime[$i] =  $ii . ":00 - " . ($i+1) . ":00 น.";
                 }
             }
         }else{
+
+            
             $availableExpectTime['all'] = "เวลาใดก็ได้ 13:00 - 17:00 น.";
+            
         }
         
         echo json_encode($availableExpectTime);
         
         //exit();
         
+    }
+    
+    public function getPickupRemark(Request $request)
+    {
+        //check customer login
+        if (session('customer.id') != null){
+            $customerId = session('customer.id');
+        }else{
+            return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+        }
+        
+        //availableExpectTime
+        $availableExpectTime = array();
+        $isBangkok = $request->get("is_bangkok");
+        $pickDate = $request->get("pick_date");
+        $pickTime = $request->get("pick_time");
+        $agent = $request->get("agent");
+        
+        $firstDate = date("d/m/Y",strtotime($pickDate));
+        
+        //check today is Sunday ?
+        if(date("D",strtotime($pickDate) + 86400) == "Sun"){
+            $nextDate = date("d/m/Y",strtotime($pickDate) + 86400*2);
+        }else{
+            $nextDate = date("d/m/Y",strtotime($pickDate) + 86400);
+        }
+
+        if($agent == "Pickup_AtHomeExpress"){
+            $remark = "พัสดุจะถึง Fastship และส่งออกภายในวันที่ " . $firstDate;
+        }else if($agent == "Pickup_AtHomeStandard"){
+            if(intval($pickTime) > 0 && intval($pickTime) < 14){
+                $remark = "พัสดุจะถึง Fastship และส่งออกภายในวันที่ " . $firstDate;
+            }else{
+                $remark = "พัสดุจะถึง Fastship และส่งออกภายในวันที่ " . $nextDate;
+            }
+        }else if($agent == "Pickup_AtHomeNextday"){
+            $remark = "พัสดุจะถึง Fastship และส่งออกภายในวันที่ " . $nextDate;
+        }
+
+        echo json_encode($remark);
+
     }
     
     public function preparePickupInvoicePrint($pickupId=null)

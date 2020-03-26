@@ -212,6 +212,157 @@
 
 </div>
 <script type="text/javascript">
+
+    $(document).ready(function() {
+        
+    	autocompleteState();
+    	//autocompleteCity();
+    	
+    	autocompleteDeclare($("#row0 input.category"));
+    
+    	$(window).keydown(function(event){
+    	    if(event.keyCode == 13) {
+    	      event.preventDefault();
+    	      return false;
+    	    }
+    	});
+    	
+    });
+    
+    $('#rec_state').on('change',function(){
+    	$('#rec_city').val("");
+    	autocompleteCity();
+    });
+    
+    function autocompleteState(){
+    
+    	var _country = "{{ $default['country'] }}";
+    
+    	$('#rec_state').autocomplete({
+            minLength: 0,
+            source: function( request, response ) {
+              $.ajax({
+                url: "{{ url('/address/states') }}",
+                type: "POST",
+                dataType: "json",
+                data: {
+                  term : request.term,
+                  agent : "{{ $default['agent'] }}",
+                  country_id: _country,
+                  _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+    
+    				var array = $.map(data['states'], function (item) { 
+                        return {
+                          label: item['stateName'],
+                          value: item['stateName'],
+                          data : item
+                        }
+                    });
+                  	response(array);
+                  	
+                }
+              });
+            },
+            select: function( event, ui ) {
+                
+               	var data = ui.item.data;   
+    
+               	if(data.stateCode === 0){
+               		$(this).val("");
+               	}else{
+               		$(this).val(data.stateName);
+               		$("#rec_state_code").val(data.stateCode);
+               	}
+        		
+        		//$("#state_desc").text("state code: " + data.code);
+        		//$("#admin_state_hidden").val(data.code);
+            }
+          });
+    }
+    function autocompleteCity(){
+    
+    	var _country = "{{ $default['country'] }}";
+    	var _state = $("#rec_state_code").val();
+    	
+    	$('#rec_city').autocomplete({
+            minLength: 0,
+            source: function( request, response ) {
+              $.ajax({
+                url: "{{ url('/address/cities') }}",
+                type: "POST",
+                dataType: "json",
+                data: {
+                  term : request.term,
+                  agent : "{{ $default['agent'] }}",
+                  country_id: _country,
+                  state_id: _state,
+                  _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+    
+    				var array = $.map(data['cities'], function (item) {
+                        return {
+                          label: item['cityName'],
+                          value: item['cityName'],
+                          data : item
+                        }
+                    });
+    
+                  	response(array);
+                }
+              });
+            },
+            select: function( event, ui ) {
+               	var data = ui.item.data;   
+               	console.log(data.cityId);
+               	if(data.cityId === 0){
+               		$(this).val("");
+               	}else{
+               		$(this).val(data.cityName);
+               	}
+            }
+    	});
+    }
+    
+    function autocompleteDeclare(elem){
+    
+    	
+    	$(elem).autocomplete({
+            minLength: "2",
+            source: function( request, response ) {
+              $.ajax({
+            	url: "{{ url('/shipment/declarations') }}",
+                type: "POST",
+                dataType: "json",
+                data: {
+                  term : request.term,
+                  _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+    
+    				var array = $.map(data['declares'], function (item) { 
+                        return {
+                          label: item['desc'],
+                          value: item['code'],
+                          data : item
+                        }
+                    });
+                    
+                    console.log(array);
+                  	response(array);
+                }
+              });
+            },
+            select: function( event, ui ) {
+               	var data = ui.item.data;   
+        		$(this).val(data.code);
+            }
+        });
+    }
+
+
     function checkZero(valueElement){
         if((valueElement.value) <= 0){valueElement.focus();}
     }

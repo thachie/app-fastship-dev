@@ -6,24 +6,29 @@
 ?>
 <div class="conter-wrapper">
         <div class="row">
-            <div class="col-md-7 pad8"><h2>{!! FT::translate('create_shipment.heading') !!}</h2></div>
-            <div class="col-md-5 text-right">
+            <div class="col-md-6 pad8"><h2>{!! FT::translate('create_shipment.heading') !!}</h2></div>
+            <div class="col-md-6 text-right">
                 <div class="bs-wizard dot-step" style="border-bottom:0;">
-                    <div class="col-xs-4 bs-wizard-step complete">
+                    <div class="col-xs-3 bs-wizard-step complete">
 	                    <div class="progress"><div class="progress-bar"></div></div>
                         <a href="#" class="bs-wizard-dot" style="text-align: center; line-height: 30px;"><span style="z-index: 995; position: relative; color: #fff;">1</span></a>
                         <p class="text-center">{!! FT::translate('step.step1') !!}</p>
                     </div> 
-                    <div class="col-xs-4 bs-wizard-step active">
+                    <div class="col-xs-3 bs-wizard-step active">
 	                    <div class="progress"><div class="progress-bar"></div></div>
                         <a href="#" class="bs-wizard-dot" style="text-align: center; line-height: 30px;"><span style="z-index: 995; position: relative; color: #fff;">2</span></a>
                         <p class="text-center">{!! FT::translate('step.step2') !!}</p>
                     </div>
-                    <div class="col-xs-4 bs-wizard-step disabled">
+                    <div class="col-xs-3 bs-wizard-step disabled">
 	                    <div class="progress"><div class="progress-bar"></div></div>
                         <a href="#" class="bs-wizard-dot" style="text-align: center; line-height: 30px;"><span style="z-index: 995; position: relative; color: #fff;">3</span></a>
                         <p class="text-center">{!! FT::translate('step.step3') !!}</p>
-                    </div>    
+                    </div>  
+                    <div class="col-xs-3 bs-wizard-step disabled">
+                        <div class="progress"><div class="progress-bar"></div></div>
+                        <a href="#" class="bs-wizard-dot" style="text-align: center; line-height: 30px;"><span style="z-index: 995; position: relative; color: #fff;">4</span></a>
+                        <p class="text-center">{!! FT::translate('step.step4') !!}</p>
+            		</div>  
             </div>
         </div>
     </div>

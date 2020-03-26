@@ -169,6 +169,8 @@ Route::group(['middleware' => 'loginsession'], function () {
 	Route::get('thaipost/label/{id?}', 'Pickup\PickupController@getThaiPostLabel');
 	Route::post('pickup/get_coupon', 'Pickup\PickupController@getCoupon');
 	Route::post('pickup/get_time', 'Pickup\PickupController@getPickupTime');
+	Route::post('pickup/get_date', 'Pickup\PickupController@getPickupDate');
+	Route::post('pickup/get_remark', 'Pickup\PickupController@getPickupRemark');
 	
 
 	//Feature Prepaid System
