@@ -100,6 +100,14 @@
 			</div>
 		</div>
 		<div class="col-md-8 ">
+			<div class="row text-right">
+			@if(session('lang') != null && session('lang') == "en")
+				<a href="{{ url('/locale/th') }}" class="small" style="line-height: 24px;"><span style="background: #f15a22;color:#fff;padding: 2px 5px;">TH</span></a>
+			@else
+				<a href="{{ url('/locale/en') }}" class="small" style="line-height: 24px;"><span style="background: #f15a22;color:#fff;padding: 2px 5px;">EN</span></a>
+			@endif	
+			</div>
+			
 			<div class="row" style="margin-top: 15%;">
     			<div class="col-md-6 col-md-offset-2">
     			

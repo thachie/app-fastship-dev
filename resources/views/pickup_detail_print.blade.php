@@ -81,7 +81,7 @@
 										<div class="col-md-7" style="padding-left: 0;">	
 											<div class="col-md-12 col-print-12" style="padding-left: 0;">วิธีที่ให้ไปรับ : {{ $pickupType[$pickup_data['PickupType']] }}</div>
 											<div class="col-md-12 col-print-12" style="padding-left: 0;">วันที่สร้าง : {{ date("d/m/Y H:i:s",strtotime($pickup_data['CreateDate']['date'])) }}</div>
-											<?php if($pickup_data['PickupType'] == "Pickup_AtHome"){ ?>
+											<?php if(substr($pickup_data['PickupType'],0,13) == "Pickup_AtHome"){ ?>
 												<div class="col-md-12 col-print-12" style="padding-left: 0;">วันที่นัดรับ : {{ date("d/m/Y H:i:s",strtotime($pickup_data['ScheduleDate'])) }}</div>
 											<?php } ?>
 										</div>

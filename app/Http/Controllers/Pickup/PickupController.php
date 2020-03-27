@@ -745,7 +745,8 @@ class PickupController extends Controller
     				$pickupData['ShipmentDetail']['ShipmentIds'][$key]['barcode'] = $barcodeImage;
     			}
     			
-    			if(in_array($pickupData['PickupType'],array("Pickup_AtHome","Pickup_ByKerry","Pickup_ByFlash","Pickup_BySpeedy"))){
+    			
+    			if(in_array($pickupData['PickupType'],array("Pickup_AtHome","Pickup_AtHomeNextday","Pickup_AtHomeStandard","Pickup_AtHomeExpress","Pickup_ByKerry","Pickup_ByFlash","Pickup_BySpeedy"))){
     			    $barcode = new BarcodeGenerator();
     			    $barcode->setText("FAST000".$pickupId);
     			    $barcode->setType(BarcodeGenerator::Code39);
@@ -1024,6 +1025,7 @@ class PickupController extends Controller
             $nextDate = date("d/m/Y",strtotime($pickDate) + 86400);
         }
 
+        $remark = "";
         if($agent == "Pickup_AtHomeExpress"){
             $remark = "พัสดุจะถึง Fastship และส่งออกภายในวันที่ " . $firstDate;
         }else if($agent == "Pickup_AtHomeStandard"){
