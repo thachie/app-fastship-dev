@@ -151,17 +151,17 @@ class CustomerController extends Controller
 			//get customer
 			$customerObj = FS_Customer::get($customerId);
 			
-			if($request->has("line_id") && $customerObj['LineId'] == null){
-			     $lineId = $request->input('line_id');
-			     $params = array(
-			         "LineUserId" => $lineId,
-			     );
-			     FS_Customer::update($params);
-			}
-			
 			if($customerObj == null){
 				return back()->with('msg','ไม่พบข้อมูลผู้ใช้งาน');
 			}else{
+			    
+			    if($request->has("line_id") && $customerObj['LineId'] == null){
+			        $lineId = $request->input('line_id');
+			        $params = array(
+			            "LineUserId" => $lineId,
+			        );
+			        FS_Customer::update($params);
+			    }
 			    
 			    //save to session
 				$request->session()->put('customer.id', $customerId);
@@ -380,12 +380,22 @@ class CustomerController extends Controller
 			   'customerData' => $createDetails,
 			);
 				
-			Mail::send('email/register',$email_data,function($message) use ($email_data){
-				$message->to($email_data['email']);
-				$message->bcc(['oak@tuff.co.th','thachie@tuff.co.th']);
-				$message->from('cs@fastship.co', 'FastShip');
-				$message->subject('FastShip - ยินดีต้อนรับคุณ'. $email_data['firstname'] ." บัญชีของคุณถูกสร้างเรียบร้อยแล้ว");
-			});
+// 			Mail::send('email/register',$email_data,function($message) use ($email_data){
+// 				$message->to($email_data['email']);
+// 				$message->bcc(['oak@tuff.co.th','thachie@tuff.co.th']);
+// 				$message->from('cs@fastship.co', 'FastShip');
+// 				$message->subject('FastShip - ยินดีต้อนรับคุณ'. $email_data['firstname'] ." บัญชีของคุณถูกสร้างเรียบร้อยแล้ว");
+// 			});
+			
+		    // ##### call notify #####
+			$token = md5("fastship".$customerId);
+		    $requestArray = array(
+		        'id' => $customerId,
+		        'token' => $token,
+		    );
+		    $url = "https://admin.fastship.co/notify/registercompleted";
+		    call_api($url,$requestArray);
+		    // ##### call notify #####
 
 			//save to session
 			$request->session()->put('customer.id', $customerId);
@@ -1277,38 +1287,40 @@ class CustomerController extends Controller
 
 		    if($updateCompleted){
 		    
-    			//Check validate email
-    			$validatePassword = DB::table('customer')
-    			->select("CUST_PASSWORD")
-    			->where('CUST_ID', $customerId)
-    			->where("IS_ACTIVE",1)
-    			->first();
+//     			//Check validate email
+//     			$validatePassword = DB::table('customer')
+//     			->select("CUST_PASSWORD")
+//     			->where('CUST_ID', $customerId)
+//     			->where("IS_ACTIVE",1)
+//     			->first();
     
-    			$currentPassDB = $validatePassword->CUST_PASSWORD;
-    			$converter = new Encryption;
-    			$oldPassword = $converter->encode($currentpassword);
-    			$newPassword = $converter->encode($newcurrentpassword);
-    			if($currentPassDB === $oldPassword){
-    				$update = DB::table('customer')
-    				->where('CUST_ID', $customerId)
-    				->update(
-    						[
-    								'CUST_PASSWORD' => $newPassword,
-    								'UPDATE_DATETIME' =>  date('Y-m-d H:i:s')
-    						]
-    						);
-    				if($update){
-    					return redirect('/myaccount')->with('msg','ระบบได้ทำการเปลี่ยนรหัสผ่าน เรียบร้อยแล้ว')->with('msg-type','success');
-    				}else{
-    					return redirect('/change_password')->with('msg','เปลี่ยนรหัสผ่านไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
-    				}
-    			}else{
-    				return redirect('/change_password')->with('msg','รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
-    			}
-		    }
-		    
+//     			$currentPassDB = $validatePassword->CUST_PASSWORD;
+//     			$converter = new Encryption;
+//     			$oldPassword = $converter->encode($currentpassword);
+//     			$newPassword = $converter->encode($newcurrentpassword);
+//     			if($currentPassDB === $oldPassword){
+//     				$update = DB::table('customer')
+//     				->where('CUST_ID', $customerId)
+//     				->update(
+//     						[
+//     								'CUST_PASSWORD' => $newPassword,
+//     								'UPDATE_DATETIME' =>  date('Y-m-d H:i:s')
+//     						]
+//     						);
+//     				if($update){
+//     					return redirect('/myaccount')->with('msg','ระบบได้ทำการเปลี่ยนรหัสผ่าน เรียบร้อยแล้ว')->with('msg-type','success');
+//     				}else{
+//     					return redirect('/change_password')->with('msg','เปลี่ยนรหัสผ่านไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
+//     				}
+
+	            return redirect('/myaccount')->with('msg','ระบบได้ทำการเปลี่ยนรหัสผ่าน เรียบร้อยแล้ว')->with('msg-type','success');
+	        
+			}else{
+				return redirect('/change_password')->with('msg','รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
+			}
+
 		}else{
-			return redirect('/change_password')->with('msg','รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง2');
+			return redirect('/change_password')->with('msg','รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
 		}
 	}
 	
@@ -1321,50 +1333,56 @@ class CustomerController extends Controller
 		]);
 		$email = $request->input('email');;
 
-		$customerObj = DB::table('customer')->whereRaw('LOWER(CUST_EMAIL) = ?', strtolower($email))->where("IS_ACTIVE",1)->first();
-		if(!isset($customerObj)){
+		Fastship::getToken();
+		
+		$customerId = FS_Customer::checkEmail(strtolower($email));
+		//$customerObj = DB::table('customer')->whereRaw('LOWER(CUST_EMAIL) = ?', strtolower($email))->where("IS_ACTIVE",1)->first();
+		if($customerId < 0){
 		    return redirect('/forget_password')->with('msg','ไม่พบอีเมล์ในระบบ กรุณาลองใหม่อีกครั้ง');
 		}
 		
 		$randomPassword = generateRandomString(6);
 		$converter = new Encryption;
 		$password = $converter->encode($randomPassword);
-		$customerObj->CUST_PASSWORD = $password;
 		
-		if($email != "" && isset($customerObj->CUST_ID) && $customerObj->CUST_ID > 0 ){
+		if($email != "" && isset($customerId) && $customerId > 0 ){
 		
-			$update = DB::table('customer')
-				->where('CUST_ID', $customerObj->CUST_ID)
-				->update([
-					'CUST_PASSWORD' => $password
-				]);
-			
 			//update to API
-			Fastship::getToken($customerObj->CUST_ID);
+		    Fastship::getToken($customerId);
 			$updateDetails = array(
 			    'Password' => $randomPassword,
 			);
 			$updateCompleted = FS_Customer::changePassword($updateDetails);
 				
 			// ###### send email #####
-			$createDetails = array(
-				"Email" => $email,
-				"Password" => $randomPassword,
-				"Firstname" => $customerObj->CUST_FIRSTNAME,
-			);
-			$email_data = array(
-				'email' => $email,
-				'customerData' => $createDetails,
-			);
+// 			$createDetails = array(
+// 				"Email" => $email,
+// 				"Password" => $randomPassword,
+// 				"Firstname" => $customerObj->CUST_FIRSTNAME,
+// 			);
+// 			$email_data = array(
+// 				'email' => $email,
+// 				'customerData' => $createDetails,
+// 			);
 				
-			Mail::send('email/reset_password',$email_data,function($message) use ($email_data){
-				$message->to($email_data['email']);
-				$message->bcc(['thachie@tuff.co.th']);
-				$message->from('cs@fastship.co', 'FastShip');
-				$message->subject('FastShip - รหัสของคุณถูกรีเซตแล้ว ('. $email_data['email'] .")");
-			});		
+// 			Mail::send('email/reset_password',$email_data,function($message) use ($email_data){
+// 				$message->to($email_data['email']);
+// 				$message->bcc(['thachie@tuff.co.th']);
+// 				$message->from('cs@fastship.co', 'FastShip');
+// 				$message->subject('FastShip - รหัสของคุณถูกรีเซตแล้ว ('. $email_data['email'] .")");
+// 			});		
 			// ###### send email #####
 		
+			// ##### call notify #####
+			$token = md5("fastship".$customerId);
+			$requestArray = array(
+			    'id' => $customerId,
+		        'token' => $token,
+			);
+			$url = "https://admin.fastship.co/notify/resetpassword";
+			call_api($url,$requestArray);
+			// ##### call notify #####
+			
 			return redirect('/login')->with('msg','ระบบได้ทำการรีเซตรหัสผ่าน เรียบร้อยแล้ว')->with('msg-type','success');
 		
 		}else{

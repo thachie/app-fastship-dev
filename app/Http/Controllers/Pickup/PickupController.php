@@ -21,6 +21,9 @@ class PickupController extends Controller
 
     public function __construct()
     {
+        
+        date_default_timezone_set("Asia/Bangkok");
+        
         if($_SERVER['REMOTE_ADDR'] == "localhost"){
             include(app_path() . '\Lib\inc.functions.php');
         }else{
@@ -480,6 +483,7 @@ class PickupController extends Controller
             }
 
             // ### send email ###
+            /*
             $toName = $customerObj['Firstname'] . ' ' . $customerObj['Lastname'];
             $eMail = $customerObj['Email'];
             
@@ -527,7 +531,7 @@ class PickupController extends Controller
                 
                 $result = LineManager::pushMessage($arrayPostData);
                 
-                $lineNotify = "กรุณาชำระเงิน " . $unpaid['Unpaid'] . " บาท ผ่านทางลิ้งก์ \n" . $notifyPaymentUrl . "\n\n วิธีการชำระเงินผ่าน QR: https://fastship.co/helps/payment-2";
+                $lineNotify = "กรุณาชำระเงิน ใบรับพัสดุหมายเลข " . $pickupId . " ยอดชำระ " . $unpaid['Unpaid'] . " บาท ผ่านทางลิ้งก์ \n" . $notifyPaymentUrl . "\n\n วิธีการชำระเงินผ่าน QR: https://fastship.co/helps/payment-2";
 
                 //reply to Line
                 $arrayPostData['to'] = $customer['LineId'];
@@ -536,9 +540,18 @@ class PickupController extends Controller
                 
                 $result = LineManager::pushMessage($arrayPostData);
 
-            }
-
+            }*/
             // ####
+
+            // ##### call notify #####
+            $token = md5("fastship".$pickupId);
+            $requestArray = array(
+                'id' => $pickupId,
+                'token' => $token,
+            );
+            $url = "https://admin.fastship.co/notify/newpickup";
+            call_api($url,$requestArray);
+            // ##### call notify #####
 
             if ($PaymentMethod == 'QR') {
                 return redirect('pickup_detail_payment/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว กรุณาตรวจสอบรายการและชำระเงิน')->with('msg-type','success');
@@ -872,7 +885,7 @@ class PickupController extends Controller
             $startH = 7;
         }else{
             $firstD = date("Y-m-d");
-            $startH = date("H") + 2;
+            $startH = intval(date("H")) + 2;
             if(date("i") > 30) $startH = $startH+1;
         }
         
@@ -896,12 +909,12 @@ class PickupController extends Controller
             if($startH < 17){
                 if($agent != "Pickup_AtHomeNextday"){
                     $availableExpectTime[$firstD] = date("M d (D)",strtotime($firstD));
-                }else if($agent == "Pickup_AtHomeNextday" && date("H") <= 11){
+                }else if($agent == "Pickup_AtHomeNextday" && intval(date("H")) <= 11){
                     $availableExpectTime[$firstD] = date("M d (D)",strtotime($firstD));
                 }
             }
         }else{
-            if($agent == "Pickup_AtHomeNextday" && date("H") <= 11){
+            if($agent == "Pickup_AtHomeNextday" && intval(date("H")) < 11){
                 $availableExpectTime[$firstD] = date("M d (D)",strtotime($firstD));
             }
         }

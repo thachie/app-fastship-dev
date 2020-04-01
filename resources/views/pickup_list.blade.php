@@ -43,8 +43,10 @@ $limit = 20;
                         		<td>
                         			@if($pickup['Status'] == 'Unpaid')
 	                        			<a href="{{ url('/pickup_detail_payment/'.$pickup['ID'])}}"><button type="button" class="btn btn-info btn-sm">ชำระเงิน</button></a>
+									@elseif($pickup['Status'] == 'New')
+	                        			<a href="{{ url('/pickup_detail_print/'.$pickup['ID'])}}" target="_blank"><button type="button" class="btn btn-success btn-sm">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
 									@else
-										<a href="{{ url('/pickup_invoice_print/'.$pickup['ID'])}}" target="_blank"><button type="button" class="btn btn-default btn-sm">{!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
+										<a href="{{ url('/pickup_invoice_print/'.$pickup['ID'])}}" target="_blank"><button type="button" class="btn btn-default btn-sm">พิมพ์ใบส่งของ</button></a>
 									@endif
                         		</td>
                         	</tr>

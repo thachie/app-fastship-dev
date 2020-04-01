@@ -22,7 +22,7 @@ Route::get('register/{refercode?}', 'Customer\CustomerController@prepareLoginWit
 Route::get('register_email/{refercode?}',  'Customer\CustomerController@prepareRegisterWithCode');
 Route::get('register_line/{refercode?}',  'Customer\CustomerController@prepareRegisterLine');
 Route::get('register_complete', function () {  return view('register_complete'); });
-Route::get('a/{refercode}',  'Customer\CustomerController@prepareRegister');
+Route::get('a/{refercode}',   'Customer\CustomerController@prepareLoginWithCode');
 
 //customer & password
 Route::get('forget_password', function () {  return view('forget_password'); });

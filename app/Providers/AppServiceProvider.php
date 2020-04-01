@@ -58,6 +58,7 @@ class AppServiceProvider extends ServiceProvider
     		"Pickup_ByOther" => "รับโดยวิธีอื่นๆ",
     	    "Pickup_ByAirPortels" => "รับโดย Air Portels",
     	    "Pickup_ByPolite" => "รับโดย Polite",
+    	    "Fastbox" => "จัดการโดย Fastbox",
     	    
     	);
     	view()->share('pickupType', $pickupType);

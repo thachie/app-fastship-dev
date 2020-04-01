@@ -20,6 +20,16 @@ use App\Lib\Encryption;
 
 class TestController extends Controller {
 
+    public function __construct()
+    {
+        $this->dateTime = date_default_timezone_set("Asia/Bangkok");
+        if($_SERVER['REMOTE_ADDR'] == "localhost"){
+            include(app_path() . '\Lib\inc.functions.php');
+        }else{
+            include(app_path() . '/Lib/inc.functions.php');
+        }
+    }
+    
 	public function getIndex(){
 		return view('test');
 	}
@@ -142,25 +152,24 @@ class TestController extends Controller {
 	    foreach ($response['ShipmentDetail']['ShipmentIds'] as $shipmentId) {
 	        $shipment_data[] = FS_Shipment::get($shipmentId);
 	    }
-	    
-	    $converter = new Encryption;
-	    $code1 = $converter->encode_short($pickupId);
-	    $code2 = $converter->encode_short($customerId);
-	    $url = "https://app.fastship.co/kbank/qr/".$code1."/".$code2;
-	    
 	    $data = array(
 	        'pickupId' => $pickupId,
 	        'email' => $eMail,
 	        'pickupData' => $response,
 	        'shipmentData' => $shipment_data,
-	        'url' => $url,
 	    );
-
-	    Mail::send('email/new_order',$data,function($message) use ($data){
+	    
+	    
+	    if($sent = Mail::send('email/new_order',$data,function($message) use ($data){
 	        $message->to($data['email']);
-	        $message->from('cs@fastship.co', 'FastShip');
-	        $message->subject( time() . 'TEST ใบรับพัสดุจาก FastShip หมายเลข '. $data['pickupId'] ." ถูกสร้างแล้ว");
-	    });
+	        $message->from('info@fastship.co', 'FastShip');
+	        $message->subject( time() . ' TEST ใบรับพัสดุจาก FastShip หมายเลข '. $data['pickupId'] ." ถูกสร้างแล้ว");
+	    })){
+	        echo "sent";
+	    }else{
+	        echo "not send1";
+	        print_r($sent);
+	    }
 	    
 	}
 	
@@ -576,6 +585,19 @@ class TestController extends Controller {
 	
 	public function testAny(){
 
+	    // ##### call notify #####
+	    $pickupId = 302088;
+	    $token = md5("fastship".$pickupId);
+	    $requestArray = array(
+	        'id' => $pickupId,
+	        'token' => $token,
+	    );
+	    $url = "https://admin.fastship.co/notify/newpickup";
+	    call_api($url,$requestArray);
+	    // ##### call notify #####
+	    
+	    exit();
+	    
 	    echo "AAA";
 	    print_r(preg_match('/[^A-Za-z0-9]/', "asda" ));
 	    
@@ -650,7 +672,7 @@ class TestController extends Controller {
 	    echo "call...";
 	    print_r($response);
 	    $resp = FS_Line::create($response);
-		echo "<hr />";	    
+echo "<hr />";	    
 	    print_r($resp);
 	}
 

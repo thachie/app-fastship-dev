@@ -125,6 +125,29 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                 <p class="text-secondary"><strong>หมายเหตุ</strong> ทีมงานฟาสต์ชิปจะติดต่อท่านภายใน 1 วันทำการ เพื่อนัดหมายเข้ารับพัสดุ</p>
         	</div>
         </div>
+       @elseif ($pickup_data['Status'] == 'Pickup')
+		<div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center" style="padding: 40px 0;background: #F3F8ED;border:1px solid #72b92e">
+            
+	    		<h3 class="text-success">ยืนยันการเข้ารับแล้ว</h3>
+	    		<p style="margin-bottom: 20px;">กรุณาพิมพ์ใบปะหน้า และเตรียมพัสดุ</p>
+	    		
+	    		@if($isSeperateLabel)
+	    		@if(sizeof($pickup_data['ShipmentDetail']['ShipmentIds']) > 0) 
+                @foreach($pickup_data['ShipmentDetail']['ShipmentIds'] as $data)
+	    			@if(isset($data) && isset($labels[$data['ID']]) && isset($labels[$data['ID']]['barcode']))
+                    <a href="https://app.fastship.co/thaipost/label/{{ $labels[$data['ID']]['barcode'] }}" target="_blank"><button type="button" class="btn btn-lg btn-primary"><i class="fa fa-print"></i> {!! FT::translate('pickup_detail.print_label') !!} {{ $data['ID'] }}</button></a>
+                	@endif
+                @endforeach
+                @endif
+                @else          	
+            	<a href="/pickup_detail_print/<?php echo $pickupID; ?>" target="_blank"><button type="button" class="btn btn-lg btn-primary"><i class="fa fa-print"></i> {!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
+                @endif
+                <br />
+                <p style="margin-top: 20px;"><a href="https://fastship.co/helps/package-guide-2" target="_blank">คู่มือการบรรจุหีบห่อ</a></p>
+                <p class="text-secondary"><strong>หมายเหตุ</strong> หากลูกค้าไม่พิมพ์ใบปะหน้าตามที่กำหนด ทางเราจะไม่รับผิดชอบต่อปัญหาที่เกิดขึ้นจากการเข้ารับ</p>
+        	</div>
+        </div>
         @endif
                     	
         <div class="row">
