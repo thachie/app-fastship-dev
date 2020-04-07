@@ -178,13 +178,14 @@ class PickupController extends Controller
                 "Height" => 0,
                 "Length" => 0,
                 "TotalShippingRate" => $totalRate,
-                "Piece" => 1,
+                "Piece" => sizeof($shipment_data),
                 "Postcode" => $customer['Postcode'],
             );
             $rates = FS_Pickup::get_pickup_rates($params);
             if(!isset($rates) || !$rates){
                 $rates = array();
             }
+            
         }else{
             $rates = array();
         }

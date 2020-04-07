@@ -22,7 +22,7 @@
 				<div class="row text-center" style="margin-top: 40px;">
 					<h5>{!! FT::translate('tracking.panel.content') !!}</h5>
 					<div class="col-xs-6 col-md-3" style="margin-bottom:10px;"><a href="https://www.ups.com/tracking/tracking.html" target="_blank"><img src="{{ url('images/agent/FS.gif') }}" style="max-width: 100%;"/></a><span class="small">FS Express</span></div>
-					<div class="col-xs-6 col-md-3" style="margin-bottom:10px;"><a href="https://www.asendia.com/tracking/" target="_blank"><img src="{{ url('images/agent/FS_Standard.gif') }}" style="max-width: 100%;" /></a><span class="small">FS Standard</span></div>
+					<div class="col-xs-6 col-md-3" style="margin-bottom:10px;"><a href="https://www.asendia.com/tracking/" target="_blank"><img src="{{ url('images/agent/FS_Standard.gif') }}" style="max-width: 100%;" /></a><span class="small">FS Non-registered</span></div>
 					<div class="col-xs-6 col-md-3" style="margin-bottom:10px;"><a href="https://www.asendia.com/tracking/" target="_blank"><img src="{{ url('images/agent/FS_Epacket.gif') }}" style="max-width: 100%;" /></a><span class="small">FS E-Packet</span></div>
 					<div class="col-xs-6 col-md-3" style="margin-bottom:10px;"><a href="https://www.ups.com/tracking/tracking.html" target="_blank"><img src="{{ url('images/agent/UPS.gif') }}" style="max-width: 100%;" /></a><span class="small">UPS Express</span></div>
 					<div class="col-xs-6 col-md-3" style="margin-bottom:10px;"><a href="https://www.aramex.com/track/shipments" target="_blank"><img src="{{ url('images/agent/Aramex.gif') }}" style="max-width: 100%;" /></a><span class="small">Aramex</span></div>

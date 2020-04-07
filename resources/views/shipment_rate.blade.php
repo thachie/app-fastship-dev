@@ -236,7 +236,7 @@
                        }else if(_displayAgent == "FS"){
                     	   _displayAgent = "FastShip Express";
                        }else if(_displayAgent == "FS Standard"){
-                    	   _displayAgent = "FastShip Standard";
+                    	   _displayAgent = "FastShip Non-registered";
                        }else if(_displayAgent == "FS Epacket"){
                     	   _displayAgent = "FastShip E-Packet";
                        }else if(_displayAgent == "Ecom PD"){

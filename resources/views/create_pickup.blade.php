@@ -142,11 +142,36 @@ foreach($shipment_data as $data){
 
                         <fieldset>
                             
+                            @if(isset($rates['Pickup_AtHomeNextdayBulk']) && session('customer.id') == 5223)
+                            <label for="pick-nextdaybulk-fs">
+                                <div class="col-md-2 hidden-xs"><img src="/images/fastship.png"></div>
+                                <div class="col-md-8 col-xs-8 text-left">
+                                    
+                                    <h5>{!! FT::translate('option.pickup.athome_nextdaybulk') !!}</h5>
+                                    
+                                    <div class="text-left">
+                                        <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalPUNB" style="display: none;">
+                                        	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-xs-4 text-right">
+                                	@if($rates['Pickup_AtHomeNextdayBulk']['AccountRate'] == 0)
+                                    <h2 class="slogan text-success no-padding">{!! FT::translate('create_pickup.text.free') !!}</h2>
+                                    @else
+                                    <h2 class="slogan text-info no-padding">{{ $rates['Pickup_AtHomeNextdayBulk']['AccountRate'] }}.-</h2>
+                                    @endif
+                                </div>
+                            </label>
+                            <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="pick-nextdaybulk-fs" value="Pickup_AtHomeNextdayBulk" checked="checked" />
+                            @endif
+                            
+                            @if(isset($rates['Pickup_AtHomeNextday']))
                             <label for="pick-nextday-fs">
                                 <div class="col-md-2 hidden-xs"><img src="/images/fastship.png"></div>
                                 <div class="col-md-8 col-xs-8 text-left">
                                     
-                                    <h3>{!! FT::translate('option.pickup.athome_nextday') !!}</h3>
+                                    <h5>{!! FT::translate('option.pickup.athome_nextday') !!}</h5>
                                     
                                     <div class="text-left">
                                         <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalPUN" style="display: none;">
@@ -155,17 +180,22 @@ foreach($shipment_data as $data){
                                     </div>
                                 </div>
                                 <div class="col-md-2 col-xs-4 text-right">
-                                	<h2 class="slogan text-success no-padding">{!! FT::translate('create_pickup.text.free') !!}</h2>
+                                	@if($rates['Pickup_AtHomeNextday']['AccountRate'] == 0)
+                                    <h2 class="slogan text-success no-padding">{!! FT::translate('create_pickup.text.free') !!}</h2>
+                                    @else
+                                    <h2 class="slogan text-info no-padding">{{ $rates['Pickup_AtHomeNextday']['AccountRate'] }}.-</h2>
+                                    @endif
                                 </div>
                             </label>
                             <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="pick-nextday-fs" value="Pickup_AtHomeNextday" checked="checked" />
+                            @endif
                             
                             @if($isBangkok)
                             <label for="pick-standard-fs">
                                 <div class="col-md-2 hidden-xs"><img src="/images/fastship.png"></div>
                                 <div class="col-md-8 col-xs-8 text-left">
                                 
-                                    <h3>{!! FT::translate('option.pickup.athome_standard') !!}</h3>
+                                    <h5>{!! FT::translate('option.pickup.athome_standard') !!}</h5>
                                     
                                     <div class="text-left">
                                         <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalPUS" style="display: none;">
@@ -187,7 +217,7 @@ foreach($shipment_data as $data){
                                 <div class="col-md-2 hidden-xs"><img src="/images/fastship.png"></div>
                                 <div class="col-md-8 col-xs-8 text-left">
                                     
-                                    <h3>{!! FT::translate('option.pickup.athome_express') !!}</h3>
+                                    <h5>{!! FT::translate('option.pickup.athome_express') !!}</h5>
 
                                     <div class="text-left">
                                         <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalPUE" style="display: none;">
@@ -206,7 +236,7 @@ foreach($shipment_data as $data){
                                 <div class="col-md-2 hidden-xs"><img src="/images/fastship.png"></div>
                                 <div class="col-md-8 col-xs-8 text-left">
                                     
-                                    <h3>{!! FT::translate('option.pickup.drop_fastship') !!}</h3>
+                                    <h5>{!! FT::translate('option.pickup.drop_fastship') !!}</h5>
                                     
                                     <div class="text-left">
                                         <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalFS">
@@ -222,12 +252,36 @@ foreach($shipment_data as $data){
                             <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="drop-fs" value="Drop_AtFastship" />
                             @endif
                             
+                            <?php if(isset($rates['Drop_AtThaiPostBulk'])):?>
+                            <label for="drop-thaipostbulk">
+                                <div class="col-md-2 hidden-xs"><img src="/images/thaipost.png" /></div>
+                                <div class="col-md-8 col-xs-8 text-left">
+                                
+                                    <h5>{!! FT::translate('option.pickup.drop_thaipost') !!}</h5>
+
+                                    <div class="text-left">
+                                        <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalTPB">
+                                        	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-xs-4 text-right">
+                                	@if($rates['Drop_AtThaiPostBulk']['AccountRate'] == 0)
+                                    <h2 class="slogan text-success no-padding">{!! FT::translate('create_pickup.text.free') !!}</h2>
+                                    @else
+                                    <h2 class="slogan text-info no-padding">{{ $rates['Drop_AtThaiPostBulk']['AccountRate'] }}.-</h2>
+                                    @endif
+                                </div>
+                            </label>
+                            <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="drop-thaipostbulk" value="Drop_AtThaiPostBulk"> 
+                            <?php endif; ?>
+                            
                             <?php if(isset($rates['Drop_AtThaiPost'])):?>
                             <label for="drop-thaipost">
                                 <div class="col-md-2 hidden-xs"><img src="/images/thaipost.png" /></div>
                                 <div class="col-md-8 col-xs-8 text-left">
                                 
-                                    <h3>{!! FT::translate('option.pickup.drop_thaipost') !!}</h3>
+                                    <h5>{!! FT::translate('option.pickup.drop_thaipost') !!}</h5>
 
                                     <div class="text-left">
                                         <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalTP">
@@ -236,11 +290,11 @@ foreach($shipment_data as $data){
                                     </div>
                                 </div>
                                 <div class="col-md-2 col-xs-4 text-right">
-                                	<?php if($rates['Drop_AtThaiPost']['AccountRate'] == 0): ?>
+                                	@if($rates['Drop_AtThaiPost']['AccountRate'] == 0)
                                     <h2 class="slogan text-success no-padding">{!! FT::translate('create_pickup.text.free') !!}</h2>
-                                    <?php else: ?>
-                                    <h2 class="slogan text-info no-padding"><?php echo $rates['Drop_AtThaiPost']['AccountRate']; ?> {!! FT::translate('unit.baht') !!}</h2>
-                                    <?php endif; ?>
+                                    @else
+                                    <h2 class="slogan text-info no-padding">{{ $rates['Drop_AtThaiPost']['AccountRate'] }}.-</h2>
+                                    @endif
                                 </div>
                             </label>
                             <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="drop-thaipost" value="Drop_AtThaiPost"> 
@@ -705,6 +759,21 @@ foreach($shipment_data as $data){
     		if(type == 'Pickup_AtHomeNextday'){
     			$("#address_section").show();
     			$("#fspickup").show();
+    			@if(isset($rates['Pickup_AtHomeNextday']))
+    				cost = {{ $rates['Pickup_AtHomeNextday']['AccountRate'] }};
+    			@else
+        			cost = 0;
+    				$("#pick-nextday-fs").hide();
+    			@endif
+    		}else if(type == 'Pickup_AtHomeNextdayBulk'){
+    			$("#address_section").show();
+    			$("#fspickup").show();
+    			@if(isset($rates['Pickup_AtHomeNextdayBulk']))
+    				cost = {{ $rates['Pickup_AtHomeNextdayBulk']['AccountRate'] }};
+    			@else
+        			cost = 0;
+    				$("#pick-nextdaybulk-fs").hide();
+    			@endif
     		}else if(type == 'Pickup_AtHomeStandard'){
     			$("#address_section").show();
     			$("#fspickup").show();
@@ -723,7 +792,21 @@ foreach($shipment_data as $data){
     		}else if(type == 'Drop_AtThaiPost'){
     			$("#address_section").show();
     			$("#fspickup").hide();
-    			cost = 0;
+    			@if(isset($rates['Drop_AtThaiPost']))
+    				cost = {{ $rates['Drop_AtThaiPost']['AccountRate'] }};
+    			@else
+        			cost = 0;
+    				$("#drop-thaipost").hide();
+    			@endif
+    		}else if(type == 'Drop_AtThaiPostBulk'){
+    			$("#address_section").show();
+    			$("#fspickup").hide();
+    			@if(isset($rates['Drop_AtThaiPostBulk']))
+    				cost = {{ $rates['Drop_AtThaiPostBulk']['AccountRate'] }};
+    			@else
+        			cost = 0;
+    				$("#drop-thaipostbulk").hide();
+    			@endif
     		}
 
     		$("#cost").html(cost);
