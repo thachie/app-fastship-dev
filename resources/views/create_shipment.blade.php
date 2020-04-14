@@ -167,6 +167,11 @@
                            		 {!! FT::translate('create_shipment.warning.china') !!}
                             </div>
                             @endif
+                            @if($default['country'] == "KOR" && $default['agent'] == "Aramex")
+                            <div class="col-md-12 small text-warning text-center" style="margin-top:20px; ">
+                           		 กรุณาแนบสำเนาบัตรประชาชนมาพร้อมกับกล่องพัสดุ หรือส่งอีเมล์เข้ามาที่ <a href="mailto:cs@fastship.co">cs@fastship.co</a>
+                            </div>
+                            @endif
 
                             
                         <div class="clearfix"></div><br /> 

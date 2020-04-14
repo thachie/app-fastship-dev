@@ -60,6 +60,7 @@ if($pickup_data['Status'] == "Unpaid"){
     $step5 = array("active","timeline-event-success","fa-check");
 }else if($pickup_data['Status'] == "Cancelled"){
     $PickupStatus = FT::translate('status.pickup.status100');
+    $step0 = array("","opacity-4","fa-ellipsis-h");
 	$step1 = array("","opacity-4","fa-ellipsis-h");
 	$step2 = array("","opacity-4","fa-ellipsis-h");
 	$step3 = array("","opacity-4","fa-ellipsis-h");
@@ -67,6 +68,7 @@ if($pickup_data['Status'] == "Unpaid"){
 	$step5 = array("","opacity-4","fa-ellipsis-h");
 }else{
 	$PickupStatus = $pickup_data['Status'];
+	$step0 = array("","opacity-4","fa-ellipsis-h");
 	$step1 = array("","opacity-4","fa-ellipsis-h");
 	$step2 = array("","opacity-4","fa-ellipsis-h");
 	$step3 = array("","opacity-4","fa-ellipsis-h");
@@ -201,7 +203,7 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
 									<div class="col-xs-6 col-md-8 text-left">QR Payment</div>
 									<div class="clearfix"></div>
 								<?php else: ?>
-									<div class="col-xs-6 col-md-8 text-left"><?php echo $paymentMethod[$pickup_data['PaymentMethod']];?></div>
+									<div class="col-xs-6 col-md-8 text-left">{{ isset($paymentMethod[$pickup_data['PaymentMethod']]) ? $paymentMethod[$pickup_data['PaymentMethod']]:$pickup_data['PaymentMethod'] }}</div>
 									<div class="clearfix"></div>
 								<?php endif; ?>
 

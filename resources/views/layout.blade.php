@@ -135,7 +135,7 @@
 									<!-- <li><a href="{{url ('/add_credit')}}"><i class="fa fa-star"></i> {!! FT::translate('menu.topup') !!}</a></li> -->
 <!-- 									<li><a href="{{url ('/promotion')}}"><i class="fa fa-bullhorn"></i> โปรโมชั่น</a></li> -->
 									<li><a href="{{url ('/account_overview')}}"><i class="fa fa-home"></i> {!! FT::translate('menu.account_overview') !!}</a></li>
-									<li><a href="{{url ('/payment_submission')}}"><i class="fa fa-money"></i> {!! FT::translate('menu.payment_submission') !!}</a></li>
+<!-- 									<li><a href="{{url ('/payment_submission')}}"><i class="fa fa-money"></i> {!! FT::translate('menu.payment_submission') !!}</a></li> -->
 									<li><a href="{{url ('/myaccount')}}"><i class="fa fa-user"></i> {!! FT::translate('menu.myinfo') !!}</a></li>
 									<li><a href="{{url ('/channel_list')}}"><i class="fa fa-cloud"></i> {!! FT::translate('menu.mychannel') !!}</a></li>
 									<li><a href="{{url ('/change_password')}}"><i class="fa fa-key"></i> {!! FT::translate('menu.change_password') !!}</a></li>	
@@ -221,7 +221,7 @@
 											<ul class="nav sidenav-sub-menu">
 												<!-- <li><a href="{{url ('/add_credit')}}"><i class="fa fa-star"></i> {!! FT::translate('menu.topup') !!}</a></li> -->
 												<li><a href="{{url ('/account_overview')}}"><i class="fa fa-home"></i> {!! FT::translate('menu.account_overview') !!}</a></li>
-												<li><a href="{{url ('/payment_submission')}}"><i class="fa fa-money"></i> {!! FT::translate('menu.payment_submission') !!}</a></li>
+<!-- 												<li><a href="{{url ('/payment_submission')}}"><i class="fa fa-money"></i> {!! FT::translate('menu.payment_submission') !!}</a></li> -->
 												<li><a href="{{url ('/myaccount')}}"><i class="fa fa-user"></i> {!! FT::translate('menu.myinfo') !!}</a></li>
 												<li><a href="{{url ('/channel_list')}}"><i class="fa fa-cloud"></i> {!! FT::translate('menu.mychannel') !!}</a></li>
 												<li><a href="{{url ('/change_password')}}"><i class="fa fa-key"></i> {!! FT::translate('menu.change_password') !!}</a></li>

@@ -583,8 +583,57 @@ class TestController extends Controller {
 	    exit();
 	}
 	
+	public function testThaipostBarcode(){
+
+	    //for($i = 27959200;$i<=27969199;$i++){
+	    //for($i = 27969200;$i<=27979199;$i++){ 
+	    for($i = 27979200;$i<=27989199;$i++){
+	        $c1 = substr($i,0,1) * 8;
+	        $c2 = substr($i,1,1) * 6;
+	        $c3 = substr($i,2,1) * 4;
+	        $c4 = substr($i,3,1) * 2;
+	        $c5 = substr($i,4,1) * 3;
+	        $c6 = substr($i,5,1) * 5;
+	        $c7 = substr($i,6,1) * 9;
+	        $c8 = substr($i,7,1) * 7;
+	        $mod = ($c1+$c2+$c3+$c4+$c5+$c6+$c7+$c8) % 11;
+	        
+	        if($mod == 0) $check = 5;
+	        else if($mod == 1) $check = 0;
+	        else $check = (11 - $mod);
+	        
+	        echo "EB" . $i . $check . "TH";
+	        echo "<br />";
+	        
+	    }
+	    
+	    exit();
+	}
+	
 	public function testAny(){
 
+	    for($i = 27959200;$i<=27989199;$i++){
+	        $c1 = substr($i,0,1) * 8;
+	        $c2 = substr($i,1,1) * 6;
+	        $c3 = substr($i,2,1) * 4;
+	        $c4 = substr($i,3,1) * 2;
+	        $c5 = substr($i,4,1) * 3;
+	        $c6 = substr($i,5,1) * 5;
+	        $c7 = substr($i,6,1) * 9;
+	        $c8 = substr($i,7,1) * 7;
+	        $mod = ($c1+$c2+$c3+$c4+$c5+$c6+$c7+$c8) % 11;
+	        
+	        if($mod == 0) $check = 5;
+	        else if($mod == 1) $check = 0;
+	        else $check = (11 - $mod);
+	        
+	        echo "EB" . $i . $check . "TH";
+	        echo "<br />";
+	    }
+	   
+	    exit();
+	    
+	    
 	    // ##### call notify #####
 	    $pickupId = 302088;
 	    $token = md5("fastship".$pickupId);

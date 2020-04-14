@@ -213,6 +213,8 @@
 
 							</div>
 						</div>
+						
+						<div class="print-break" style="padding-bottom: 30px;">&nbsp;</div>
 
 						<?php if($pickup_data['PickupType'] != "Drop_AtThaiPost"): ?>
 									

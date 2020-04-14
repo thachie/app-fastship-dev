@@ -142,17 +142,19 @@ foreach($shipment_data as $data){
 
                         <fieldset>
                             
-                            @if(isset($rates['Pickup_AtHomeNextdayBulk']) && session('customer.id') == 5223)
+                            @if(isset($rates['Pickup_AtHomeNextdayBulk']))
                             <label for="pick-nextdaybulk-fs">
-                                <div class="col-md-2 hidden-xs"><img src="/images/fastship.png"></div>
+                                <div class="col-md-2 hidden-xs"><img src="/images/pickup/kerry_flash.png"></div>
                                 <div class="col-md-8 col-xs-8 text-left">
                                     
-                                    <h5>{!! FT::translate('option.pickup.athome_nextdaybulk') !!}</h5>
+                                    <h5 style="margin-bottom:0">{!! FT::translate('option.pickup.athome_nextdaybulk') !!}</h5>
                                     
                                     <div class="text-left">
-                                        <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalPUNB" style="display: none;">
+                                        <a href="https://fastship.co/pickup_shipment" target="_blank">
+                                        <button type="button" class="btn btn-xs btnmodal" style="font-size: 10px;">
                                         	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
                                         </button>
+                                        </a>
                                     </div>
                                 </div>
                                 <div class="col-md-2 col-xs-4 text-right">
@@ -168,15 +170,17 @@ foreach($shipment_data as $data){
                             
                             @if(isset($rates['Pickup_AtHomeNextday']))
                             <label for="pick-nextday-fs">
-                                <div class="col-md-2 hidden-xs"><img src="/images/fastship.png"></div>
+                                <div class="col-md-2 hidden-xs"><img src="/images/pickup/kerry_flash.png"></div>
                                 <div class="col-md-8 col-xs-8 text-left">
                                     
-                                    <h5>{!! FT::translate('option.pickup.athome_nextday') !!}</h5>
+                                    <h5  style="margin-bottom:0">{!! FT::translate('option.pickup.athome_nextday') !!}</h5>
                                     
                                     <div class="text-left">
-                                        <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalPUN" style="display: none;">
+                                        <a href="https://fastship.co/pickup_helps" target="_blank">
+                                        <button type="button" class="btn btn-xs btnmodal" style="font-size: 10px;">
                                         	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
                                         </button>
+                                        </a>
                                     </div>
                                 </div>
                                 <div class="col-md-2 col-xs-4 text-right">
@@ -192,15 +196,17 @@ foreach($shipment_data as $data){
                             
                             @if($isBangkok)
                             <label for="pick-standard-fs">
-                                <div class="col-md-2 hidden-xs"><img src="/images/fastship.png"></div>
+                                <div class="col-md-2 hidden-xs"><img src="/images/pickup/fastship.png"></div>
                                 <div class="col-md-8 col-xs-8 text-left">
                                 
-                                    <h5>{!! FT::translate('option.pickup.athome_standard') !!}</h5>
+                                    <h5 style="margin-bottom:0">{!! FT::translate('option.pickup.athome_standard') !!}</h5>
                                     
                                     <div class="text-left">
-                                        <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalPUS" style="display: none;">
-                                        	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
-                                        </button>
+                                        <a href="https://fastship.co/pickup_dropoff" target="_blank">
+                                            <button type="button" class="btn btn-xs btnmodal" style="font-size: 10px;">
+                                            	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
+                                            </button>
+                                        </a>
                                     </div>
                                 </div>
                                 <div class="col-md-2 col-xs-4 text-right">
@@ -214,15 +220,17 @@ foreach($shipment_data as $data){
                             <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="pick-standard-fs" value="Pickup_AtHomeStandard" />
                             
                             <label for="pick-express-fs">
-                                <div class="col-md-2 hidden-xs"><img src="/images/fastship.png"></div>
+                                <div class="col-md-2 hidden-xs"><img src="/images/pickup/skootar_lalamove.png" style="max-width:100%;" /></div>
                                 <div class="col-md-8 col-xs-8 text-left">
                                     
-                                    <h5>{!! FT::translate('option.pickup.athome_express') !!}</h5>
+                                    <h5 style="margin-bottom:0">{!! FT::translate('option.pickup.athome_express') !!}</h5>
 
                                     <div class="text-left">
-                                        <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalPUE" style="display: none;">
-                                        	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
-                                        </button>
+                                        <a href="https://fastship.co/pickup_dropoff" target="_blank">
+                                            <button type="button" class="btn btn-xs btnmodal" style="font-size: 10px;">
+                                            	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
+                                            </button>
+                                        </a>
                                     </div>
                                 </div>
                                 <div class="col-md-2 col-xs-4 text-right">
@@ -233,13 +241,13 @@ foreach($shipment_data as $data){
                             
                             
                         	<label for="drop-fs">
-                                <div class="col-md-2 hidden-xs"><img src="/images/fastship.png"></div>
+                                <div class="col-md-2 hidden-xs"><img src="/images/pickup/fastship.png"></div>
                                 <div class="col-md-8 col-xs-8 text-left">
                                     
-                                    <h5>{!! FT::translate('option.pickup.drop_fastship') !!}</h5>
+                                    <h5 style="margin-bottom:0">{!! FT::translate('option.pickup.drop_fastship') !!}</h5>
                                     
                                     <div class="text-left">
-                                        <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalFS">
+                                        <button type="button" class="btn btn-xs btnmodal"  style="font-size: 10px;" data-toggle="modal" data-target="#ModalFS">
                                         	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
                                         </button>
                                     </div>
@@ -254,13 +262,13 @@ foreach($shipment_data as $data){
                             
                             <?php if(isset($rates['Drop_AtThaiPostBulk'])):?>
                             <label for="drop-thaipostbulk">
-                                <div class="col-md-2 hidden-xs"><img src="/images/thaipost.png" /></div>
+                                <div class="col-md-2 hidden-xs"><img src="/images/pickup/thaipost.png" /></div>
                                 <div class="col-md-8 col-xs-8 text-left">
                                 
-                                    <h5>{!! FT::translate('option.pickup.drop_thaipost') !!}</h5>
+                                    <h5 style="margin-bottom:0">{!! FT::translate('option.pickup.drop_thaipost') !!}</h5>
 
                                     <div class="text-left">
-                                        <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalTPB">
+                                        <button type="button" class="btn btn-xs btnmodal" style="font-size: 10px;" data-toggle="modal" data-target="#ModalTPB">
                                         	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
                                         </button>
                                     </div>
@@ -281,10 +289,10 @@ foreach($shipment_data as $data){
                                 <div class="col-md-2 hidden-xs"><img src="/images/thaipost.png" /></div>
                                 <div class="col-md-8 col-xs-8 text-left">
                                 
-                                    <h5>{!! FT::translate('option.pickup.drop_thaipost') !!}</h5>
+                                    <h5 style="margin-bottom:0">{!! FT::translate('option.pickup.drop_thaipost') !!}</h5>
 
                                     <div class="text-left">
-                                        <button type="button" class="btn btn-xs btnmodal" data-toggle="modal" data-target="#ModalTP">
+                                        <button type="button" class="btn btn-xs btnmodal" style="font-size: 10px;" data-toggle="modal" data-target="#ModalTP">
                                         	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
                                         </button>
                                     </div>
@@ -545,7 +553,9 @@ foreach($shipment_data as $data){
                     
                     <div class="text-center btn-create">
 			            <div><label><input type="checkbox" name="condition" id="condition" onclick="acceptTerm()" /> {!! FT::translate('create_pickup.agreement_intro') !!} <a href="http://fastship.co/helps/terms-conditions/" target="_blank">{!! FT::translate('create_pickup.agreement_link') !!}</a></label></div>
-			            <br />      
+			            <div><label><input type="checkbox" name="condition2" id="condition2" onclick="acceptTerm()" /> {!! FT::translate('create_pickup.agreement_intro') !!} <a href="https://fastship.co/announcement/" target="_blank">ข้อตกลงและเงื่อนไขพิเศษเนื่องในสถานการณ์ COVID-19</a></label></div>
+			            <br />
+			               
 			            <div><button type="submit" id="submit" name="submit" class="btn btn-lg btn-primary" >{!! FT::translate('button.confirm') !!}</button></div>
 			            <div id="error_text" class="text-left red col-xs-6 col-xs-offset-3"></div>
 			        </div>
@@ -819,7 +829,12 @@ foreach($shipment_data as $data){
 
         function acceptTerm(){
     		if($("#condition").is(":checked")){
-    			$("#submit").attr("disabled",false);
+
+    			if($("#condition2").is(":checked")){
+    				$("#submit").attr("disabled",false);
+    			}else{
+    				$("#submit").attr("disabled",true);
+    			}
     		}else{
     			$("#submit").attr("disabled",true);
     		}

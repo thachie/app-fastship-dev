@@ -163,6 +163,7 @@ Route::group(['middleware' => 'loginsession'], function () {
 	Route::post('pickup/create', 'Pickup\PickupController@createPickup');
 	Route::match(['get', 'post'],'pickup_detail/{id?}', 'Pickup\PickupController@preparePickupDetail');
 	Route::get('pickup_detail_print/{id?}', 'Pickup\PickupController@preparePickupDetailPrint');
+	Route::get('pickup_detail_print2/{id?}', 'Pickup\PickupController@preparePickupDetailPrint2');
 	Route::match(['get', 'post'],'pickup_list/{page?}', 'Pickup\PickupController@preparePickupList');
 	Route::post('pickup/cancel', 'Pickup\PickupController@cancelPickup');
 	Route::get('pickup_invoice_print/{id?}', 'Pickup\PickupController@preparePickupInvoicePrint');
@@ -240,6 +241,7 @@ Route::get('testZoho', 'TestController@testZoho');
 Route::get('testThaitrade', 'TestController@testThaitrade');
 Route::get('testKbank', 'TestController@testKbankQRPayment');
 Route::get('testAny', 'TestController@testAny');
+Route::get('testThaipostBarcode', 'TestController@testThaipostBarcode');
 
 //address
 //Route::get('test_address', 'Shipment\AddressController@index');

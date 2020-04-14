@@ -295,29 +295,37 @@ class CustomerController extends Controller
 			    $referrerMedium		= 'cpc';
 			}
 
-			//insert to API
-			$createDetails = array(
-				'Firstname' => $data['firstname'],
-				'Lastname' => $data['lastname'],
-				'PhoneNumber' => $data['telephone'],
-		        'Email' => strtolower($data['email']),
-		        'State' => strtolower($data['state']),
-				'Password' => $data['password'],
-				'ReferCode' => $data['referral'],
-			    'MarketplaceId' => $data['marketplace_ref_id'],
-		        'For' => strtolower($data['for']),
-		        'TrafficSource' => $referrerMedium,
-			    'AdsCampaign' => $referrerCampaign,
-			    'Behavior' => $data['behavior'],
-			    'LineUserId' => $data['line_id'],
-				'Group' => $class,
-			);
-			$customerId = FS_Customer::create($createDetails);
-
-			if($customerId == "" || $customerId <= 0){
+			try{
+			    
+    			//insert to API
+    			$createDetails = array(
+    				'Firstname' => $data['firstname'],
+    				'Lastname' => $data['lastname'],
+    				'PhoneNumber' => $data['telephone'],
+    		        'Email' => strtolower($data['email']),
+    		        'State' => strtolower($data['state']),
+    				'Password' => $data['password'],
+    				'ReferCode' => $data['referral'],
+    			    'MarketplaceId' => $data['marketplace_ref_id'],
+    		        'For' => strtolower($data['for']),
+    		        'TrafficSource' => $referrerMedium,
+    			    'AdsCampaign' => $referrerCampaign,
+    			    'Behavior' => $data['behavior'],
+    			    'LineUserId' => $data['line_id'],
+    				'Group' => $class,
+    			);
+    			$customerId = FS_Customer::create($createDetails);
+    
+    			if($customerId == "" || $customerId <= 0){
+    			    return back()->with('msg','ข้อมูลไม่ถูกต้อง : ' . strtolower($data['email']));
+    			}
+    			
+    		}catch(Exception $e){
+    		    
 			    return back()->with('msg','ข้อมูลไม่ถูกต้อง : ' . strtolower($data['email']));
-			}
 
+			}
+			
 			//check SOOK
 			if(isset($marketplaceType) && strtoupper($marketplaceType) == "SOOK"){
 

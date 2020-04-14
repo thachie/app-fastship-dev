@@ -987,9 +987,12 @@ class ShipmentController extends Controller
                 //return redirect('create_shipment_data', array('data' => $data));
                 //return redirect()->route('create_shipment_data', ['data' =>  $data])->with('message', 'State');
 
-                return redirect()->action(
-                    'Shipment\ShipmentController@prepareCreateShipment', array('data' => $data_callback)
-                );
+                return redirect()->back()->with('msg','ไม่สามารถสร้างพัสดุได้ กรุณาตรวจสอบข้อมูลอีกครั้ง');
+                
+//                 return redirect()->action(
+//                     'Shipment\ShipmentController@prepareCreateShipment', array('data' => $data_callback)
+//                 );
+                
             }else{
                 
                 $status = 'Success';
@@ -2376,7 +2379,7 @@ class ShipmentController extends Controller
     		$data['Sender_AddressLine2'] = $customerObj['AddressLine2'];
     		$data['Sender_City'] = $customerObj['City'];
     		$data['Sender_State'] = $customerObj['State'];
-    		$data['Sender_Postcode'] = $customerObj['Postcode'];
+    		$data['Sender_Postcode'] = trim($customerObj['Postcode']);
     		$data['Sender_Country'] = $customerObj['Country'];
     
     		//Receiver
@@ -2389,7 +2392,7 @@ class ShipmentController extends Controller
     		$data['Receiver_AddressLine2'] = $request->input('address2');
     		$data['Receiver_City'] = $request->input('city');
     		$data['Receiver_State'] = $request->input('state');
-    		$data['Receiver_Postcode'] = $request->input('postcode');
+    		$data['Receiver_Postcode'] = trim($request->input('postcode'));
     		$data['Receiver_Country'] = $request->input('country');
     		$data['TermOfTrade'] = strtoupper($request->input('term'));
     		$data['ShippingAgent'] = $request->input('agent');
@@ -2856,7 +2859,9 @@ class ShipmentController extends Controller
         
         Fastship::getToken($customerId);
         
-        $declares = FS_Shipment::get_declarations($request->get("term"));
+        $term = $request->get("term");
+        $term = str_replace("?","",$term);
+        $declares = FS_Shipment::get_declarations($term);
         
         return response()->json(['declares'=>$declares]);
     }
