@@ -612,6 +612,21 @@ class TestController extends Controller {
 	
 	public function testAny(){
 
+
+	    $file = fopen(public_path('liff_log.txt'),"r");
+	    
+	    while(! feof($file))
+	    {
+	        $line = fgets($file);
+	        print_r(json_decode($line));
+	        echo "<hr />";
+	    }
+	    
+	    fclose($file);
+
+	    
+	    exit();
+	    
 	    for($i = 27959200;$i<=27989199;$i++){
 	        $c1 = substr($i,0,1) * 8;
 	        $c2 = substr($i,1,1) * 6;

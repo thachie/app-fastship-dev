@@ -105,7 +105,8 @@
                             ?>
                             <tr id='row<?php echo $key ?>'>
                                 <td>
-                                    <input type="text" name="category[<?php echo $key ?>]" class="category form-control required"  pattern="<?php echo $validateDeclare; ?>" oninvalid="this.setCustomValidity('{!! FT::translate('error.english_only') !!}')" oninput="setCustomValidity('')" value="<?php echo $default['category'][$key];?>" />
+                                    <input type="text" id="category<?php echo $key ?>" name="category[<?php echo $key ?>]" class="category form-control required"  pattern="<?php echo $validateDeclare; ?>" oninvalid="this.setCustomValidity('{!! FT::translate('error.english_only') !!}')" oninput="setCustomValidity('')" value="<?php echo $default['category'][$key];?>" />
+                                	<div class="red tiny text-left col-md-10 no-padding"><span id="category<?php echo $key ?>-error" class="error-msg"></span></div> 
                                 </td>      
                                 <td><input type="number" min="1" name="amount[<?php echo $key ?>]" class="form-control required" value="<?php echo isset($default['amount'][$key])?$default['amount'][$key]:"";?>" /></td>
                                 <td><input type="number" min="1" name="value[<?php echo $key ?>]" class="form-control required" value="<?php echo isset($default['value'][$key])?$default['value'][$key]:"";?>" /></td>
@@ -120,7 +121,7 @@
                             ?>
                             <tr id='row0'>
                                 <td>
-                                   	<input type="text" name="category[0]" class="category form-control required" />
+                                   	<input type="text" id="category0" name="category[0]" class="category form-control required" />
                                   	<div class="red tiny text-left col-md-10 no-padding"><span id="category0-error" class="error-msg"></span></div> 
                                 </td>      
                                 <td><input type="number" min="1" name="amount[0]" class="form-control declare-qty required" /></td>
@@ -417,12 +418,14 @@
         var row = "<tr id='row"+table_size+"'>"+
                         "<td>"+
                             "<input id='category-"+table_size+"' type='text' name='category["+table_size+"]' class='category form-control required' required />"+                                
+                            "<span id='category"+table_size+"-error' class='error-msg'></span>" +          
                         "</td>"+
                         "<td><input type='number' min='1' name='amount["+table_size+"]' class='form-control required declare-qty' required /></td>"+
                         "<td><input type='number' min='1' name='value["+table_size+"]' class='form-control required declare-value' required /></td>"+
                         "<td><span class='glyphicon glyphicon-minus-sign text-danger' onclick='rmv("+table_size+")'></span></td>"+
                     "</tr>";
         $( "#product_table" ).append(row);
+        $("input[name=category["+table_size+"]]").keyup(validateDeclare);
     }
     function rmv(id){
         $( "#row"+id ).remove();
@@ -449,6 +452,7 @@
 		
 		$("#shipment_form .required").each(validateRequired);
 		$("#shipment_form input").each(validateOptional);
+		$("#shipment_form .category").each(validateDeclare);
 		$("input[name=email]").each(validateEmailFormat);
 
 		$(".error-msg").each(function(){
@@ -524,6 +528,36 @@
 			$('#'+nm+"-error").text("");
 		}
 	}
+	function validateDeclare(){
+
+		var nm = $(this).attr("name");
+		var id = $(this).attr("id");
+		var val = $(this).val();
+		var values = val.split(" ");
+		var censors = ["gun","explosive","bomb","sex","fuck","porn","weapon","alcohol","chemical","ash","gift","food","souvenir","medicine","cosmetics","present"];
+
+		$('#'+id+"-error").html("");
+		values.forEach(function(term){
+			var check = censors.indexOf(term.toLowerCase());
+
+			if(check >= 0 ){
+				$(this).addClass("error");
+				$('#'+id+"-error").text( censors[check] + " ไม่สามารถส่งได้หรือข้อมูลไม่ชัดเจน");
+	 			//$('#'+nm+"-error").text("{!! FT::translate('error.required') !!}");
+			}
+		});
+
+// 		if(val == ""){
+// 			$(this).addClass("error");
+// 			$('#'+nm+"-error").text("{!! FT::translate('error.required') !!}");
+// 		}else if(!validateEnglish.test(val)){
+// 			$(this).addClass("error");
+// 			$('#'+nm+"-error").text("{!! FT::translate('error.english_only') !!}");
+// 		}else{
+// 			$('#'+nm+"-error").text("");
+// 			$(this).removeClass("error");
+// 		}
+	}
 	
 	function inputCount() {
 		var nm = $(this).attr("name");
@@ -572,18 +606,28 @@
             		var table_size = $("#product_table" ).children().length;
                     var row = "<tr id='row"+table_size+"'>"+
                                     "<td>"+
-                                        "<input id='category-"+table_size+"' type='text' name='category["+table_size+"]' class='category form-control required' required value='"+item+"' />"+                                
+                                        "<input id='category-"+table_size+"' type='text' name='category["+table_size+"]' class='category form-control required' required value='"+item+"' />"+ 
+                                        "<span id='category"+table_size+"-error' class='error-msg'></span>" +                      
                                     "</td>"+
                                     "<td><input type='number' min='1' name='amount["+table_size+"]' class='form-control required declare-qty' required value='"+declareQty[index]+"' /></td>"+
                                     "<td><input type='number' min='1' name='value["+table_size+"]' class='form-control required declare-value' required value='"+declareValue[index]+"' /></td>"+
                                     "<td><span class='glyphicon glyphicon-minus-sign text-danger' onclick='rmv("+table_size+")'></span></td>"+
                                 "</tr>";
                     $( "#product_table" ).append(row);
+                    
+                    $("input[name=category["+table_size+"]]").keyup(validateDeclare);
+                    
         		}else{
             		$("#row0 .category").val(item);
             		$("#row0 .declare-qty").val(declareQty[0]);
             		$("#row0 .declare-value").val(declareValue[0]);
+
+            		$("input[name=category[0]]").keyup(validateDeclare);
+            		
         		}
+
+
+        		
         		
     		});
     		

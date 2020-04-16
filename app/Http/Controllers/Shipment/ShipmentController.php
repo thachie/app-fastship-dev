@@ -2448,11 +2448,7 @@ class ShipmentController extends Controller
     		    );
     		}
     		
-    
-    		if($customerId == 18377){
-    		    //return $Declarations;
-    		}
-    		
+
     		//prepare request data
     		$createDetails = array(
     				'ShipmentDetail' => array(

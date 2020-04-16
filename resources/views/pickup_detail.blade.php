@@ -120,11 +120,50 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                 @endforeach
                 @endif
                 @else          	
-            	<a href="/pickup_detail_print/<?php echo $pickupID; ?>" target="_blank"><button type="button" class="btn btn-lg btn-primary"><i class="fa fa-print"></i> {!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
+            	<a href="/pickup_detail_print/{{ $pickupID }}" target="_blank"><button type="button" class="btn btn-lg btn-primary"><i class="fa fa-print"></i> {!! FT::translate('pickup_detail.button.print_pickup') !!}</button></a>
                 @endif
                 <br />
                 <p style="margin-top: 20px;"><a href="https://fastship.co/helps/package-guide-2" target="_blank">คู่มือการบรรจุหีบห่อ</a></p>
-                <p class="text-secondary"><strong>หมายเหตุ</strong> ทีมงานฟาสต์ชิปจะติดต่อท่านภายใน 1 วันทำการ เพื่อนัดหมายเข้ารับพัสดุ</p>
+                
+                <div class="col-md-8 col-md-offset-2">
+                @if($pickup_data['PickupType'] == "Drop_AtFastship")
+                <h4 class="text-left">ขั้นตอนการส่งที่ FastShip</h4>
+                <ol class="text-secondary text-left">
+                	<li>กรุณาพิมพ์ใบปะหน้า โดยกดลิงค์ข้างต้น</li>
+                	<li>แปะใบปะหน้าลงบนพัสดุ อ่านรายละเอียด คู่มือการบรรจุหีบห่อ</li>
+                	<li>หากไม่มีเครื่องพิมพ์ กรุณาเขียนเลข Pickup ID ({{ $pickupID }}) และ Shipment ID (15xxxxxxxx) พร้อมชื่อผู้รับปลายทาง</li>
+                	<li>นำสินค้ามาดรอปไว้ที่ บริษัท FastShip ซอยแจ้งวัฒนะ 14 (<a href="https://goo.gl/maps/m3VHsWzPK5d1FuCn9" target="_blank">แผนที่</a>)</li>
+                </ol>
+                <p style="margin-top: 20px;"><a href="https://fastship.co/helps/pickup_dropoff/" target="_blank">รายละเอียดเพิ่มเติม</a></p>
+                @elseif($pickup_data['PickupType'] == "Drop_AtThaiPost")
+                <h4 class="text-left">ขั้นตอนการส่งที่ไปรษณีย์</h4>
+                <ol class="text-secondary text-left">
+                	<li>กรุณาพิมพ์ใบปะหน้า โดยกดลิงค์ข้างต้น</li>
+                	<li>แปะใบปะหน้าลงบนพัสดุ อ่านรายละเอียด คู่มือการบรรจุหีบห่อ</li>
+                	<li>นำพัสดุไปฝากไว้ที่ ไปรษณีย์ โดยเข้าไปที่ช่องธุรกิจ (ไม่ต้องจ่ายค่าส่ง) อ่านรายละเอียด วิธีการส่งที่จุด Drop off ไปรษณีย์ไทย</li>
+                </ol>
+                <p style="margin-top: 20px;"><a href="https://fastship.co/helps/thaipost-dropoff/" target="_blank">รายละเอียดเพิ่มเติม</a></p>
+                @elseif($pickup_data['PickupType'] == "Pickup_AtHomeNextday")
+                <h4 class="text-left">ขั้นตอนการเข้ารับด้วย Kerry/Flash</h4>
+                <ol class="text-secondary text-left">
+                	<li>กรุณาพิมพ์ใบปะหน้า โดยกดลิงค์ข้างต้น</li>
+                	<li>แปะใบปะหน้าลงบนพัสดุ อ่านรายละเอียด คู่มือการบรรจุหีบห่อ</li>
+                	<li>เจ้าหน้าที่ Kerry/Flash จะโทรติดต่อทางเบอร์มือถือที่ให้ไว้ ภายใน 1-3 วัน</li>
+                	<li>หลังจากเจ้าหน้าที่ Kerry/Flash รับพัสดุไปแล้ว พัสดุจะถึงบริษัท FastShip ในวันถัดไป และ ส่งออกภายใน 1-2 วันทำการ</li>
+                </ol>
+                <p style="margin-top: 20px;"><a href="https://fastship.co/pickup_helps/" target="_blank">รายละเอียดเพิ่มเติม</a></p>
+                @else
+                <h4 class="text-left">ขั้นตอนการเข้ารับ</h4>
+                <ol class="text-secondary text-left">
+                	<li>กรุณาพิมพ์ใบปะหน้า โดยกดลิงค์ข้างต้น</li>
+                	<li>แปะใบปะหน้าลงบนพัสดุ อ่านรายละเอียด คู่มือการบรรจุหีบห่อ</li>
+                	<li>เจ้าหน้าที่จะโทรติดต่อทางเบอร์มือถือที่ให้ไว้ ก่อนการเข้ารับ</li>
+                	<li>หลังจากพัสดุจะถึงบริษัท FastShip ส่งออกภายใน 1-2 วันทำการ</li>
+                </ol>
+                <p style="margin-top: 20px;"><a href="https://fastship.co/helps/pickup_dropoff/" target="_blank">รายละเอียดเพิ่มเติม</a></p>
+                @endif
+                </div>
+
         	</div>
         </div>
        @elseif ($pickup_data['Status'] == 'Pickup')
@@ -147,7 +186,46 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                 @endif
                 <br />
                 <p style="margin-top: 20px;"><a href="https://fastship.co/helps/package-guide-2" target="_blank">คู่มือการบรรจุหีบห่อ</a></p>
-                <p class="text-secondary"><strong>หมายเหตุ</strong> หากลูกค้าไม่พิมพ์ใบปะหน้าตามที่กำหนด ทางเราจะไม่รับผิดชอบต่อปัญหาที่เกิดขึ้นจากการเข้ารับ</p>
+                
+                <div class="col-md-8 col-md-offset-2">
+                @if($pickup_data['PickupType'] == "Drop_AtFastship")
+                <h4 class="text-left">ขั้นตอนการส่งที่ FastShip</h4>
+                <ol class="text-secondary text-left">
+                	<li>กรุณาพิมพ์ใบปะหน้า โดยกดลิงค์ข้างต้น</li>
+                	<li>แปะใบปะหน้าลงบนพัสดุ อ่านรายละเอียด คู่มือการบรรจุหีบห่อ</li>
+                	<li>หากไม่มีเครื่องพิมพ์ กรุณาเขียนเลข Pickup ID ({{ $pickupID }}) และ Shipment ID (15xxxxxxxx) พร้อมชื่อผู้รับปลายทาง</li>
+                	<li>นำสินค้ามาดรอปไว้ที่ บริษัท FastShip ซอยแจ้งวัฒนะ 14 (<a href="https://goo.gl/maps/m3VHsWzPK5d1FuCn9" target="_blank">แผนที่</a>)</li>
+                </ol>
+                <p style="margin-top: 20px;"><a href="https://fastship.co/helps/pickup_dropoff/" target="_blank">รายละเอียดเพิ่มเติม</a></p>
+                @elseif($pickup_data['PickupType'] == "Drop_AtThaiPost")
+                <h4 class="text-left">ขั้นตอนการส่งที่ไปรษณีย์</h4>
+                <ol class="text-secondary text-left">
+                	<li>กรุณาพิมพ์ใบปะหน้า โดยกดลิงค์ข้างต้น</li>
+                	<li>แปะใบปะหน้าลงบนพัสดุ อ่านรายละเอียด คู่มือการบรรจุหีบห่อ</li>
+                	<li>นำพัสดุไปฝากไว้ที่ ไปรษณีย์ โดยเข้าไปที่ช่องธุรกิจ (ไม่ต้องจ่ายค่าส่ง) อ่านรายละเอียด วิธีการส่งที่จุด Drop off ไปรษณีย์ไทย</li>
+                </ol>
+                <p style="margin-top: 20px;"><a href="https://fastship.co/helps/thaipost-dropoff/" target="_blank">รายละเอียดเพิ่มเติม</a></p>
+                @elseif($pickup_data['PickupType'] == "Pickup_AtHomeNextday")
+                <h4 class="text-left">ขั้นตอนการเข้ารับด้วย Kerry/Flash</h4>
+                <ol class="text-secondary text-left">
+                	<li>กรุณาพิมพ์ใบปะหน้า โดยกดลิงค์ข้างต้น</li>
+                	<li>แปะใบปะหน้าลงบนพัสดุ อ่านรายละเอียด คู่มือการบรรจุหีบห่อ</li>
+                	<li>เจ้าหน้าที่ Kerry/Flash จะโทรติดต่อทางเบอร์มือถือที่ให้ไว้ ภายใน 1-3 วัน</li>
+                	<li>หลังจากเจ้าหน้าที่ Kerry/Flash รับพัสดุไปแล้ว พัสดุจะถึงบริษัท FastShip ในวันถัดไป และ ส่งออกภายใน 1-2 วันทำการ</li>
+                </ol>
+                <p style="margin-top: 20px;"><a href="https://fastship.co/pickup_helps/" target="_blank">รายละเอียดเพิ่มเติม</a></p>
+                @else
+                <h4 class="text-left">ขั้นตอนการเข้ารับ</h4>
+                <ol class="text-secondary text-left">
+                	<li>กรุณาพิมพ์ใบปะหน้า โดยกดลิงค์ข้างต้น</li>
+                	<li>แปะใบปะหน้าลงบนพัสดุ อ่านรายละเอียด คู่มือการบรรจุหีบห่อ</li>
+                	<li>เจ้าหน้าที่จะโทรติดต่อทางเบอร์มือถือที่ให้ไว้ ก่อนการเข้ารับ</li>
+                	<li>หลังจากพัสดุจะถึงบริษัท FastShip ส่งออกภายใน 1-2 วันทำการ</li>
+                </ol>
+                <p style="margin-top: 20px;"><a href="https://fastship.co/helps/pickup_dropoff/" target="_blank">รายละเอียดเพิ่มเติม</a></p>
+                @endif
+                </div>
+                
         	</div>
         </div>
         @endif
