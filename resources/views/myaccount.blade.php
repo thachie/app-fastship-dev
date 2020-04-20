@@ -41,7 +41,6 @@ if($customer_data['latitude'] == ""){
 							<?php echo $customer_data['firstname']." ".$customer_data['lastname']; ?>
 						<?php endif; ?>
 	                    </div>
-						
 	                    <div class="clearfix"></div>
 	                    
 	                    <div class="col-md-12">
@@ -56,11 +55,11 @@ if($customer_data['latitude'] == ""){
 
 		                <div class="col-md-12">{!! FT::translate('label.email') !!}: <?php echo $customer_data['email']; ?></div>
 		                <div class="clearfix"></div>
-		                    
+
 	                    <div class="col-md-12">{!! FT::translate('label.telephone') !!}: <?php echo $customer_data['phonenumber']; ?></div>
 		                <div class="clearfix"></div>
-		                <br />
- 
+
+		                
 	                </div>
 	                <?php if($customer_data['latitude'] != ""): ?>
 	                <div class="col-md-7 col-xs-12 no-padding">
@@ -70,6 +69,11 @@ if($customer_data['latitude'] == ""){
 			             </div>
 	                </div>
 	                <?php endif; ?>
+	                
+	                <div class="col-xs-12 no-padding" style="line-height: 30px;">
+	               	 	<div class="col-md-12">{!! FT::translate('label.refund_account') !!}: <?php echo $customer_data['refund_bank']; ?> <?php echo $customer_data['refund_account']; ?></div>
+		                <div class="clearfix"></div>
+	                </div>
 	                <div class="clearfix"></div>
 		            <br />
 		            

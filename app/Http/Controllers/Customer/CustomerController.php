@@ -457,7 +457,9 @@ class CustomerController extends Controller
 		$customer_data['longitude'] = $customer['Longitude'];
 		$customer_data['group'] = $customer['Group'];
 		$customer_data['refcode'] = $customer['ReferCode'];
-
+		$customer_data['refund_bank'] = $customer['RefundBank'];
+		$customer_data['refund_account'] = $customer['RefundAccount'];
+		
 		$creditCardsObj = DB::table('omise_customer')
 			->select("ID","NUMBER","OMISE_LASTDIGITS","OMISE_BANK","OMISE_CARDNAME")
             ->where("CUST_ID",$customerId)
@@ -749,6 +751,8 @@ class CustomerController extends Controller
 		$customer_data['refcode'] = $customerObj['ReferCode'];
 		$customer_data['latitude'] = $customerObj['Latitude'];
 		$customer_data['longitude'] = $customerObj['Longitude'];
+		$customer_data['refund_bank'] = $customerObj['RefundBank'];
+		$customer_data['refund_account'] = $customerObj['RefundAccount'];
 		
 		$provinces = DB::table('provinces')->select("name_in_thai as name_th","name_in_english as name_en")->orderBy('name_in_thai')->get();
 
@@ -1181,6 +1185,8 @@ class CustomerController extends Controller
 		$data['postcode'] = $request->input('postcode');
 		$data['latitude'] = $request->input('latitude');
 		$data['longitude'] = $request->input('longitude');
+		$data['refund_bank'] = $request->input('refund_bank');
+		$data['refund_account'] = $request->input('refund_account');
 
 		//update to API
 		Fastship::getToken($customerId);
@@ -1197,6 +1203,8 @@ class CustomerController extends Controller
 		    'PostCode' => $data['postcode'],
 		    'Latitude' => $data['latitude'],
 		    'Longitude' => $data['longitude'],
+		    'RefundBank' => $data['refund_bank'],
+		    'RefundAccount' => $data['refund_account'],
 		);
 		$updateCompleted = FS_Customer::update($updateDetails);
 		

@@ -137,17 +137,17 @@ foreach($shipment_data as $data){
             	<div class="panel panel-primary">
                     <div class="panel-heading">{!! FT::translate('create_pickup.panel.heading2') !!}</div>
                     <div class="panel-body">
-                    
+
                     	<h3>{!! FT::translate('create_pickup.panel.subheading1') !!}</h3>
 
                         <fieldset>
-                            
-                            @if(isset($rates['Pickup_AtHomeNextdayBulk']))
-                            <label for="pick-nextdaybulk-fs">
-                                <div class="col-md-2 hidden-xs"><img src="/images/pickup/kerry_flash.png"></div>
+
+                            @if(isset($rates['Pickup_ByKerryBulk']))
+                            <label for="pick-kerrybulk">
+                                <div class="col-md-2 hidden-xs"><img src="/images/pickup/kerry.png"></div>
                                 <div class="col-md-8 col-xs-8 text-left">
                                     
-                                    <h5 style="margin-bottom:0">{!! FT::translate('option.pickup.athome_nextdaybulk') !!}</h5>
+                                    <h5 style="margin-bottom:0">{!! FT::translate('option.pickup.bykerrybulk') !!}</h5>
                                     
                                     <div class="text-left">
                                         <a href="https://fastship.co/pickup_shipment" target="_blank">
@@ -158,22 +158,22 @@ foreach($shipment_data as $data){
                                     </div>
                                 </div>
                                 <div class="col-md-2 col-xs-4 text-right">
-                                	@if($rates['Pickup_AtHomeNextdayBulk']['AccountRate'] == 0)
+                                	@if($rates['Pickup_ByKerryBulk']['AccountRate'] == 0)
                                     <h2 class="slogan text-success no-padding">{!! FT::translate('create_pickup.text.free') !!}</h2>
                                     @else
-                                    <h2 class="slogan text-info no-padding">{{ $rates['Pickup_AtHomeNextdayBulk']['AccountRate'] }}.-</h2>
+                                    <h2 class="slogan text-info no-padding">{{ $rates['Pickup_ByKerryBulk']['AccountRate'] }}.-</h2>
                                     @endif
                                 </div>
                             </label>
-                            <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="pick-nextdaybulk-fs" value="Pickup_AtHomeNextdayBulk" checked="checked" />
+                            <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="pick-kerrybulk" value="Pickup_ByKerryBulk" checked="checked" />
                             @endif
                             
-                            @if(isset($rates['Pickup_AtHomeNextday']))
-                            <label for="pick-nextday-fs">
-                                <div class="col-md-2 hidden-xs"><img src="/images/pickup/kerry_flash.png"></div>
+                            @if(isset($rates['Pickup_ByKerry']))
+                            <label for="pick-kerry">
+                                <div class="col-md-2 hidden-xs"><img src="/images/pickup/kerry.png"></div>
                                 <div class="col-md-8 col-xs-8 text-left">
                                     
-                                    <h5  style="margin-bottom:0">{!! FT::translate('option.pickup.athome_nextday') !!}</h5>
+                                    <h5  style="margin-bottom:0">{!! FT::translate('option.pickup.bykerry') !!}</h5>
                                     
                                     <div class="text-left">
                                         <a href="https://fastship.co/pickup_helps" target="_blank">
@@ -184,16 +184,42 @@ foreach($shipment_data as $data){
                                     </div>
                                 </div>
                                 <div class="col-md-2 col-xs-4 text-right">
-                                	@if($rates['Pickup_AtHomeNextday']['AccountRate'] == 0)
+                                	@if($rates['Pickup_ByKerry']['AccountRate'] == 0)
                                     <h2 class="slogan text-success no-padding">{!! FT::translate('create_pickup.text.free') !!}</h2>
                                     @else
-                                    <h2 class="slogan text-info no-padding">{{ $rates['Pickup_AtHomeNextday']['AccountRate'] }}.-</h2>
+                                    <h2 class="slogan text-info no-padding">{{ $rates['Pickup_ByKerry']['AccountRate'] }}.-</h2>
                                     @endif
                                 </div>
                             </label>
-                            <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="pick-nextday-fs" value="Pickup_AtHomeNextday" checked="checked" />
+                            <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="pick-kerry" value="Pickup_ByKerry" checked="checked" />
                             @endif
                             
+                            @if(isset($rates['Pickup_ByFlash']))
+                            <label for="pick-flash">
+                                <div class="col-md-2 hidden-xs"><img src="/images/pickup/flash.png"></div>
+                                <div class="col-md-8 col-xs-8 text-left">
+                                    
+                                    <h5  style="margin-bottom:0">{!! FT::translate('option.pickup.byflash') !!}</h5>
+                                    
+                                    <div class="text-left">
+                                        <a href="https://fastship.co/pickup_helps" target="_blank">
+                                        <button type="button" class="btn btn-xs btnmodal" style="font-size: 10px;">
+                                        	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
+                                        </button>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-xs-4 text-right">
+                                	@if($rates['Pickup_ByFlash']['AccountRate'] == 0)
+                                    <h2 class="slogan text-success no-padding">{!! FT::translate('create_pickup.text.free') !!}</h2>
+                                    @else
+                                    <h2 class="slogan text-info no-padding">{{ $rates['Pickup_ByFlash']['AccountRate'] }}.-</h2>
+                                    @endif
+                                </div>
+                            </label>
+                            <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="pick-flash" value="Pickup_ByFlash" />
+                            @endif
+
                             @if($isBangkok)
                             <label for="pick-standard-fs">
                                 <div class="col-md-2 hidden-xs"><img src="/images/pickup/fastship.png"></div>
@@ -208,6 +234,9 @@ foreach($shipment_data as $data){
                                             </button>
                                         </a>
                                     </div>
+                                    
+                                    <span class="text-info tiny">{!! FT::translate('create_pickup.text.bkk_only') !!}</span>
+                                    
                                 </div>
                                 <div class="col-md-2 col-xs-4 text-right">
                                 @if($total_rate > 2000)
@@ -218,7 +247,7 @@ foreach($shipment_data as $data){
                                 </div>
                             </label>
                             <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="pick-standard-fs" value="Pickup_AtHomeStandard" />
-                            
+
                             <label for="pick-express-fs">
                                 <div class="col-md-2 hidden-xs"><img src="/images/pickup/skootar_lalamove.png" style="max-width:100%;" /></div>
                                 <div class="col-md-8 col-xs-8 text-left">
@@ -228,18 +257,20 @@ foreach($shipment_data as $data){
                                     <div class="text-left">
                                         <a href="https://fastship.co/pickup_dropoff" target="_blank">
                                             <button type="button" class="btn btn-xs btnmodal" style="font-size: 10px;">
-                                            	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
+                                            	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!} 
                                             </button>
                                         </a>
                                     </div>
+                                    
+                                    <span class="text-info tiny">{!! FT::translate('create_pickup.text.bkk_only') !!}</span>
+                                    
                                 </div>
                                 <div class="col-md-2 col-xs-4 text-right">
                                 	<h2 class="slogan text-info no-padding">350.-</h2>
                                 </div>
                             </label>
-                            <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="pick-express-fs" value="Pickup_AtHomeExpress"  />
-                            
-                            
+                            <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="pick-express-fs" value="Pickup_AtHomeExpress" />
+
                         	<label for="drop-fs">
                                 <div class="col-md-2 hidden-xs"><img src="/images/pickup/fastship.png"></div>
                                 <div class="col-md-8 col-xs-8 text-left">
@@ -251,6 +282,8 @@ foreach($shipment_data as $data){
                                         	<i class="fa fa-info-circle"></i> {!! FT::translate('create_pickup.text.more_detail') !!}
                                         </button>
                                     </div>
+                                    
+                                    <span class="text-info tiny">{!! FT::translate('create_pickup.text.bkk_only') !!}</span>
                                     
                                 </div>
                                 <div class="col-md-2 col-xs-4 text-right">
@@ -766,39 +799,62 @@ foreach($shipment_data as $data){
             var discount = parseInt($("#discount").text());
 			var cost = 0;
 			
-    		if(type == 'Pickup_AtHomeNextday'){
+    		if(type == 'Pickup_ByKerry'){
     			$("#address_section").show();
-    			$("#fspickup").show();
-    			@if(isset($rates['Pickup_AtHomeNextday']))
-    				cost = {{ $rates['Pickup_AtHomeNextday']['AccountRate'] }};
+    			$("#fspickup").hide();
+    			@if(isset($rates['Pickup_ByKerry']))
+    				cost = {{ $rates['Pickup_ByKerry']['AccountRate'] }};
     			@else
         			cost = 0;
-    				$("#pick-nextday-fs").hide();
+    				$("#pick-kerry").hide();
     			@endif
-    		}else if(type == 'Pickup_AtHomeNextdayBulk'){
+    			$("#pickup_form input[name='state']").val("");
+    			$("#pickup_form input[name='state']").attr("disabled",false);
+    		}else if(type == 'Pickup_ByKerryBulk'){
     			$("#address_section").show();
-    			$("#fspickup").show();
-    			@if(isset($rates['Pickup_AtHomeNextdayBulk']))
-    				cost = {{ $rates['Pickup_AtHomeNextdayBulk']['AccountRate'] }};
+    			$("#fspickup").hide();
+    			@if(isset($rates['Pickup_ByKerryBulk']))
+    				cost = {{ $rates['Pickup_ByKerryBulk']['AccountRate'] }};
     			@else
         			cost = 0;
-    				$("#pick-nextdaybulk-fs").hide();
+    				$("#pick-kerrybulk").hide();
     			@endif
+    			$("#pickup_form input[name='state']").val("");
+    			$("#pickup_form input[name='state']").attr("disabled",false);
+    		}else if(type == 'Pickup_ByFlash'){
+    			$("#address_section").show();
+    			$("#fspickup").hide();
+    			@if(isset($rates['Pickup_ByFlash']))
+    				cost = {{ $rates['Pickup_ByFlash']['AccountRate'] }};
+    			@else
+        			cost = 0;
+    				$("#pick-flash").hide();
+    			@endif
+    			$("#pickup_form input[name='state']").val("");
+    			$("#pickup_form input[name='state']").attr("disabled",false);
     		}else if(type == 'Pickup_AtHomeStandard'){
     			$("#address_section").show();
-    			$("#fspickup").show();
+    			//$("#fspickup").show();
+    			$("#fspickup").hide();
     			if(total_rate > 2000){
     				cost = 0;
     			}else{
     				cost = 200;
     			}
+    			$("#pickup_form input[name='state']").val("กรุงเทพมหานคร");
+    			$("#pickup_form input[name='state']").attr("disabled",true);
     		}else if(type == 'Pickup_AtHomeExpress'){
     			$("#address_section").show();
-    			$("#fspickup").show();
+    			//$("#fspickup").show();
+    			$("#fspickup").hide();
     			cost = 350;
+    			$("#pickup_form input[name='state']").val("กรุงเทพมหานคร");
+    			$("#pickup_form input[name='state']").attr("disabled",true);
     		}else if(type == 'Drop_AtFastship'){
     			$("#address_section").hide();
     			$("#fspickup").hide();
+    			$("#pickup_form input[name='state']").val("");
+    			$("#pickup_form input[name='state']").attr("disabled",false);
     		}else if(type == 'Drop_AtThaiPost'){
     			$("#address_section").show();
     			$("#fspickup").hide();
@@ -808,6 +864,8 @@ foreach($shipment_data as $data){
         			cost = 0;
     				$("#drop-thaipost").hide();
     			@endif
+    			$("#pickup_form input[name='state']").val("");
+    			$("#pickup_form input[name='state']").attr("disabled",false);
     		}else if(type == 'Drop_AtThaiPostBulk'){
     			$("#address_section").show();
     			$("#fspickup").hide();
@@ -817,6 +875,8 @@ foreach($shipment_data as $data){
         			cost = 0;
     				$("#drop-thaipostbulk").hide();
     			@endif
+    			$("#pickup_form input[name='state']").val("");
+    			$("#pickup_form input[name='state']").attr("disabled",false);
     		}
 
     		$("#cost").html(cost);
@@ -931,11 +991,11 @@ foreach($shipment_data as $data){
         }
 
         function showDiscount(){
-        	<?php if($discount > 0):?>
+        	@if($discount > 0)
 			$("#pickupdiscount").show();
-			<?php else: ?>
+			@else
 			$("#pickupdiscount").hide();
-            <?php endif; ?>
+            @endif
         }
 
         $(document).ready( function() {
@@ -950,9 +1010,8 @@ foreach($shipment_data as $data){
 
             $("#submit").attr("disabled",true);
 
-            $('#pick-nextday-fs').attr('checked', true).change();
-            //$('#pick-date-{{ $availableExpectTime[0] }}').attr('checked', true).change();
-
+            $('#pick-kerry').attr('checked', true).change();
+            
             $("#pickup_form").on("submit",function(){
 
             	var valid = true;
@@ -1037,7 +1096,6 @@ foreach($shipment_data as $data){
                 }
 
                 $("#error_text").text("");
-                //$("#submit").attr("readonly",true);
                 $("#submit").attr("disabled",true);
 
             });

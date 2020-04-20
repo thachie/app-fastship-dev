@@ -1108,6 +1108,7 @@ class PickupController extends Controller
         //availableExpectTime
         $availableExpectTime = array();
         $isBangkok = $request->get("is_bangkok");
+        $postcode = $request->get("postcode");
         $agent = $request->get("agent");
 
         //check today is Sunday ?
@@ -1140,14 +1141,14 @@ class PickupController extends Controller
         //available time
         if($isBangkok){
             if($startH < 17){
-                if($agent != "Pickup_AtHomeNextday" &&  $agent != "Pickup_AtHomeNextdayBulk"){
+                if($agent != "Pickup_ByKerry" &&  $agent != "Pickup_ByKerryBulk" &&  $agent != "Pickup_ByFlash"){
                     $availableExpectTime[$firstD] = date("M d (D)",strtotime($firstD));
                 }else if($agent == "Pickup_AtHomeNextday" && intval(date("H")) <= 11){
                     $availableExpectTime[$firstD] = date("M d (D)",strtotime($firstD));
                 }
             }
         }else{
-            if( ($agent == "Pickup_AtHomeNextday" || $agent == "Pickup_AtHomeNextdayBulk") && intval(date("H")) < 11){
+            if( ($agent == "Pickup_ByKerry" || $agent == "Pickup_ByKerryBulk" || $agent == "Pickup_ByFlash") && intval(date("H")) < 11){
                 $availableExpectTime[$firstD] = date("M d (D)",strtotime($firstD));
             }
         }
@@ -1176,7 +1177,7 @@ class PickupController extends Controller
         
         $agent = $request->get("agent");
         
-        if($agent != "Pickup_AtHomeNextday" &&  $agent != "Pickup_AtHomeNextdayBulk"){
+        if($agent != "Pickup_ByKerry" &&  $agent != "Pickup_ByKerryBulk" && $agent != "Pickup_ByFlash"){
             
             $nextDay = date("Y-m-d",strtotime($pickDate) + 86400);
 
@@ -1282,7 +1283,7 @@ class PickupController extends Controller
             }else{
                 $remark = "พัสดุจะถึง Fastship และส่งออกภายในวันที่ " . $nextDate;
             }
-        }else if($agent == "Pickup_AtHomeNextday" || $agent == "Pickup_AtHomeNextdayBulk"){
+        }else if($agent == "Pickup_ByKerry" || $agent == "Pickup_ByKerryBulk" || $agent == "Pickup_ByFlash"){
             $remark = "พัสดุจะถึง Fastship และส่งออกภายในวันที่ " . $next2Date;
         }
 

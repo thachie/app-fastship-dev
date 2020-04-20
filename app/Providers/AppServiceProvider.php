@@ -48,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
             
             "Pickup_AtHome" => "ให้ไปรับที่บ้าน",
             "Pickup_AtHomeNextday" => "ให้ไปรับที่บ้าน 1-3 วัน",
+            "Pickup_AtHomeNextdayBulk" => "รวมกล่อง ให้ไปรับที่บ้าน 1-3 วัน",
             "Pickup_AtHomeStandard" => "ให้ไปรับที่บ้าน ภายในวัน",
             "Pickup_AtHomeExpress" => "ให้ไปรับที่บ้าน ด่วน",
             "Pickup_BySkootar" => "รับโดย Skootar",
@@ -55,6 +56,7 @@ class AppServiceProvider extends ServiceProvider
             "Pickup_ByFlash" => "รับโดย Flash",
             "Pickup_BySpeedy" => "รับโดย Speedy",
             "Pickup_ByKerry" => "รับโดย Kerry",
+            "Pickup_ByKerryBulk" => "รวมกล่อง รับโดย Kerry",
             "Pickup_ByOther" => "รับโดยวิธีอื่นๆ",
             "Pickup_ByAirPortels" => "รับโดย Air Portels",
             "Pickup_ByPolite" => "รับโดย Polite",
