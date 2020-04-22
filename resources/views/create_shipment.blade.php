@@ -135,46 +135,70 @@
                         </table>
                         <div class="row detailpro">
                             <div class="col-md-6 pull-right text-right"><a href="javascript:add();"><i class="fa fa-plus-circle green"></i> {!! FT::translate('create_shipment.add_declare') !!}</a></div>
-                            <div class="col-md-6 pull-left hidden-xs"><a href="http://fastship.co/helps/prohibited-items/" target="_blank"><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item') !!}</a></div>
                         </div>
                         
                         <?php if(false): ?>
-                            <label class="col-md-5 control-label label-top">{!! FT::translate('create_shipment.duty_responsibility') !!}: </label>
-                            <div class="col-md-7">
-                                <div class="radio">
-                                    <?php 
-                                    if($default['term'] == "DDP"){ ?>
-                                        <label><input type="radio" name="term" id="ddu" value="DDU" > {!! FT::translate('radio.ddu') !!}</label>
-                                        &nbsp;
-                                        <label><input type="radio" name="term" id="ddp" value="DDP" checked> {!! FT::translate('radio.ddp') !!}</label>
-                                    <?php }else{ ?>
-                                        <label><input type="radio" name="term" id="ddu" value="DDU" checked> {!! FT::translate('radio.ddu') !!}</label>
-                                        &nbsp;
-                                        <label><input type="radio" name="term" id="ddp" value="DDP" > {!! FT::translate('radio.ddp') !!}</label>
-                                    <?php } ?>
-                                    
-                                </div>
+                        <label class="col-md-5 control-label label-top">{!! FT::translate('create_shipment.duty_responsibility') !!}: </label>
+                        <div class="col-md-7">
+                            <div class="radio">
+                                <?php 
+                                if($default['term'] == "DDP"){ ?>
+                                    <label><input type="radio" name="term" id="ddu" value="DDU" > {!! FT::translate('radio.ddu') !!}</label>
+                                    &nbsp;
+                                    <label><input type="radio" name="term" id="ddp" value="DDP" checked> {!! FT::translate('radio.ddp') !!}</label>
+                                <?php }else{ ?>
+                                    <label><input type="radio" name="term" id="ddu" value="DDU" checked> {!! FT::translate('radio.ddu') !!}</label>
+                                    &nbsp;
+                                    <label><input type="radio" name="term" id="ddp" value="DDP" > {!! FT::translate('radio.ddp') !!}</label>
+                                <?php } ?>
+                                
                             </div>
-                            <?php endif; ?>
-                            
-                            <?php if(in_array($default['agent'] , array("Ecom_PD","FS_FBA","FS_FBA_PLUS","FS_FBA_JP","FS_FBA_SG","FS_FBA_UK","FS_FBA_AU","FS_FBA_FR"))): ?>
-                            <input type="hidden" name="term" id="ddp" value="DDP">
-                            <?php else: ?>
-                            <input type="hidden" name="term" id="ddu" value="DDU">
-                            <?php endif; ?>
-                            
-                            @if($default['country'] == "CHN")
-                            <div class="col-md-12 small text-warning text-center" style="margin-top:20px; ">
-                           		 {!! FT::translate('create_shipment.warning.china') !!}
-                            </div>
-                            @endif
-                            @if($default['country'] == "KOR" && $default['agent'] == "Aramex")
-                            <div class="col-md-12 small text-warning text-center" style="margin-top:20px; ">
-                           		 กรุณาแนบสำเนาบัตรประชาชนมาพร้อมกับกล่องพัสดุ หรือส่งอีเมล์เข้ามาที่ <a href="mailto:cs@fastship.co">cs@fastship.co</a>
-                            </div>
-                            @endif
-
-                            
+                        </div>
+                        <?php endif; ?>
+                        
+                        <?php if(in_array($default['agent'] , array("Ecom_PD","FS_FBA","FS_FBA_PLUS","FS_FBA_JP","FS_FBA_SG","FS_FBA_UK","FS_FBA_AU","FS_FBA_FR"))): ?>
+                        <input type="hidden" name="term" id="ddp" value="DDP">
+                        <?php else: ?>
+                        <input type="hidden" name="term" id="ddu" value="DDU">
+                        <?php endif; ?>
+                        
+                        @if($default['country'] == "CHN")
+                        <div class="col-md-12 small text-warning text-center" style="margin-top:20px; ">
+                       		 {!! FT::translate('create_shipment.warning.china') !!}
+                        </div>
+                        @endif
+                        @if($default['country'] == "KOR" && $default['agent'] == "Aramex")
+                        <div class="col-md-12 small text-warning text-center" style="margin-top:20px; ">
+                       		 กรุณาแนบสำเนาบัตรประชาชนมาพร้อมกับกล่องพัสดุ หรือส่งอีเมล์เข้ามาที่ <a href="mailto:cs@fastship.co">cs@fastship.co</a>
+                        </div>
+                        @endif
+                        
+                        <div class="well small" style="background: #fefefe;border: 1px solid #fdd;box-shadow: 0 0 0;">
+                        	<h5><b>{!! FT::translate('create_shipment.prohibited_item') !!}</b></h5>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item1') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item2') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item3') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item4') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item5') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item6') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item7') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item8') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item9') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item10') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item11') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item12') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item13') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item14') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item15') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item16') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item17') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item18') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item19') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item20') !!}</div>
+                        	<div class="text-center"><a href="http://fastship.co/helps/prohibited-items/" target="_blank"><button class="btn btn-link btn-sm">{!! FT::translate('create_pickup.text.more_detail') !!}</button></a></div>
+                        	<div class="clearfix"></div>
+                        </div>
+  
                         <div class="clearfix"></div><br /> 
                         
                         <div class="col-md-6 pull-right visible-xs"><a href="http://fastship.co/helps/prohibited-items/" target="_blank"><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item') !!}</a></div>

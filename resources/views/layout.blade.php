@@ -39,7 +39,7 @@
 		<link rel="stylesheet" type="text/css" href="/css/step.css"/>
 		
 		<!-- Start of fastship Zendesk Widget script -->
-        <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=b69e2321-0f90-4c20-8911-733d23083e53"> </script>
+        <!-- <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=b69e2321-0f90-4c20-8911-733d23083e53"> </script>  -->
         <!-- End of fastship Zendesk Widget script -->
 		
 		<!-- Facebook Pixel Code -->

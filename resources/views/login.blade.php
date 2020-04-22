@@ -37,11 +37,11 @@
         <link rel="stylesheet" type="text/css" href="/css/custom.css?t=<?php echo time(); ?>"/>
 		<link rel="stylesheet" type="text/css" href="/css/timeline.css"/>
 		<link rel="stylesheet" type="text/css" href="/css/step.css"/>
-		
+
 		<!-- Start of fastship Zendesk Widget script -->
-        <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=b69e2321-0f90-4c20-8911-733d23083e53"> </script>
+        <!-- <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=b69e2321-0f90-4c20-8911-733d23083e53"> </script> -->
         <!-- End of fastship Zendesk Widget script -->
-		
+
 		<!-- Facebook Pixel Code -->
         <script>
          !function(f,b,e,v,n,t,s)
@@ -166,13 +166,7 @@
 			</div>
 	    </div>
 	    <div class="clearfix"></div>
-        
-	    <script type="text/javascript">
-	    $(function(){
 
-	                
-	    });
-	    </script>
 	    <script>
 	      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

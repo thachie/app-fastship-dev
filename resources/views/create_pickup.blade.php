@@ -409,32 +409,32 @@ foreach($shipment_data as $data){
             		                    <div class="clearfix"></div>
         
             			                <div class="col-md-6">
-            		                        <label for="telephone" class="col-12 control-label">{!! FT::translate('label.address1') !!}</label>
+            		                        <label for="address1" class="col-12 control-label">{!! FT::translate('label.address1') !!}</label>
             		                        <input type="text" class="form-control required input-count" name="address1" id="address1" value="<?php echo $customer_data['address1']; ?>" maxlength="50" />
             		                    </div>
             		                    <div class="col-md-6">
-            		                        <label for="telephone" class="col-12 control-label">{!! FT::translate('label.address2') !!}</label>
+            		                        <label for="address2" class="col-12 control-label">{!! FT::translate('label.address2') !!}</label>
             		                        <input type="text" class="form-control input-count" name="address2" id="address2" value="<?php echo $customer_data['address2']; ?>" maxlength="50" />
             		                    </div>
             		                    <div class="clearfix"></div>
             		                    
             		                    <div class="col-md-6">
-            		                        <label for="telephone" class="col-12 control-label">{!! FT::translate('label.city') !!}</label>
+            		                        <label for="city" class="col-12 control-label">{!! FT::translate('label.city') !!}</label>
             		                        <input type="text" class="form-control required input-count" name="city" id="city" value="<?php echo $customer_data['city']; ?>" maxlength="50" />
             		                    </div>
             		                    <div class="col-md-6">
-            		                        <label for="telephone" class="col-12 control-label">{!! FT::translate('label.state') !!}</label>
-            		                        <input type="text" class="form-control required input-count" name="state" id="state" value="<?php echo $customer_data['state']; ?>" maxlength="50" />
+            		                        <label for="state" class="col-12 control-label">{!! FT::translate('label.state') !!}</label>
+            		                        <input type="text" class="form-control input-count" name="state" id="state" value="<?php echo $customer_data['state']; ?>" maxlength="50" />
             		                    </div>
             		                    <div class="clearfix"></div>
             		                    
             		                    <div class="col-md-6">
-            		                        <label for="telephone" class="col-12 control-label">{!! FT::translate('label.postcode') !!}</label>
+            		                        <label for="postcode" class="col-12 control-label">{!! FT::translate('label.postcode') !!}</label>
             		                        <input type="text" class="form-control required input-count" name="postcode" id="postcode" value="<?php echo $customer_data['postcode']; ?>" maxlength="20" />
             		                    </div>
             		                    
             		                    <div class="col-md-6">
-            		                        <label for="telephone" class="col-12 control-label">{!! FT::translate('label.country') !!}</label>
+            		                        <label for="country" class="col-12 control-label">{!! FT::translate('label.country') !!}</label>
             		                        <div class="form-control"><?php echo ($customer_data['country'])?$countries[$customer_data['country']]:""; ?></div>
             		                    </div>
             		                    <div class="clearfix"></div>
@@ -463,32 +463,32 @@ foreach($shipment_data as $data){
             		                    <div class="clearfix"></div>
         
             			                <div class="col-md-6">
-            		                        <label for="telephone" class="col-12 control-label">{!! FT::translate('label.address1') !!}</label>
+            		                        <label for="address1" class="col-12 control-label">{!! FT::translate('label.address1') !!}</label>
             		                        <input type="text" class="form-control required input-count" name="address1" id="address1" value="<?php echo $customer_data['address1']; ?>" maxlength="50" />
             		                    </div>
             		                    <div class="col-md-6">
-            		                        <label for="telephone" class="col-12 control-label">{!! FT::translate('label.address2') !!}</label>
+            		                        <label for="address2" class="col-12 control-label">{!! FT::translate('label.address2') !!}</label>
             		                        <input type="text" class="form-control input-count" name="address2" id="address2" value="<?php echo $customer_data['address2']; ?>" maxlength="50" />
             		                    </div>
             		                    <div class="clearfix"></div>
             		                    
             		                    <div class="col-md-6">
-            		                        <label for="telephone" class="col-12 control-label">{!! FT::translate('label.city') !!}</label>
+            		                        <label for="city" class="col-12 control-label">{!! FT::translate('label.city') !!}</label>
             		                        <input type="text" class="form-control required input-count" name="city" id="city" value="<?php echo $customer_data['city']; ?>" maxlength="50" />
             		                    </div>
             		                    <div class="col-md-6">
-            		                        <label for="telephone" class="col-12 control-label">{!! FT::translate('label.state') !!}</label>
-            		                        <input type="text" class="form-control required input-count" name="state" id="state" value="<?php echo $customer_data['state']; ?>" maxlength="50" />
+            		                        <label for="state" class="col-12 control-label">{!! FT::translate('label.state') !!}</label>
+            		                        <input type="text" class="form-control input-count" name="state" id="state" value="<?php echo $customer_data['state']; ?>" maxlength="50" />
             		                    </div>
             		                    <div class="clearfix"></div>
             		                    
             		                    <div class="col-md-6">
-            		                        <label for="telephone" class="col-12 control-label">{!! FT::translate('label.postcode') !!}</label>
+            		                        <label for="postcode" class="col-12 control-label">{!! FT::translate('label.postcode') !!}</label>
             		                        <input type="text" class="form-control required input-count" name="postcode" id="postcode" value="<?php echo $customer_data['postcode']; ?>" maxlength="20" />
             		                    </div>
             		                    
             		                    <div class="col-md-6">
-            		                        <label for="telephone" class="col-12 control-label">{!! FT::translate('label.country') !!}</label>
+            		                        <label for="country" class="col-12 control-label">{!! FT::translate('label.country') !!}</label>
             		                        <div class="form-control"><?php echo ($customer_data['country'])?$countries[$customer_data['country']]:""; ?></div>
             		                    </div>
             		                    <div class="clearfix"></div>
@@ -809,7 +809,7 @@ foreach($shipment_data as $data){
     				$("#pick-kerry").hide();
     			@endif
     			$("#pickup_form input[name='state']").val("");
-    			$("#pickup_form input[name='state']").attr("disabled",false);
+    			$("#pickup_form input[name='state']").attr("readonly",false);
     		}else if(type == 'Pickup_ByKerryBulk'){
     			$("#address_section").show();
     			$("#fspickup").hide();
@@ -820,7 +820,7 @@ foreach($shipment_data as $data){
     				$("#pick-kerrybulk").hide();
     			@endif
     			$("#pickup_form input[name='state']").val("");
-    			$("#pickup_form input[name='state']").attr("disabled",false);
+    			$("#pickup_form input[name='state']").attr("readonly",false);
     		}else if(type == 'Pickup_ByFlash'){
     			$("#address_section").show();
     			$("#fspickup").hide();
@@ -831,7 +831,7 @@ foreach($shipment_data as $data){
     				$("#pick-flash").hide();
     			@endif
     			$("#pickup_form input[name='state']").val("");
-    			$("#pickup_form input[name='state']").attr("disabled",false);
+    			$("#pickup_form input[name='state']").attr("readonly",false);
     		}else if(type == 'Pickup_AtHomeStandard'){
     			$("#address_section").show();
     			//$("#fspickup").show();
@@ -842,19 +842,19 @@ foreach($shipment_data as $data){
     				cost = 200;
     			}
     			$("#pickup_form input[name='state']").val("กรุงเทพมหานคร");
-    			$("#pickup_form input[name='state']").attr("disabled",true);
+    			$("#pickup_form input[name='state']").attr("readonly",true);
     		}else if(type == 'Pickup_AtHomeExpress'){
     			$("#address_section").show();
     			//$("#fspickup").show();
     			$("#fspickup").hide();
     			cost = 350;
     			$("#pickup_form input[name='state']").val("กรุงเทพมหานคร");
-    			$("#pickup_form input[name='state']").attr("disabled",true);
+    			$("#pickup_form input[name='state']").attr("readonly",true);
     		}else if(type == 'Drop_AtFastship'){
     			$("#address_section").hide();
     			$("#fspickup").hide();
     			$("#pickup_form input[name='state']").val("");
-    			$("#pickup_form input[name='state']").attr("disabled",false);
+    			$("#pickup_form input[name='state']").attr("readonly",false);
     		}else if(type == 'Drop_AtThaiPost'){
     			$("#address_section").show();
     			$("#fspickup").hide();
@@ -865,7 +865,7 @@ foreach($shipment_data as $data){
     				$("#drop-thaipost").hide();
     			@endif
     			$("#pickup_form input[name='state']").val("");
-    			$("#pickup_form input[name='state']").attr("disabled",false);
+    			$("#pickup_form input[name='state']").attr("readonly",false);
     		}else if(type == 'Drop_AtThaiPostBulk'){
     			$("#address_section").show();
     			$("#fspickup").hide();
@@ -876,7 +876,7 @@ foreach($shipment_data as $data){
     				$("#drop-thaipostbulk").hide();
     			@endif
     			$("#pickup_form input[name='state']").val("");
-    			$("#pickup_form input[name='state']").attr("disabled",false);
+    			$("#pickup_form input[name='state']").attr("readonly",false);
     		}
 
     		$("#cost").html(cost);
