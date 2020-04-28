@@ -76,6 +76,12 @@
                             <div class="col-md-6">
                                 <select class="form-control" id="country" name="country"  onchange="calculateRate(true)">
                                 <option value="">- {!! FT::translate('dropdown.default.country') !!} -</option>
+                                <option value="USA" style="font-weight: 600;">United States </option>
+                                <option value="GBR" style="font-weight: 600;">United Kingdom </option>
+                                <option value="DEU" style="font-weight: 600;">Germany</option>
+                                <option value="KOR" style="font-weight: 600;">South Korea</option>
+                                <option value="AUS" style="font-weight: 600;">Australia</option>
+                                <optgroup label="-------------------------"></optgroup>
                                 <?php
                                     foreach($country as $code=>$name){
                                         echo "<option value='".$code."'>".$name."</option>";
@@ -292,6 +298,7 @@
             	}
             }
 
+            /*
             if($("#weight").val() > 20000 || parseInt($("#volumnWeight").text()) > 20000){
                 content += '<fieldset>';
                 content += '<label class="label-rate" for="agent-quotation" onclick="selectAgent(\'Quotation\',\'0\',\'\')" class="clearfix">';
@@ -307,7 +314,7 @@
          	   	content += '</label>';
          	   	content += '<input class="selector" type="radio" id="agent-quotation" value="quotation" >';
                	content += '</fieldset>';
-            }
+            }*/
 
             $("#result-panel").append(content);
 

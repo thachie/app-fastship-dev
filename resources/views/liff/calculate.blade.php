@@ -8,7 +8,7 @@
 	</div>
 	
 	<div id="form-panel">
-    	<form id="calculate_form" name="calculate_form" method="post" action="{{ url('liff/create_shipment') }}">
+    	<form id="calculate_form" name="calculate_form" method="post" onsubmit="calculateRate(true,false)">
     
     		<input type="hidden" name="line_user_id" class="line_user_id" />
     		<input type="hidden" name="agent" id="agent" />
@@ -215,7 +215,7 @@ function calculateRate(scroll,defaultAgent){
                    content += '		<span class="rate-agent-type rate-agent-type-' + _type + '">' + _type + '</span>';
                    content += '	</div>';
                    content += '	<div class="col col-4 rate-right">';
-                   content += '		<div class="text-success text-right rate-agent-price">' + parseInt(_value).format() + ' บาท</div>';
+                   content += '		<div class="text-success text-right rate-agent-price">' + parseInt(_value).format() + '.-</div>';
                    content += '	</div>';
                    content += '</div>';
 

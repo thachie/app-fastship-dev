@@ -682,20 +682,26 @@ class PickupController extends Controller
                 $pickupData = $response;
                 $shipmentIds = $response['ShipmentDetail']['ShipmentIds'];
                 
+                //shipments
                 foreach ($shipmentIds as $key => $shipid) {
                     //$shipment_data[$key] = FS_Shipment::get($shipid);
                     $pickupData['ShipmentDetail']['ShipmentIds'][$key] = FS_Shipment::get($shipid);
                     //$arr[$key]['Weight'] = $shipment_data[$key]['ShipmentDetail']['Weight'];
                     //$arr[$key]['ShippingRate'] = $shipment_data[$key]['ShipmentDetail']['ShippingRate'];
                 }
+                
+                //cases
+                $cases = FS_Customer::getCasesByRef($pickupId);
+                
             }
-            
+
             //alert($pickupData);
             $data = array(
                 'pickupID' => $pickupId, 
                 'pickup_data' => $pickupData, 
                 'status' => $status, 
                 'labels' => $labels,
+                'cases' => $cases,
             );
             return view('pickup_detail',$data);
             

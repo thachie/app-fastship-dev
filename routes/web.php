@@ -209,8 +209,12 @@ Route::group(['middleware' => 'loginsession'], function () {
 
 	//case
 	Route::get('case_list', 'Customer\CustomerController@prepareCaseList');
-	Route::get('add_case', 'Customer\CustomerController@prepareAddCase');
+	Route::get('case/{id?}', 'Customer\CustomerController@prepareCaseDetail');
+	//Route::get('add_case', 'Customer\CustomerController@prepareAddCase');
+	Route::get('add_case/{id?}', 'Customer\CustomerController@prepareAddCase');
 	Route::post('case/create', 'Customer\CustomerController@createCase');
+	Route::post('case/createreply', 'Customer\CustomerController@createCaseReply');
+	Route::post('case/get_ref', 'Customer\CustomerController@getCaseReferences');
 	
 	//error
 	Route::get('/error_page', function () {

@@ -8,7 +8,7 @@
 	</div>
 	
 	
-	<form id="create_form" name="create_form" method="post" action="{{ url('liff/create_shipment_step4') }}">
+	<form id="create_form" name="create_form" method="post" action="{{ url('liff/create_pickup_step4') }}">
 	
 		<div class="row">
 

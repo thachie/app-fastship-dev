@@ -1623,7 +1623,8 @@ class LiffController extends Controller
         
         //get shipment in cart
         $searchDetails = array(
-            "Status" => "Sent",
+            //"Status" => "Sent",
+            "NoStatuses" => array("Pending","Created","ReadyToShip","Cancelled")
         );
         $response = FS_Shipment::search($searchDetails);
         
@@ -1647,16 +1648,21 @@ class LiffController extends Controller
      */
     public function trackingResult(Request $request)
     {
-        
-        
         //tracking number
         if($request->has("tracking")){
             $tracking = $request->input("tracking");
+        }else{
+            $data = array(
+                'tracking' => $tracking,
+                'trackingResult' =>  array(),
+                'trackingStatus' => array(),
+            );
+            return view('liff/tracking_result',$data)->with('msg','ไม่พบหมายเลข Tracking '.$tracking.' หรือพัสดุกำลังรอการจัดส่ง');
         }
         
         $customerId = session('customer.id');
         Fastship::getToken();
-        
+
         //static variable
         $trackingStatus = array(
             "pre_transit" => "Pre-Transit",
@@ -1677,36 +1683,53 @@ class LiffController extends Controller
             "1000" => "Processing",
         );
         
-        //call api
-        $tracking_data = FS_Shipment::track($tracking);
-        
-        if(!empty($tracking_data['Events'])){
-            $data = array(
-                'tracking' => $tracking,
-                'trackingResult' => $tracking_data,
-                'trackingStatus' => $trackingStatus,
-            );
-            return view('liff/tracking_result',$data);
-        }else{
+        try{
             
-            $tracking_data = FS_Shipment::trackid($tracking);
-            if(!empty($tracking_data['Events'])){
+            //call api
+            $tracking_data = FS_Shipment::track($tracking);
+
+            if(is_array($tracking_data) && !empty($tracking_data['Events'])){
+                
                 $data = array(
                     'tracking' => $tracking,
                     'trackingResult' => $tracking_data,
                     'trackingStatus' => $trackingStatus,
                 );
                 return view('liff/tracking_result',$data);
+                
             }else{
                 
-                $data = array(
-                    'tracking' => $tracking,
-                    'trackingResult' =>  array(),
-                    'trackingStatus' => array(),
-                );
-                return view('liff/tracking_result')->with('msg','ไม่พบหมายเลข Tracking '.$tracking.' ระบบปรับปรุงข้อมูลภายใน 24 ชม หลังส่งออก กรุณาตรวจสอบใหม่อีกครั้งภายหลัง');
+                $tracking_data = FS_Shipment::trackid($tracking);
+                
+                if(isset($tracking_data) && is_array($tracking_data) && !empty($tracking_data['Events'])){
+
+                    $data = array(
+                        'tracking' => $tracking,
+                        'trackingResult' => $tracking_data,
+                        'trackingStatus' => $trackingStatus,
+                    );
+                    return view('liff/tracking_result',$data);
+                }else{
+                    
+                    $data = array(
+                        'tracking' => $tracking,
+                        'trackingResult' =>  array(),
+                        'trackingStatus' => array(),
+                    );
+                    return view('liff/tracking_result',$data)->with('msg','ไม่พบหมายเลข Tracking '.$tracking.' ระบบปรับปรุงข้อมูลภายใน 24 ชม หลังส่งออก กรุณาตรวจสอบใหม่อีกครั้งภายหลัง');
+                }
+                
             }
-        }        
+            
+        }catch(Exception $e){
+
+            $data = array(
+                'tracking' => $tracking,
+                'trackingResult' =>  array(),
+                'trackingStatus' => array(),
+            );
+            return view('liff/tracking_result',$data)->with('msg','ไม่พบหมายเลข Tracking '.$tracking.' หรือพัสดุกำลังรอการจัดส่ง');
+        }
         
     }
     

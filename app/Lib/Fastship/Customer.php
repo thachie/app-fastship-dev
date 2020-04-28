@@ -132,6 +132,109 @@ class FS_Customer extends FS_ApiResource
      * @param array|null $params
      * @param string|null $apiToken
      *
+     * @return Fastship_Customer Create a Customer Channel.
+     */
+    public static function addCase($params = null, $apiToken = null)
+    {
+        
+        $requestor = new FS_ApiRequestor($apiToken);
+        $url = "case/create";
+        
+        list($response, $rcode) = $requestor->request('post', $url, $params);
+        
+        if($rcode != 200){
+            return false;
+        }else{
+            return $response;
+        }
+    }
+    
+    /**
+     * @param array|null $params
+     * @param string|null $apiToken
+     *
+     * @return Fastship_Customer Create a Customer Channel.
+     */
+    public static function addCaseReply($params = null, $apiToken = null)
+    {
+        
+        $requestor = new FS_ApiRequestor($apiToken);
+        $url = "case/createreply";
+        
+        list($response, $rcode) = $requestor->request('post', $url, $params);
+        
+        if($rcode != 200){
+            return false;
+        }else{
+            return $response;
+        }
+    }
+    
+    /**
+     * @param array|null $params
+     * @param string|null $apiToken
+     *
+     * @return Fastship_Customer Create a Customer Channel.
+     */
+    public static function getCase($id, $apiToken = null)
+    {
+        
+        $requestor = new FS_ApiRequestor($apiToken);
+        $url = "case/".$id;
+        
+        list($response, $rcode) = $requestor->request('get', $url);
+        
+        if($rcode != 200){
+            return false;
+        }else{
+            return $response;
+        }
+    }
+    
+    /**
+     * @param string $id
+     * @param string|null $apiToken
+     *
+     * @return Fastship_Retrieve Get a Customer.
+     */
+    public static function getCases($apiToken = null)
+    {
+        $requestor = new FS_ApiRequestor($apiToken);
+        $url = "cases";
+        
+        list($response, $rcode) = $requestor->request('get', $url);
+ 
+        if($rcode != 200){
+            return false;
+        }else{
+            return $response;
+        }
+    }
+    
+    /**
+     * @param string $id
+     * @param string|null $apiToken
+     *
+     * @return Fastship_Retrieve Get a Customer.
+     */
+    public static function getCasesByRef($id, $apiToken = null)
+    {
+        $requestor = new FS_ApiRequestor($apiToken);
+        $url = "cases/ref/" . $id;
+        
+        list($response, $rcode) = $requestor->request('get', $url);
+        
+        if($rcode != 200){
+            return false;
+        }else{
+            return $response;
+        }
+    }
+    
+    /**
+     * @param array|null $params
+     * @param string|null $apiToken
+     *
      * @return Fastship_Customer Update a Customer.
      */
     public static function update($params = null, $apiToken = null)

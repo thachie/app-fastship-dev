@@ -57,6 +57,60 @@
 	<div class="row">
         <div class="col-md-12"><h2>{!! FT::translate('shipment_detail.heading') !!}: <?php echo $ShipmentDetail['ID'];?></h2></div>
     </div>
+       
+    @if(sizeof($cases)>0)
+	@foreach($cases as $case)
+	<div class="alert m-t-20 mt-b-20 text-left bg-white alert-case alert-{{ strtolower($case['Priority']) }}">
+    	<div class="text-center alert-left">
+    		<div class="case">Case #{{ $case['ID'] }}</div>
+    	</div>
+    	<div class="alert-detail">
+    		@if($case['IsPrivate'] == 1)
+    		<span class=""><strong>{{ $case['Category'] }}</strong> | </span>
+    		<span class="small">by Fastship {{ date('d/m H:i',strtotime($case['CreateDate'])) }}</span>
+    		@else
+    		<span class=""><strong>{{ $case['Detail'] }}</strong> | </span>
+    		<span class="small">on {{ date('d/m H:i',strtotime($case['CreateDate'])) }}</span>
+
+    		@if(sizeof($case['Replies']) > 0)
+    		@foreach($case['Replies'] as $reply)
+    		@if(strstr($reply['Detail'],"ปรับปรุง <b>สถานะ</b>") == FALSE && strstr($reply['Detail'],"ปรับปรุงสถานะ") == FALSE && strstr($reply['Detail'],"ปรับปรุง Case") == FALSE)
+	
+    		<hr style="margin: 5px;">
+    		@if($reply['CustomerId'] == session('customer.id'))
+    		<div class="small" style="margin-left: 20px;">{{ $reply['Detail'] }} | by {{ session('customer.name') }} {{ date('d/m H:i',strtotime($reply['CreateDate'])) }}</div>
+    		@else
+    		<div class="small" style="margin-left: 20px;">{{ $reply['Detail'] }} | by Fastship {{ date('d/m H:i',strtotime($reply['CreateDate'])) }}</div>
+    		@endif
+    		
+    		@endif
+    		@endforeach
+    		@endif
+    		
+    		@endif		 
+    	</div>
+    	@if($case['IsPrivate'] == 0)
+    	<div class="alert-reply">
+    	<form id="case_form" name="case_form" class="form-horizontal" method="post" action="{{url ('/case/createreply')}}">
+    		
+    		{{ csrf_field() }}	
+    			
+    		<input type="hidden" name="case_id" value="{{ $case['ID'] }}" />
+
+    		<textarea class="form-control" name="detail" placeholder="Reply here" required></textarea>
+    		<button type="submit" class="btn btn-sm btn-primary" style="position: absolute;right: 20px;top: 20px;" >Send</button> 
+    		
+    	</form>	
+    	</div>
+    	@endif
+    	<div class="alert-right text-center ">
+    		<div class="circle-status alert-status-{{ strtolower($case['Status']) }}"></div>
+    		<div class="small">Status: {{ $case['Status'] }}</div>
+    	</div>
+    </div>
+	@endforeach
+	@endif
+
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-primary">
@@ -167,6 +221,7 @@
                     
                 </div>
             </div>
+
         </div>
         <div class="col-md-6">
         	<div class="panel panel-primary">
@@ -258,12 +313,56 @@
     
     </div>
     <div class="clearfix"></div>
+      
+    @if(sizeof($cases) == 0)
+    <div class="row">
+	    <div class="col-md-6 col-md-offset-3">
+	    
+	    	<form id="case_form" name="case_form" class="form-horizontal" method="post" action="{{url ('/case/create')}}">
+	    		
+	    		{{ csrf_field() }}
+	    		
+	    		<input type="hidden" name="ref_id" value="{{ $ShipmentDetail['ID'] }}" />
+
+			    <div class="panel panel-primary">
+					<div class="panel-heading"><img src="{{ url('images/fasty_help.png') }}" style="max-height:40px;" /> <span style="line-height:40px;">{!! FT::translate('button.sendusmsg') !!}</span></div>
+			        <div class="panel-body">
+
+	                	<div class="col-md-12">
+	                        <label for="category" class="col-12 control-label">ประเภท Case</label>
+	                        
+	                        <select name="category" class="form-control required" required>
+	                        	<option value="">--- กรุณาเลือก ---</option>
+	                    		<option>ปัญหาการเข้ารับพัสดุ</option>
+	                    		<option>ติดตามสถานะ Tracking</option>
+	                    		<option>สอบถามรายละเอียดยอดชำระ</option>
+	                    		<option>ปัญหาการจ่ายเงิน</option>
+	                    		<option>คืนเงิน / สถานะการคืนเงิน</option>
+	                    		<option>คืนสินค้า/ สถานะการคืนสินค้า</option>
+	                    		<option>ขอเอกสาร หัก ณ ที่จ่าย</option>
+	                    		<option>อื่นๆ</option>
+	                    	</select>
+	                    	
+	                    </div>
+	                    <div class="col-md-12">
+		                    <label for="detail" class="col-12 control-label">รายละเอียด</label>
+		                    <textarea class="form-control required" rows="5" name="detail" id="detail" required>{{ old('detail','') }}</textarea>
+		                </div>
+		                <div class="clearfix"></div>
+		                <br />
+
+		                <div class="text-center"><button type="submit" name="submit" class="btn btn-lg btn-primary">{!! FT::translate('button.confirm') !!}</button></div>
+		            
+		            </div>
+				</div>
+			</form> 
+	    </div>
+	    
+	</div>
+	<div class="clearfix"></div>
     <br />
-    
-    
-    
-    
-    
+	@endif
+
 </div>
 
 <script type="text/javascript">

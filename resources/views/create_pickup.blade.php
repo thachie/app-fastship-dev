@@ -808,8 +808,8 @@ foreach($shipment_data as $data){
         			cost = 0;
     				$("#pick-kerry").hide();
     			@endif
-    			$("#pickup_form input[name='state']").val("");
-    			$("#pickup_form input[name='state']").attr("readonly",false);
+//     			$("#pickup_form input[name='state']").val("");
+//     			$("#pickup_form input[name='state']").attr("readonly",false);
     		}else if(type == 'Pickup_ByKerryBulk'){
     			$("#address_section").show();
     			$("#fspickup").hide();
@@ -819,8 +819,8 @@ foreach($shipment_data as $data){
         			cost = 0;
     				$("#pick-kerrybulk").hide();
     			@endif
-    			$("#pickup_form input[name='state']").val("");
-    			$("#pickup_form input[name='state']").attr("readonly",false);
+//     			$("#pickup_form input[name='state']").val("");
+//     			$("#pickup_form input[name='state']").attr("readonly",false);
     		}else if(type == 'Pickup_ByFlash'){
     			$("#address_section").show();
     			$("#fspickup").hide();
@@ -830,8 +830,8 @@ foreach($shipment_data as $data){
         			cost = 0;
     				$("#pick-flash").hide();
     			@endif
-    			$("#pickup_form input[name='state']").val("");
-    			$("#pickup_form input[name='state']").attr("readonly",false);
+//     			$("#pickup_form input[name='state']").val("");
+//     			$("#pickup_form input[name='state']").attr("readonly",false);
     		}else if(type == 'Pickup_AtHomeStandard'){
     			$("#address_section").show();
     			//$("#fspickup").show();
@@ -841,20 +841,20 @@ foreach($shipment_data as $data){
     			}else{
     				cost = 200;
     			}
-    			$("#pickup_form input[name='state']").val("กรุงเทพมหานคร");
-    			$("#pickup_form input[name='state']").attr("readonly",true);
+//     			$("#pickup_form input[name='state']").val("กรุงเทพมหานคร");
+//     			$("#pickup_form input[name='state']").attr("readonly",true);
     		}else if(type == 'Pickup_AtHomeExpress'){
     			$("#address_section").show();
     			//$("#fspickup").show();
     			$("#fspickup").hide();
     			cost = 350;
-    			$("#pickup_form input[name='state']").val("กรุงเทพมหานคร");
-    			$("#pickup_form input[name='state']").attr("readonly",true);
+//     			$("#pickup_form input[name='state']").val("กรุงเทพมหานคร");
+//     			$("#pickup_form input[name='state']").attr("readonly",true);
     		}else if(type == 'Drop_AtFastship'){
     			$("#address_section").hide();
     			$("#fspickup").hide();
-    			$("#pickup_form input[name='state']").val("");
-    			$("#pickup_form input[name='state']").attr("readonly",false);
+//     			$("#pickup_form input[name='state']").val("");
+//     			$("#pickup_form input[name='state']").attr("readonly",false);
     		}else if(type == 'Drop_AtThaiPost'){
     			$("#address_section").show();
     			$("#fspickup").hide();
@@ -864,8 +864,8 @@ foreach($shipment_data as $data){
         			cost = 0;
     				$("#drop-thaipost").hide();
     			@endif
-    			$("#pickup_form input[name='state']").val("");
-    			$("#pickup_form input[name='state']").attr("readonly",false);
+//     			$("#pickup_form input[name='state']").val("");
+//     			$("#pickup_form input[name='state']").attr("readonly",false);
     		}else if(type == 'Drop_AtThaiPostBulk'){
     			$("#address_section").show();
     			$("#fspickup").hide();
@@ -875,15 +875,21 @@ foreach($shipment_data as $data){
         			cost = 0;
     				$("#drop-thaipostbulk").hide();
     			@endif
-    			$("#pickup_form input[name='state']").val("");
-    			$("#pickup_form input[name='state']").attr("readonly",false);
+//     			$("#pickup_form input[name='state']").val("");
+//     			$("#pickup_form input[name='state']").attr("readonly",false);
     		}
 
     		$("#cost").html(cost);
         	$("#totalpickup").html((Math.max(0,parseInt(total_rate)+discount+cost)).format());
 
         	getPickupDate()
-        	
+
+        	var c_postcode = $("#pickup_form input[name='postcode']").val();
+			var isBangkok = c_postcode.substring(0,2) == "10" || c_postcode.substring(0,2) == "11" || c_postcode.substring(0,2) == "12";
+
+			if(isBangkok == false){
+    			console.log('not bkk');
+			}
 
     	}
 
@@ -1029,6 +1035,25 @@ foreach($shipment_data as $data){
             	}
             	if(agent != "Drop_AtFastship"){
 
+            		if(agent == "Pickup_AtHomeStandard" || agent == "Pickup_AtHomeExpress"){
+                		
+            			var c_postcode = $("#pickup_form input[name='postcode']").val();
+            			var isBangkok = c_postcode.substring(0,2) == "10" || c_postcode.substring(0,2) == "11" || c_postcode.substring(0,2) == "12";
+
+            			if(isBangkok == false){
+                			console.log('not bkk');
+                			valid = false;
+
+                			$("#pickup_form input[name='postcode']").css("border","1px solid red");
+	                    	error += "- รหัสไปรษณีย์ไม่อยู่ในพื้นที่ให้บริการ<br />";
+	                    	valid = false;
+	                    	
+            			}else{
+            				$("#pickup_form input[name='postcode']").css("border","1px solid #cacaca");
+            			}
+            			
+            		}
+            		
             		if($("#pickup_form input[name='payment_method']").val() == ""){
                     	$("#pickup_form input[name='payment_method']").css("border","1px solid red");
                     	error += "- {!! FT::translate('label.payment_method') !!}<br />";

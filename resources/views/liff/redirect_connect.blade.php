@@ -32,7 +32,8 @@
         	<form id="redirect_form" name="redirect_form" method="post" action="{{ url('liff/connect') }}">
         
         		<input type="hidden" name="line_user_id" class="line_user_id" />
-
+				<input type="hidden" name="return" value="/liff/connect_success" /> 
+				
         		<h3 class="text-center text-orange" >ตรวจสอบการเชื่อมต่อ LINE</h3>
         		
         		<div class="text-center" style="margin-top: 40px;">

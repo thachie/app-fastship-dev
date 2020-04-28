@@ -139,6 +139,7 @@
 									<li><a href="{{url ('/myaccount')}}"><i class="fa fa-user"></i> {!! FT::translate('menu.myinfo') !!}</a></li>
 									<li><a href="{{url ('/channel_list')}}"><i class="fa fa-cloud"></i> {!! FT::translate('menu.mychannel') !!}</a></li>
 									<li><a href="{{url ('/change_password')}}"><i class="fa fa-key"></i> {!! FT::translate('menu.change_password') !!}</a></li>	
+									<li><a href="{{url ('/case_list')}}"><i class="fa fa-bug"></i> {!! FT::translate('menu.mycase') !!}</a></li>
 									<li><a href="http://fastship.co/help/" target="_blank"><i class="fa fa-question-circle"></i> {!! FT::translate('menu.help') !!}</a></li>
 									<li><a href="{{url ('/customer/logout')}}"><i class="fa fa-power-off"></i> {!! FT::translate('menu.logout') !!}</a></li>
 								</ul>

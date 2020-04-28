@@ -1398,12 +1398,16 @@ class ShipmentController extends Controller
         	}
         }
 
+        //cases
+        $cases = FS_Customer::getCasesByRef($id);
+
         $data = array(
             'ShipmentDetail' => $ShipmentDetail,
             'amounts' => null,
         	'tracking_data' => $tracking_data,
         	'trackingStatus' => $trackingStatus,
         	'declareTypes' => $declareTypes,
+            'cases' => $cases,
          );
         return view('shipment_detail',$data);
     }

@@ -1,9 +1,20 @@
 @extends('layout')
 @section('content')
+<style>
+img.rotate_pic{ opacity:1; transition:2s;margin-bottom: -20px; }
+img.rotate_pic:hover{ 
+  opacity:1;
+  margin-bottom: 0px;
+  transition:1s; 
+  -ms-transform: rotate(10deg); /* IE 9 */
+  -webkit-transform: rotate(10deg); /* Safari */
+  transform: rotate(10deg); /* Standard syntax */ 
+}
+</style>
 <div class="conter-wrapper">
 
 	<div class="col-12 col-md-10 col-md-offset-1 alert alert-primary" role="alert">
-        Updates Related to COVID-19 <a href="https://fastship.co/annoucement/" target="_blank" class="alert-link">More ...</a>
+        Updates Related to COVID-19 <a href="https://fastship.co/announcement/" target="_blank" class="alert-link">More ...</a>
         </div>
 
 	@if(session('customer.line') == "")
@@ -49,18 +60,11 @@
 					</div>
 				</a>
 			</div>
-			<div class="col-md-4 block-index tool-index fade">
-				<div class="col-md-5"><h3>{!! FT::translate('menu.tools') !!}</h3></div>
-				<div class="col-md-7">
-					<div class="col-md-12 block-item-index">
-						<img src="/images/dashboard/fs-dshboard-icon-tool-01.png" />
-						<a href="{{url ('/track')}}" class="link"> {!! FT::translate('menu.tracking') !!}</a><br />
-					</div>
-					<div class="col-md-12 block-item-index">
-						<img src="/images/dashboard/fs-dshboard-icon-tool-02.png" /> 
-						<a href="{{url ('/tariff/get_cost')}}" class="link"> {!! FT::translate('menu.tariff') !!}</a>
-					</div>
-				</div>
+			<div class="col-md-4 block-index tool-index  fade">
+    			<div class="text-center">
+                	<img src="{{ url('images/fasty_help.png') }}" style="max-height:83px;" />
+                	<a href="{{ url('add_case/') }}" target="_blank" ><button type="button" class="btn btn-primary btn-lg">{!! FT::translate('button.sendusmsg') !!}</button></a>
+                </div>
 			</div>
 			<div class="col-md-8 block-index account-index fade">
 				<div class="col-md-3">
@@ -71,10 +75,10 @@
 						<img src="/images/dashboard/fs-dshboard-icon-account-01.png" />
 						<a href="{{url ('/account_overview')}}" class="link"> {!! FT::translate('menu.account_overview') !!}</a>
 					</div>
-					<div class="col-xl-4 col-md-4 col-sm-6 block-item-index">
-						<img src="/images/dashboard/fs-dshboard-icon-account-06.png" />
-						<a href="{{url ('/payment_submission')}}" class="link"> {!! FT::translate('menu.payment_submission') !!}</a>
-					</div>
+<!-- 					<div class="col-xl-4 col-md-4 col-sm-6 block-item-index"> -->
+<!-- 						<img src="/images/dashboard/fs-dshboard-icon-account-06.png" /> -->
+<!-- 						<a href="{{url ('/payment_submission')}}" class="link"> {!! FT::translate('menu.payment_submission') !!}</a> -->
+<!-- 					</div> -->
 					<div class="col-xl-4 col-md-4 col-sm-6 block-item-index" >
 						<img src="/images/dashboard/fs-dshboard-icon-account-02.png" />
 						<a href="{{url ('/myaccount')}}" class="link"> {!! FT::translate('menu.myinfo') !!}</a>
@@ -96,6 +100,9 @@
 				<div class="clearfix"></div>
 			</div>
 			<div class="clearfix"></div>
+
+			
+
 		</div>
 	</div>
 </div>

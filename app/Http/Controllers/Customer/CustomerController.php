@@ -1106,16 +1106,10 @@ class CustomerController extends Controller
 
 	    //get customer
 	    Fastship::getToken($customerId);
-	    $customerObj = FS_Customer::get($customerId);
-	    
-	    //get params
-	    $accountId = $customerObj["ZohoAccountId"];
-	    
+
 	    //get cases
-	    $args = array(
-	        "account_id" => $accountId,
-	    );
-	    $cases = ZohoApiV2::searchCases($args);
+	    $cases = FS_Customer::getCases();
+
 	    $data = array(
 	        "cases" => $cases,
 	    );
@@ -1123,8 +1117,31 @@ class CustomerController extends Controller
 	    return view('case_list',$data);
 	}
 	
+	//Prepare for case list
+	public function prepareCaseDetail($id)
+	{
+	    
+	    if (session('customer.id') != null){
+	        $customerId = session('customer.id');
+	    }else{
+	        return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+	    }
+	    
+	    //get customer
+	    Fastship::getToken($customerId);
+	    
+	    //get cases
+	    $case = FS_Customer::getCase($id);
+	    
+	    $data = array(
+	        "case" => $case,
+	    );
+	    
+	    return view('case_detail',$data);
+	}
+	
 	//Prepare for check rate page
-	public function prepareAddCase()
+	public function prepareAddCase($id="")
 	{
 	    
 	    if (session('customer.id') != null){
@@ -1134,20 +1151,22 @@ class CustomerController extends Controller
 	    }
 	    
 	    //get shipment sent
-	    Fastship::getToken($customerId);
-	    $searchDetails = array(
-	        "NoStatuses" => array('Pending','Imported','Cancelled','15','16','17','25'),
-	    );
-	    $response = FS_Shipment::fullsearch($searchDetails);
-	    if(isset($response['data'])){
-	        $shipments = $response['data'];
-	    }else{
-	        $shipments = array();
-	    }
+// 	    Fastship::getToken($customerId);
+// 	    $searchDetails = array(
+// 	        "NoStatuses" => array('New','Pending','Delivered'),
+// 	        //"NoStatuses" => array('Unpaid','Pending','Imported','Cancelled','15','16','17','25'),
+// 	    );
+// 	    $response = FS_Shipment::fullsearch($searchDetails);
+// 	    if(isset($response['data'])){
+// 	        $shipments = $response['data'];
+// 	    }else{
+// 	        $shipments = array();
+// 	    }
 
 	    //get 
 	    $data = array(
-	        "shipments" => $shipments,
+	        //"shipments" => $shipments,
+	        "reference" => $id,
 	    );
 	    
 	    return view('create_case',$data);
@@ -1491,9 +1510,10 @@ class CustomerController extends Controller
 	}
 
 	
-	//Add Zoho Case
+	//Add Case
 	public function createCase(Request $request) //post
 	{
+	    
 	    if (session('customer.id') != null){
 	        $customerId = session('customer.id');
 	    }else{
@@ -1501,36 +1521,80 @@ class CustomerController extends Controller
 	    }
 	    
 	    //validate data
-	    if($request->input('subject') == ""){
-	        return redirect('/add_case')->with('msg','กรุณากรอกหัวข้อ');
-	    }
-	    if($request->input('priority') == ""){
-	        return redirect('/add_case')->with('msg','กรุณาเลือกระดับความสำคัญ');
+	    if($request->input('ref_id') == ""){
+	        return back()->with('msg','กรุณากรอกหมายเลขอ้างอิง');
 	    }
 	    if($request->input('detail') == ""){
-	        return redirect('/add_case')->with('msg','กรุณากรอกรายละเอียด');
+	        return back()->with('msg','กรุณากรอกรายละเอียด');
 	    }
  
 	    //get customer
 	    Fastship::getToken($customerId);
-	    $customerObj = FS_Customer::get($customerId);
-	    
-	    //get params
-	    $accountId = $customerObj["ZohoAccountId"];
 
-	    //create zoho case
+	    //check Pickup/Shipment
+	    $referenceId = $request->input('ref_id');
+	    if(strlen($referenceId) == 6){
+	        $type = "PICKUP";
+	        $check = FS_Pickup::get($referenceId);
+	        if(!isset($check) || $check == ""){
+	            return back()->with('msg','หมายเลขพัสดุ/ใบรับพัสดุไม่ถูกต้อง');
+	        }
+	    }else if(strlen($referenceId) == 10){
+	        $type = "SHIPMENT";
+	        $check = FS_Shipment::get($referenceId);
+	        if(!isset($check) || $check == "No Shipment were found that match the specified criteria."){
+	            return back()->with('msg','หมายเลขพัสดุ/ใบรับพัสดุไม่ถูกต้อง');
+	        }
+	    }else{
+	        return back()->with('msg','หมายเลขพัสดุ/ใบรับพัสดุไม่ถูกต้อง');
+	    }
+	    
+	    //create case
 	    $params = array(
-	        'subject' => $request->input('subject'),
-	        'priority' => $request->input('priority'),
-	        'description' => $request->input('detail'),
-	        'account_id' => $accountId,
-	        'ship_id' => $request->input('ship_id'),
-	        'category' => $request->input('category'),
+	        'Category' => $request->input('category'),
+	        'Detail' => $request->input('detail'),
+	        'ReferenceType' => $type,
+	        'ReferenceId' => $request->input('ref_id'),
 	    );
-	    $insert = ZohoApiV2::createCase($params);
+	    $insert = FS_Customer::addCase($params);
 	    
 	    if($insert){
-	        return redirect('/case_list')->with('msg','เพิ่ม Case ใหม่เรียบร้อยแล้ว')->with('msg-type','success');
+	        return redirect('/' . strtolower($type) . '_detail/' . $referenceId)->with('msg','เพิ่มปัญหาใหม่เรียบร้อยแล้ว')->with('msg-type','success');
+	    }else{
+	        return back()->with('msg','เกิดปัญหาในการสร้างปัญหา');
+	    }
+	    
+	}
+	
+	//Add Case
+	public function createCaseReply(Request $request) //post
+	{
+	    if (session('customer.id') != null){
+	        $customerId = session('customer.id');
+	    }else{
+	        return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+	    }
+
+	    $caseId = $request->input('case_id');
+	    
+	    if($request->input('detail') == ""){
+	        return redirect('/case/'.$caseId)->with('msg','กรุณากรอกรายละเอียด');
+	    }
+	    
+	    //get customer
+	    Fastship::getToken($customerId);
+
+	    //create case
+	    $params = array(
+	        'CaseId' => $request->input('case_id'),
+	        'Detail' => $request->input('detail'),
+	    );
+	    $insert = FS_Customer::addCaseReply($params);
+
+	    $case = FS_Customer::getCase($caseId);
+	    
+	    if($insert){
+	        return redirect('/' . strtolower($case['ReferenceType']). '_detail/'.$case['ReferenceId'])->with('msg','เพิ่มข้อความเรียบร้อยแล้ว')->with('msg-type','success');
 	    }else{
 	        return back()->with('msg','เกิดปัญหาในการสร้าง Case');
 	    }
@@ -1691,8 +1755,61 @@ class CustomerController extends Controller
 	    }
 	    $request->session()->put('pending.shipment', $shipment_data);
 	    
-	    return redirect('calculate_shipment_rate');
+	    return redirect('/');
+	    
+	    //return redirect('calculate_shipment_rate');
 
+	}
+	
+	//Get rate (ajax)
+	public function getCaseReferences(Request $request)
+	{
+	    //check customer login
+	    if (session('customer.id') != null){
+	        $customerId = session('customer.id');
+	    }else{
+	        exit();
+	    }
+
+	    $results = array();
+	    
+	    $term = $request->input('term');
+	    
+	    //get shipments
+	    Fastship::getToken($customerId);
+	    $searchDetails = array(
+	        "NoStatuses" => array('New','Pending','Delivered'),
+	        "ShipmentID" => $term,
+	    );
+	    $response = FS_Shipment::fullsearch($searchDetails);
+	    if(isset($response['data']) && sizeof($response['data']) > 0 ){
+	        foreach($response['data'] as $result){
+	            $results[] = array(
+	                "key" => $result['ID'],
+	                "value" => "Shipment# " . $result['ID'] . " - " . $result['ReceiverDetail']['Firstname'] . " (" . $result['ReceiverDetail']['Country'] . ")",
+	            );
+	        }
+	        
+	    }
+	    
+	    //get pickups
+	    $searchDetails = array(
+	        "PickupID" => $term,
+	    );
+	    $response = FS_Pickup::search($searchDetails);
+	    if(isset($response) && sizeof($response) > 0 && is_array($response)){
+	        foreach($response as $result){
+    	        $results[] = array(
+    	            "key" => $result['ID'],
+    	            "value" => "Pickup# " . $result['ID'] ,
+    	        );
+	        }
+	    }
+
+	    return response()->json(['ref'=>$results]);
+	    
+// 	    echo json_encode($results);
+// 	    exit();
 	}
 
 }
