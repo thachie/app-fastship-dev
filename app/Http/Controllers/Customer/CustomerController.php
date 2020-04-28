@@ -1558,8 +1558,19 @@ class CustomerController extends Controller
 	    );
 	    $insert = FS_Customer::addCase($params);
 	    
+	    // ##### call notify #####
+	    $caseId = $insert;
+	    $token = md5("fastship".$caseId);
+	    $requestArray = array(
+	        'id' => $caseId,
+	        'token' => $token,
+	    );
+	    $url = "https://admin.fastship.co/notify/newcase";
+	    call_api($url,$requestArray);
+	    // ##### call notify #####
+
 	    if($insert){
-	        return redirect('/' . strtolower($type) . '_detail/' . $referenceId)->with('msg','เพิ่มปัญหาใหม่เรียบร้อยแล้ว')->with('msg-type','success');
+	        return redirect('/' . strtolower($type) . '_detail/' . $referenceId)->with('msg','เพิ่มปัญหาใหม่เรียบร้อยแล้ว (Case #' . $insert . ")")->with('msg-type','success');
 	    }else{
 	        return back()->with('msg','เกิดปัญหาในการสร้างปัญหา');
 	    }
