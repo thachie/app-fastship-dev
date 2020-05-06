@@ -169,6 +169,7 @@ foreach($shipment_data as $data){
                             @endif
                             
                             @if(isset($rates['Pickup_ByKerry']))
+                            @if(!$isBangkok)
                             <label for="pick-kerry">
                                 <div class="col-md-2 hidden-xs"><img src="/images/pickup/kerry.png"></div>
                                 <div class="col-md-8 col-xs-8 text-left">
@@ -192,6 +193,7 @@ foreach($shipment_data as $data){
                                 </div>
                             </label>
                             <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="pick-kerry" value="Pickup_ByKerry" checked="checked" />
+                            @endif
                             @endif
                             
                             @if(isset($rates['Pickup_ByFlash']))
@@ -236,7 +238,8 @@ foreach($shipment_data as $data){
                                     </div>
                                     
                                     <span class="text-info tiny">{!! FT::translate('create_pickup.text.bkk_only') !!}</span>
-                                    
+                                    <span class="text-warning tiny"> ฟรี!! เมื่อยอดค่าส่งรวมเกิน 2,000 บาท</span>
+
                                 </div>
                                 <div class="col-md-2 col-xs-4 text-right">
                                 @if($total_rate > 2000)
@@ -344,6 +347,12 @@ foreach($shipment_data as $data){
 
 
                         </fieldset>
+                        	
+                        <div class="row">
+                        	<div class="col-md-12 text-danger text-center">
+                        		Kerry ไม่สามารถเข้ารับในวันที่ 1,4 และ 6 พฤษภาคม 2563 เนื่องจากหยุดให้บริการในวันดังกล่าว
+                        	</div>
+                        </div>
                         
                         <div class="clearfix"></div><br />
                         
@@ -1016,7 +1025,11 @@ foreach($shipment_data as $data){
 
             $("#submit").attr("disabled",true);
 
-            $('#pick-kerry').attr('checked', true).change();
+            @if($isBangkok)
+            	$('#pick-standard-fs').attr('checked', true).change();
+            @else
+            	$('#pick-kerry').attr('checked', true).change();
+            @endif
             
             $("#pickup_form").on("submit",function(){
 
@@ -1034,11 +1047,11 @@ foreach($shipment_data as $data){
 					}
             	}
             	if(agent != "Drop_AtFastship"){
+                	
+            		var c_postcode = $("#pickup_form input[name='postcode']").val();
+        			var isBangkok = c_postcode.substring(0,2) == "10" || c_postcode.substring(0,2) == "11" || c_postcode.substring(0,2) == "12";
 
             		if(agent == "Pickup_AtHomeStandard" || agent == "Pickup_AtHomeExpress"){
-                		
-            			var c_postcode = $("#pickup_form input[name='postcode']").val();
-            			var isBangkok = c_postcode.substring(0,2) == "10" || c_postcode.substring(0,2) == "11" || c_postcode.substring(0,2) == "12";
 
             			if(isBangkok == false){
                 			console.log('not bkk');
@@ -1052,6 +1065,19 @@ foreach($shipment_data as $data){
             				$("#pickup_form input[name='postcode']").css("border","1px solid #cacaca");
             			}
             			
+            		}else if( agent == "Pickup_ByKerry" || agent == "Pickup_ByKerryBulk" ){
+
+            			if(isBangkok == true){
+                			console.log('is bkk');
+                			valid = false;
+
+                			$("#pickup_form input[name='postcode']").css("border","1px solid red");
+	                    	error += "- รหัสไปรษณีย์ไม่อยู่ในพื้นที่ให้บริการ<br />";
+	                    	valid = false;
+	                    	
+            			}else{
+            				$("#pickup_form input[name='postcode']").css("border","1px solid #cacaca");
+            			}
             		}
             		
             		if($("#pickup_form input[name='payment_method']").val() == ""){

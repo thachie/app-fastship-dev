@@ -562,6 +562,22 @@ class PickupController extends Controller
                 }else{
                     return redirect('credit/omise_auto_charge/'.$pickupId.'/'.$Card);
                 }
+            }else if ($PaymentMethod == 'Invoice'){
+                
+                // ##### call notify #####
+                $token = md5("fastship".$pickupId);
+                $requestArray = array(
+                    'id' => $pickupId,
+                    'token' => $token,
+                );
+                $url = "https://admin.fastship.co/notify/pickup_paid";
+                call_api($url,$requestArray);
+                $url = "https://admin.fastship.co/notify/pickingup";
+                call_api($url,$requestArray);
+                // ##### call notify #####
+                
+                return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
+                
             }else{
                 return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
             }

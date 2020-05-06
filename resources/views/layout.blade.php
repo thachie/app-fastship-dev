@@ -139,7 +139,7 @@
 									<li><a href="{{url ('/myaccount')}}"><i class="fa fa-user"></i> {!! FT::translate('menu.myinfo') !!}</a></li>
 									<li><a href="{{url ('/channel_list')}}"><i class="fa fa-cloud"></i> {!! FT::translate('menu.mychannel') !!}</a></li>
 									<li><a href="{{url ('/change_password')}}"><i class="fa fa-key"></i> {!! FT::translate('menu.change_password') !!}</a></li>	
-									<li><a href="{{url ('/case_list')}}"><i class="fa fa-bug"></i> {!! FT::translate('menu.mycase') !!}</a></li>
+									<li><a href="{{url ('/case_list')}}"><i class="fa fa-bullhorn"></i> {!! FT::translate('menu.mycase') !!}</a></li>
 									<li><a href="http://fastship.co/help/" target="_blank"><i class="fa fa-question-circle"></i> {!! FT::translate('menu.help') !!}</a></li>
 									<li><a href="{{url ('/customer/logout')}}"><i class="fa fa-power-off"></i> {!! FT::translate('menu.logout') !!}</a></li>
 								</ul>
@@ -226,6 +226,7 @@
 												<li><a href="{{url ('/myaccount')}}"><i class="fa fa-user"></i> {!! FT::translate('menu.myinfo') !!}</a></li>
 												<li><a href="{{url ('/channel_list')}}"><i class="fa fa-cloud"></i> {!! FT::translate('menu.mychannel') !!}</a></li>
 												<li><a href="{{url ('/change_password')}}"><i class="fa fa-key"></i> {!! FT::translate('menu.change_password') !!}</a></li>
+												<li><a href="{{url ('/case_list')}}"><i class="fa fa-bullhorn"></i> {!! FT::translate('menu.mycase') !!}</a></li>
 												<li><a href="http://fastship.co/help/" target="_blank"><i class="fa fa-question-circle"></i> {!! FT::translate('menu.help') !!}</a></li>
 												<li><a href="{{url ('/customer/logout')}}"><i class="fa fa-power-off"></i> {!! FT::translate('menu.logout') !!}</a></li>
 											</ul>
@@ -290,12 +291,9 @@
 	        </div>
 	        <div id="footer-wrapper" class="footer">
 	        	<div class="container-fluid">
-	        		Copyright &copy;2018 FastShip.co. All rights reserved, Powered by CloudCommerce.
+	        		Copyright &copy;2018-2020 FastShip Co., Ltd. All rights reserved, Powered by CloudCommerce.
 	        		<span class="pull-right">
-						<i class="fa fa-phone-square"></i> <a href="tel:+6620803999" target="_self">020803999</a> 
-						<!-- <a href="#"><i class="fa fa-facebook-square"></i> Fastship.co</a> -->
-						<i class="fa fa-envelope"></i> <a href="mailto:cs@fastship.co" target="_self">cs@fastship.co</a> 
-	        			<i class="fa fa-comment"></i> <a href="https://line.me/R/ti/p/%40fastship.co" target="_blank">@fastship.co</a>
+						<i class="fa fa-bullhorn"></i> <a href="{{ url('/create_case') }}" target="_self">Contact Us</a> 
 	        		</span>
 	        	</div>
 	        </div>

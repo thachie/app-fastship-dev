@@ -259,8 +259,8 @@
 
                        content += '<fieldset>';
                        content += '<label class="label-rate" for="agent-' + _agent + '" onclick="selectAgent(\''+_agent+'\',\''+_value+'\',\''+_deliveryTime+'\')" class="clearfix">';
-                	   content += '<div class="col-xs-4 col-md-3"><img src="images/agent/' + _agent.replace(/ /g,"-") + '.gif" style="border-radius: 5px 0 0 5px; position: absolute; left:0;"/></div>';
-                	   content += '<div class="col-xs-4 col-md-6 width-30 text-left mac-margin-left" >';
+                	   content += '<div class="col-xs-3 col-md-3"><img src="images/agent/' + _agent.replace(/ /g,"-") + '.gif" style="border-radius: 5px 0 0 5px; position: absolute; left:0;"/></div>';
+                	   content += '<div class="col-xs-5 col-md-6 width-30 text-left mac-margin-left" >';
                 	   content += '<h3>' +  _displayAgent + '</h3>';
                 	   content += '<h4 class="orange"><span class="hidden-xs">' + _type + ' : </span>' + _deliveryTime + '</h4>';
                 	   content += '</div>';
@@ -287,9 +287,6 @@
                     }
                 }
 
-                
-
-                
             }else{
             	if(data !== false && data == "No Rate were found that match the specified criteria."){
                 	content = "{!! FT::translate('error.shipment_rate.notfound') !!}";
@@ -321,14 +318,10 @@
             var ua = navigator.userAgent.toLowerCase(); 
     		if (ua.indexOf('safari') != -1) { 
     		  if (ua.indexOf('chrome') <= -1) {
-    		    $('.mac-margin-left').css('margin-left','140px');
+    		    $('.mac-margin-left').css('margin-left','0px');
     		  }
     		}
-/*
-            if(defaultAgent != ""){
-           		$("#agent-"+defaultAgent).attr("checked",true);
-            }
-            */
+
             $( ".selector" ).checkboxradio({
                 classes: { "ui-checkboxradio": "highlight" }
             });
