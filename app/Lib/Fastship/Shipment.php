@@ -135,6 +135,26 @@ class FS_Shipment extends FS_ApiResource
      *
      * @return Fastship_Retrieve Get a Shipment.
      */
+    public static function trackNoApi($tracking, $apiToken = null)
+    {
+    	$requestor = new FS_ApiRequestor($apiToken);
+    	$url = "tracknoapi/" . $tracking;
+    
+    	list($response, $rcode) = $requestor->request('get', $url);
+    
+    	if($rcode != 200 && $rcode != 404){
+    		return false;
+    	}else{
+    		return $response;
+    	}
+    }
+    
+    /**
+     * @param string $tracking
+     * @param string|null $apiToken
+     *
+     * @return Fastship_Retrieve Get a Shipment.
+     */
     public static function trackid($id, $apiToken = null)
     {
         $requestor = new FS_ApiRequestor($apiToken);

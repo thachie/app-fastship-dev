@@ -132,8 +132,8 @@ class ToolsController extends Controller
 	        Fastship::getToken();
 	        
 	        //call api
-	        $tracking_data = FS_Shipment::track($tracking);
-	        if(!empty($tracking_data['Events'])){
+	        $tracking_data = FS_Shipment::trackNoApi($tracking);
+	        if(!empty($tracking_data)){
 	            $data = array(
 	                'paramId' => $tracking,
 	                'tracking_data' => $tracking_data,

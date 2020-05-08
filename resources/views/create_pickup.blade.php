@@ -343,17 +343,8 @@ foreach($shipment_data as $data){
                             </label>
                             <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="drop-thaipost" value="Drop_AtThaiPost"> 
                             <?php endif; ?>
-                                
-
 
                         </fieldset>
-                        	
-                        <div class="row">
-                        	<div class="col-md-12 text-danger text-center">
-                        		Kerry ไม่สามารถเข้ารับในวันที่ 1,4 และ 6 พฤษภาคม 2563 เนื่องจากหยุดให้บริการในวันดังกล่าว
-                        	</div>
-                        </div>
-                        
                         <div class="clearfix"></div><br />
                         
                         <div id="fspickup">
