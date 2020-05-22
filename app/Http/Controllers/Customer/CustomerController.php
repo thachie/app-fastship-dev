@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use App\Lib\Encryption;
+use App\Lib\Fastship\FS_CreditBalance;
 use App\Lib\Fastship\Fastship;
 use App\Lib\Fastship\FS_Shipment;
 use App\Lib\Fastship\FS_Pickup;
@@ -583,9 +584,9 @@ class CustomerController extends Controller
 	    //prepare current month
 	    $searchDetails = array(
 	        'NoStatuses' => array("Cancelled","New","Pickup","Received","Unpaid","Verified"),
-	        'CreateDateSince' => date("Y-m-01 00:00:00"),
-	        'CreateDateTo' => date('Y-m-t 23:59:59',strtotime(date("Y-m-01"))),
-	        'Limit' => 1000,
+	        //'CreateDateSince' => date("Y-m-01 00:00:00"),
+	        //'CreateDateTo' => date('Y-m-t 23:59:59',strtotime(date("Y-m-01"))),
+	        'Limit' => 10,
 	    );
 	    $currentMonthResponse = FS_Pickup::search($searchDetails);
 	    $currentMonthSale = 0;
@@ -643,17 +644,17 @@ class CustomerController extends Controller
 	    
 	    //prepare new pickup
 	    $searchDetails = array(
-	        'Status' => "New",
+	        'Status' => "Verified",
 	        'Limit' => 1000,
 	    );
 	    $newResponse = FS_Pickup::search($searchDetails);
 	    if($newResponse === false){
-	        $pickupCount['new'] = 0;
+	        $pickupCount['verified'] = 0;
 	    }else{
 	        if(is_array($newResponse) && sizeof($newResponse) > 0){
-	            $pickupCount['new'] = sizeof($newResponse);
+	            $pickupCount['verified'] = sizeof($newResponse);
 	        }else{
-	            $pickupCount['new'] = 0;
+	            $pickupCount['verified'] = 0;
 	        }
 	    }
 	    
@@ -691,7 +692,7 @@ class CustomerController extends Controller
 	    
 	    //prepare completed pickup
 	    $searchDetails = array(
-	        'Status' => "Paid",
+	        'Status' => "Sent",
 	        'Limit' => 1000,
 	    );
 	    $newResponse = FS_Pickup::search($searchDetails);
@@ -705,6 +706,19 @@ class CustomerController extends Controller
 	        }
 	    }
 	    
+	    //get payment statement
+	    $statements = FS_CreditBalance::get_statements();
+	    
+	    $paymentMapping = array(
+	        "QR" => "ชำระเงินผ่าน QR Code",
+	        "Credit_Card" => "ชำระเงินผ่าน Credit Card",
+	        "Bank_Transfer" => "ชำระเงินโดยการโอนผ่านธนาคาร",
+	        "Cash" => "ชำระเงินสด",
+	        "Invoice" => "ชำระเงินแบบวางบิล",
+	        "Store_Credit" => "รับเครดิตเงินคืน",
+	        "Withdraw" => "ถอนเงิน",
+	        "Use_Credit" => "ใช้เครดิตสะสม",
+	    );
 	    
 	    $data = array(
 	        'customer_data' => $customer_data,
@@ -715,6 +729,8 @@ class CustomerController extends Controller
 	        'twomonthago_sale' => $twoMonthAgoSale,
 	        'channels' => array(),
 	        'pickupCount' => $pickupCount,
+	        'statements' => array_slice($statements, 0, 10),
+	        'payment_mapping' => $paymentMapping,
 	    );
 	    
 	    return view('account_overview',$data);

@@ -142,6 +142,8 @@ foreach($shipment_data as $data){
 
                         <fieldset>
 
+							@if(!$isBangkok)
+							
                             @if(isset($rates['Pickup_ByKerryBulk']))
                             <label for="pick-kerrybulk">
                                 <div class="col-md-2 hidden-xs"><img src="/images/pickup/kerry.png"></div>
@@ -169,7 +171,6 @@ foreach($shipment_data as $data){
                             @endif
                             
                             @if(isset($rates['Pickup_ByKerry']))
-                            @if(!$isBangkok)
                             <label for="pick-kerry">
                                 <div class="col-md-2 hidden-xs"><img src="/images/pickup/kerry.png"></div>
                                 <div class="col-md-8 col-xs-8 text-left">
@@ -194,6 +195,7 @@ foreach($shipment_data as $data){
                             </label>
                             <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="pick-kerry" value="Pickup_ByKerry" checked="checked" />
                             @endif
+                            
                             @endif
                             
                             @if(isset($rates['Pickup_ByFlash']))
@@ -273,7 +275,8 @@ foreach($shipment_data as $data){
                                 </div>
                             </label>
                             <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="pick-express-fs" value="Pickup_AtHomeExpress" />
-
+                        	@endif
+                        	
                         	<label for="drop-fs">
                                 <div class="col-md-2 hidden-xs"><img src="/images/pickup/fastship.png"></div>
                                 <div class="col-md-8 col-xs-8 text-left">
@@ -294,8 +297,7 @@ foreach($shipment_data as $data){
                                 </div>
                             </label>
                             <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="drop-fs" value="Drop_AtFastship" />
-                            @endif
-                            
+
                             <?php if(isset($rates['Drop_AtThaiPostBulk'])):?>
                             <label for="drop-thaipostbulk">
                                 <div class="col-md-2 hidden-xs"><img src="/images/pickup/thaipost.png" /></div>

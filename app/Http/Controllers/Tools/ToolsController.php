@@ -103,9 +103,9 @@ class ToolsController extends Controller
 	//Prepare for tracking page
 	public function prepareStandaloneTrack($tracking=null)
 	{
-	    
+
 	    $customerId = 69;
-	    
+
 	    if($tracking){
 	        
 	        //static variable
@@ -133,13 +133,17 @@ class ToolsController extends Controller
 	        
 	        //call api
 	        $tracking_data = FS_Shipment::trackNoApi($tracking);
-	        if(!empty($tracking_data)){
+	        if(!empty($tracking_data) && is_array($tracking_data)){
+	            
+	            $tracking_data = array_reverse($tracking_data);
+
 	            $data = array(
 	                'paramId' => $tracking,
 	                'tracking_data' => $tracking_data,
 	                'trackingStatus' => $trackingStatus,
 	            );
 	            return view('standalone_track',$data);
+	            
 	        }else{
 	            
 	            $tracking_data = FS_Shipment::trackid($tracking);

@@ -132,11 +132,9 @@
 								</a>
 								<ul class="dropdown-menu top-dropdown-menu admin admin-dropdown" role="menu">
 									<li role="presentation" class="dropdown-header"><?php echo session('customer.name'); ?></li>
-									<!-- <li><a href="{{url ('/add_credit')}}"><i class="fa fa-star"></i> {!! FT::translate('menu.topup') !!}</a></li> -->
-<!-- 									<li><a href="{{url ('/promotion')}}"><i class="fa fa-bullhorn"></i> โปรโมชั่น</a></li> -->
 									<li><a href="{{url ('/account_overview')}}"><i class="fa fa-home"></i> {!! FT::translate('menu.account_overview') !!}</a></li>
-<!-- 									<li><a href="{{url ('/payment_submission')}}"><i class="fa fa-money"></i> {!! FT::translate('menu.payment_submission') !!}</a></li> -->
 									<li><a href="{{url ('/myaccount')}}"><i class="fa fa-user"></i> {!! FT::translate('menu.myinfo') !!}</a></li>
+									<li><a href="{{url ('/customer_balance')}}"><i class="fa fa-money"></i> {!! FT::translate('menu.balance') !!}</a></li>
 									<li><a href="{{url ('/channel_list')}}"><i class="fa fa-cloud"></i> {!! FT::translate('menu.mychannel') !!}</a></li>
 									<li><a href="{{url ('/change_password')}}"><i class="fa fa-key"></i> {!! FT::translate('menu.change_password') !!}</a></li>	
 									<li><a href="{{url ('/case_list')}}"><i class="fa fa-bullhorn"></i> {!! FT::translate('menu.mycase') !!}</a></li>
@@ -220,10 +218,9 @@
 										<li class="sidenav-dropdown ">
 											<a class="subnav-toggle" href="javascript:;" style="border:none;" >{!! FT::translate('menu.myaccount') !!}<i class="fa fa-angle-down  pull-right"></i></a>
 											<ul class="nav sidenav-sub-menu">
-												<!-- <li><a href="{{url ('/add_credit')}}"><i class="fa fa-star"></i> {!! FT::translate('menu.topup') !!}</a></li> -->
 												<li><a href="{{url ('/account_overview')}}"><i class="fa fa-home"></i> {!! FT::translate('menu.account_overview') !!}</a></li>
-<!-- 												<li><a href="{{url ('/payment_submission')}}"><i class="fa fa-money"></i> {!! FT::translate('menu.payment_submission') !!}</a></li> -->
 												<li><a href="{{url ('/myaccount')}}"><i class="fa fa-user"></i> {!! FT::translate('menu.myinfo') !!}</a></li>
+												<li><a href="{{url ('/customer_balance')}}"><i class="fa fa-money"></i> {!! FT::translate('menu.balance') !!}</a></li>
 												<li><a href="{{url ('/channel_list')}}"><i class="fa fa-cloud"></i> {!! FT::translate('menu.mychannel') !!}</a></li>
 												<li><a href="{{url ('/change_password')}}"><i class="fa fa-key"></i> {!! FT::translate('menu.change_password') !!}</a></li>
 												<li><a href="{{url ('/case_list')}}"><i class="fa fa-bullhorn"></i> {!! FT::translate('menu.mycase') !!}</a></li>
@@ -231,6 +228,7 @@
 												<li><a href="{{url ('/customer/logout')}}"><i class="fa fa-power-off"></i> {!! FT::translate('menu.logout') !!}</a></li>
 											</ul>
 										</li>
+										
 										<li style="border:none;">
             								@if(session('lang') != null && session('lang') == "en")
                     							<a href="{{ url('/locale/th') }}">ภาษาไทย</a>
@@ -286,19 +284,18 @@
 				@endif
 
 	        	@yield('content')
-	        	
-	        	
+
 	        </div>
 	        <div id="footer-wrapper" class="footer">
 	        	<div class="container-fluid">
-	        		Copyright &copy;2018-2020 FastShip Co., Ltd. All rights reserved, Powered by CloudCommerce.
+	        		Copyright &copy;2018-2020 FastShip Co., Ltd. All rights reserved.
 	        		<span class="pull-right">
-						<i class="fa fa-bullhorn"></i> <a href="{{ url('/create_case') }}" target="_self">Contact Us</a> 
+						<i class="fa fa-bullhorn"></i> <a href="{{ url('/add_case') }}" target="_self">Contact Us</a>
 	        		</span>
 	        	</div>
 	        </div>
         </div>
-        
+
 	    <script type="text/javascript">
 	            $(function(){
 

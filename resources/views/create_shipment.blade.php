@@ -161,18 +161,7 @@
                         <?php else: ?>
                         <input type="hidden" name="term" id="ddu" value="DDU">
                         <?php endif; ?>
-                        
-                        @if($default['country'] == "CHN")
-                        <div class="col-md-12 small text-warning text-center" style="margin-top:20px; ">
-                       		 {!! FT::translate('create_shipment.warning.china') !!}
-                        </div>
-                        @endif
-                        @if($default['country'] == "KOR" && $default['agent'] == "Aramex")
-                        <div class="col-md-12 small text-warning text-center" style="margin-top:20px; ">
-                       		 กรุณาแนบสำเนาบัตรประชาชนมาพร้อมกับกล่องพัสดุ หรือส่งอีเมล์เข้ามาที่ <a href="mailto:cs@fastship.co">cs@fastship.co</a>
-                        </div>
-                        @endif
-                        
+
                         <div class="well small" style="background: #fefefe;border: 1px solid #fdd;box-shadow: 0 0 0;">
                         	<h5><b>{!! FT::translate('create_shipment.prohibited_item') !!}</b></h5>
                         	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item1') !!}</div>
@@ -279,6 +268,22 @@
                         </div>       
                     </div>
                 </div>
+                
+                 @if($default['country'] == "CHN")
+                <div class="col-md-12 text-warning text-center" style="margin-top:20px; ">
+               		 {!! FT::translate('create_shipment.warning.china') !!}
+                </div>
+                @endif
+
+                @if( $default['agent'] == "Aramex" && ($default['country'] == "KOR" || $default['country'] == "HKG") )
+                <div class="col-md-12 text-center text-danger">
+                	{!! FT::translate('create_shipment.warning.aramex_passport') !!}
+                </div>
+                <div class="col-md-12 text-warning text-center" style="margin-top:20px; ">
+                       	กรุณาแนบสำเนาบัตรประชาชนมาพร้อมกับกล่องพัสดุ หรือส่งอีเมล์เข้ามาที่ <a href="mailto:cs@fastship.co">cs@fastship.co</a>
+                </div>
+                @endif
+
             </div>
         </div>
         <div class="text-center btn-create"><button type="submit" name="submit" class="btn btn-lg btn-primary minus-margin">{!! FT::translate('button.create_shipment') !!}</button></div>
@@ -313,8 +318,10 @@
     
     	var _country = "{{ $default['country'] }}";
 
+if(_country  == "") return false; 
+
     	$('#rec_state').autocomplete({
-            minLength: 0,
+            minLength: 1,
             source: function( request, response ) {
               $.ajax({
                 url: "{{ url('/address/states') }}",
@@ -360,9 +367,10 @@
 
     	var _country = "{{ $default['country'] }}";
     	var _state = $("#rec_state_code").val();
-    	
+if(_country  == "") return false; 
+if(_state == "") return false; 
     	$('#rec_city').autocomplete({
-            minLength: 0,
+            minLength: 1,
             source: function( request, response ) {
               $.ajax({
                 url: "{{ url('/address/cities') }}",

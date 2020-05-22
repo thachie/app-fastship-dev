@@ -228,5 +228,25 @@ class FS_Pickup extends FS_ApiResource
             return $response;
         }
     }
+    
+    /**
+     * @param string $id
+     * @param string|null $apiToken
+     * Get a Thaipost Tracking.
+     * @return
+     */
+    public static function track($id, $apiToken = null)
+    {
+        $requestor = new FS_ApiRequestor($apiToken);
+        $url = "pickup/tracks/" . $id;
+        
+        list($response, $rcode) = $requestor->request('get', $url);
+        
+        if($rcode != 200){
+            return false;
+        }else{
+            return $response;
+        }
+    }
 
 }

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 //login & register
-Route::get('login', function () {  return view('login'); });
+Route::get('/login', function () { return view('login'); });
 Route::post('customer/login', 'Customer\CustomerController@login');
 Route::post('customer/register', 'Customer\CustomerController@register');
 Route::match(['get', 'post'],'joinus/{refercode?}',  'Customer\CustomerController@prepareLoginWithCode');
@@ -97,8 +97,10 @@ Route::get('upgrading', function () {  return view('underconstruction'); });
 //check login session
 Route::group(['middleware' => 'loginsession'], function () {
 	
-	Route::get('/', function () {  return view('index'); });
-	Route::get('/testHome', function () {  return view('index1'); });
+    //Route::get('/', function () {  return view('index'); });
+    //Route::get('/testHome', function () {  return view('index1'); });
+    
+    Route::get('/', 'HomeController@index');
 
 	//customer
 	Route::get('customer/logout', 'Customer\CustomerController@logout');
@@ -175,27 +177,24 @@ Route::group(['middleware' => 'loginsession'], function () {
 	Route::post('pickup/get_time', 'Pickup\PickupController@getPickupTime');
 	Route::post('pickup/get_date', 'Pickup\PickupController@getPickupDate');
 	Route::post('pickup/get_remark', 'Pickup\PickupController@getPickupRemark');
-	
 
 	//Feature Prepaid System
 	Route::get('pickup_detail_payment/{id?}', 'Pickup\PickupController@preparePickupDetailPayment');
 	
-	//credit
-	Route::get('credit','Credit\CreditBalanceController@index');
-	Route::get('add_credit','Credit\CreditBalanceController@prepareCredit');
-	Route::get('add_credit/{amount}','Credit\CreditBalanceController@prepareCredit');
-	Route::post('credit/create', 'Credit\CreditBalanceController@saveCredit');
+	//credit card
 	Route::post('credit/add_creditcard', 'Credit\CreditBalanceController@omiseAddCreditCard');
-	Route::get('credit/getBalance/{customerId?}','Credit\CreditBalanceController@getBalance'); //test
-	Route::get('credit/insertToCreditBalance/{ccID?}/{customerId?}','Credit\CreditBalanceController@insertToCreditBalance'); //test
 	Route::post('credit/delete_creditcard', 'Credit\CreditBalanceController@deleteCreditCard');
-
-	Route::post('credit/add_new_creditcard', 'Credit\CreditBalanceController@omiseAddNewCreditCard');
 	Route::get('credit/omise_auto_charge/{pickupId}/{card}', 'Credit\CreditBalanceController@omiseAutoChargeAction');
+	//Route::post('credit/add_new_creditcard', 'Credit\CreditBalanceController@omiseAddNewCreditCard');
+	
+	//store credit
+	Route::get('customer_balance', 'Credit\CreditBalanceController@index');
+	Route::post('credit/withdraw', 'Credit\CreditBalanceController@withdraw');
+	Route::post('credit/update_refund', 'Credit\CreditBalanceController@updateRefund');
 	
 	//payment submission
-	Route::get('payment_submission', 'Credit\CreditBalanceController@preparePaymentSubmission');
-	Route::get('payment_submission/{amount}', 'Credit\CreditBalanceController@preparePaymentSubmission');
+	//Route::get('payment_submission', 'Credit\CreditBalanceController@preparePaymentSubmission');
+	//Route::get('payment_submission/{amount}', 'Credit\CreditBalanceController@preparePaymentSubmission');
 
 	//tools
 	Route::get('track/{trackID?}', 'Tools\ToolsController@prepareTrack');
@@ -206,7 +205,7 @@ Route::group(['middleware' => 'loginsession'], function () {
 	
 	//marketplace channel
 	Route::get('channel_list', 'Customer\CustomerController@prepareChannelList');
-	Route::get('channel_list2', 'Customer\CustomerController@prepareChannelList2');
+	//Route::get('channel_list2', 'Customer\CustomerController@prepareChannelList2');
 	Route::get('add_channel', 'Customer\CustomerController@prepareAddChannel');
 	Route::get('add_channel_ebay/{site}', 'Customer\CustomerController@prepareAddChannelEbay');
 

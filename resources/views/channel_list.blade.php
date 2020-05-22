@@ -3,8 +3,14 @@
 <div class="conter-wrapper">
 
     <div class="row">
+    
+    	@include('left_account_menu')
 
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-10">
+
+        	<h2>{!! FT::translate('channel_list.heading') !!}</h2>
+        	<hr />
+
         	<div class="panel panel-primary">
     			<div class="panel-heading">
         			<div class="col-md-9">{!! FT::translate('channel_list.heading') !!}</div>

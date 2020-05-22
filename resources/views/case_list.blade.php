@@ -3,12 +3,13 @@
 <div class="conter-wrapper">
 
 	<div class="row">
-    	<div class="col-md-12"><h2>Cases ({{ sizeof($cases) }})</h2></div>
-	</div>
-
-	@if(sizeof($cases) > 0)
-    <div class="row">
-		<div class="col-md-12">
+	
+		@include('left_account_menu')
+	
+		<div class="col-md-10">
+        	<h2>Cases ({{ sizeof($cases) }})</h2>
+    		<hr />
+        	@if(sizeof($cases) > 0)
             <div class="panel panel-primary ">
             	<div class="panel-heading">รายการ Case</div>
             	<div class="panel-body">
@@ -47,21 +48,17 @@
 
                 </div>
             </div>
+        	@else
+        	<div class="text-center" style="padding-top: 30px;">
+        		<h4>ไม่พบปัญหา</h4>
+        	</div>
+        	@endif
+	
+    		<div class="text-center">
+            	<a href="{{ url('add_case') }}"><button type="button" class="btn btn-primary btn-lg">+ เพิ่มปัญหาใหม่</button></a>
+            </div>
+            
         </div>
-        
-
-    </div>
-
-	@else
-	
-	<div class="text-center" style="padding-top: 30px;">
-		<h4>ไม่พบปัญหา</h4>
-	</div>
-	
-	@endif
-	
-		<div class="col-md-12 text-center">
-        	<a href="{{ url('add_case') }}"><button type="button" class="btn btn-primary btn-lg">+ เพิ่มปัญหาใหม่</button></a>
-        </div>
+  	</div>
 </div>
 @endsection

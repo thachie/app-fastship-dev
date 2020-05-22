@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pickup;
 use DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Lib\Fastship\FS_CreditBalance;
 use App\Lib\Fastship\Fastship;
 use App\Lib\Fastship\FS_Shipment;
 use App\Lib\Fastship\FS_Pickup;
@@ -710,7 +711,26 @@ class PickupController extends Controller
                 $cases = FS_Customer::getCasesByRef($pickupId);
                 
             }
+            
+            $params = array(
+                "pick_id" => $pickupId,
+            );
+            $statements = FS_CreditBalance::get_statements($params);
 
+            $paymentMapping = array(
+                "QR" => "ชำระเงินผ่าน QR Code",
+                "Credit_Card" => "ชำระเงินผ่าน Credit Card",
+                "Bank_Transfer" => "ชำระเงินโดยการโอนผ่านธนาคาร",
+                "Cash" => "ชำระเงินสด",
+                "Invoice" => "ชำระเงินแบบวางบิล",
+                "Store_Credit" => "รับเครดิตเงินคืน",
+                "Withdraw" => "ถอนเงิน",
+                "Use_Credit" => "ใช้เครดิตสะสม",
+            );
+            
+            //get trackings
+            $trackings = FS_Pickup::track($pickupId);
+            
             //alert($pickupData);
             $data = array(
                 'pickupID' => $pickupId, 
@@ -718,6 +738,9 @@ class PickupController extends Controller
                 'status' => $status, 
                 'labels' => $labels,
                 'cases' => $cases,
+                'statements' => $statements,
+                'payment_mapping' => $paymentMapping,
+                'trackings' => $trackings,
             );
             return view('pickup_detail',$data);
             
@@ -948,7 +971,7 @@ class PickupController extends Controller
                     'barcode' => $barcodeImage,
                     'additionalBarcodeImage' => $additionalBarcodeImage,
                 );
-                return view('pickup_detail_print2',$data);
+                return view('pickup_detail_print',$data);
             }else{
                 return 'Pickup id is null.';
             }

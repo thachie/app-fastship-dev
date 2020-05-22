@@ -22,6 +22,7 @@ class FS_CreditBalance extends FS_ApiResource
     		return $response['data'];
     	}
     }
+    
     /**
      * @param array|null $params
      * @param string|null $apiToken
@@ -44,15 +45,36 @@ class FS_CreditBalance extends FS_ApiResource
     }
     
     /**
+     * @param array|null $params
+     * @param string|null $apiToken
+     *
+     * @return Fastship_Shipment Create a Shipment.
+     */
+    public static function withdraw($params = null, $apiToken = null)
+    {
+        
+        $requestor = new FS_ApiRequestor($apiToken);
+        $url = "credit_balance/withdraw";
+        
+        list($response, $rcode) = $requestor->request('post', $url, $params);
+        
+        if($rcode != 200){
+            return false;
+        }else{
+            return $response;
+        }
+    }
+    
+    /**
      * @param string $id
      * @param string|null $apiToken
      *
      * @return Fastship_Retrieve Get a Shipment.
      */
-    public static function get_statements($apiToken = null)
+    public static function get_statements($params=array(),$apiToken = null)
     {
         $requestor = new FS_ApiRequestor($apiToken);
-        $url = "credit_balance/statement";
+        $url = "credit_balance/statement?".http_build_query($params);
         
         list($response, $rcode) = $requestor->request('get', $url);
 

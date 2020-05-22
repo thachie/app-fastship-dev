@@ -78,24 +78,17 @@
                 				<div class="row">
                 					<div class="hidden-xs col-md-4 text-right"><strong>หมายเลขติดตามพัสดุ</strong><br /><span class="small">tracking number</span></div>
                 					<div class="visible-xs col-xs-12"><label><strong>หมายเลขติดตามพัสดุ</strong> (<span class="small">tracking number</span>)</label></div>
-                					<div class="col-xs-9 col-md-6"><input type="text" name="tracking" class="form-control form-control-lg required" required value="<?php echo $paramId;?>" /></div>
+                					<div class="col-xs-9 col-md-6"><input type="text" name="tracking" class="form-control form-control-lg required" required value="{{ $paramId }}" /></div>
                 					<div class="col-xs-3 col-md-2"><button type="button" class="btn btn-primary btn-lg" onclick="trackShipment()" style="padding: 9px 10px;"><i class="fa fa-search"></i></button></div>		                                
                 				</div>
                 			</div>
                 		</div>
                 	</div>
                 </div>
-                @if(!empty($tracking_data['Shipment']))
-                <?php 
-                $DeclareTypes = explode(";",$tracking_data['Shipment']['DeclareType']);
-                if($DeclareTypes [sizeof($DeclareTypes)-1] == ""){
-                	unset($DeclareTypes [sizeof($DeclareTypes)-1]);
-                }
-                $DeclareValues = explode(";",$tracking_data['Shipment']['DeclareValue']);
-                if($DeclareValues [sizeof($DeclareValues)-1] == ""){
-                	unset($DeclareValues [sizeof($DeclareValues)-1]);
-                }
-                ?>
+                @if(!empty($tracking_data) && sizeof($tracking_data) > 0 && is_array($tracking_data))
+                @php
+                $firstElem = array_values($tracking_data)[0];
+                @endphp
                 <div class="row">
                 
                 	<div class="col-md-6 col-md-offset-3">
@@ -103,10 +96,9 @@
                 			<div class="panel-heading">การติดตามพัสดุ</div>
                 		    <div class="panel-body">
                 		    	<div class="row">
-                		    		<div class="col-md-4 text-center"><img src="/images/agent/<?php echo $tracking_data['Shipment']['Agent'];?>.gif" style="max-width:140px;" /></div>
-                			        <div class="col-md-8">
-                			        	<h2><?php echo (isset($trackingStatus[$tracking_data['Status']]))?$trackingStatus[$tracking_data['Status']]:$tracking_data['Status']; ?></h2>
-                			        	<h4 class="green">Tracking: <strong><?php echo $tracking_data['TrackingCode'];?></strong></h4>
+                		    		<div class="col-md-12 text-center">
+                			        	<h2>{{ (isset($trackingStatus[$firstElem['status']]))?$trackingStatus[$firstElem['status']]:$firstElem['status'] }}</h2>
+                			        	<h4 class="green">Tracking: <strong>{{ $paramId }}</strong></h4>
                 			        </div>
                 		        </div>
                 		    </div>
@@ -118,50 +110,59 @@
                         	<div class="panel-heading">ประวัติการเคลื่อนไหวของพัสดุ</div>
                             <div class="panel-body">
                             	<div class="timeline timeline-single-column">
-                                    	<?php 
-                                    	if(sizeof($tracking_data['Events'])>0):
-                                    	$descEvents = $tracking_data['Events'];
-                                    	krsort($descEvents);
-                                    	foreach($descEvents as $event):
-                                    	if($event['Status'] == "1004"){
-                                    		$css = "success";
-                                    	}else if($event['Status'] == "1003"){
-                                    		$css = "info";
-                                    	}else if($event['Status'] == "1002"){
-                                    	    $css = "warning";
-                                    	}else if($event['Status'] == "1005" || $event['Status'] == "1006"){
-                                    	    $css = "danger";
-                                    	}else{
-                                    		$css = "default";
-                                    	}
-                                    	?>
-                                    	<div class="timeline-item <?php echo $event['Status']; ?>">
-                                            <div class="timeline-point timeline-point-default">
-                                                <i class="fa fa-check"></i>
+                                	<?php 
+                                	if(sizeof($tracking_data)>0):
+
+                                	foreach($tracking_data as $event):
+                                	
+                                	$description = isset($event['description'])?$event['description']:$event['address'];
+
+                                	if($event['status'] == "1004"){
+                                		$css = "success";
+                                	}else if($event['status'] == "1003"){
+                                		$css = "info";
+                                	}else if($event['status'] == "1002"){
+                                	    $css = "warning";
+                                	}else if($event['status'] == "1005" || $event['status'] == "1006"){
+                                	    $css = "danger";
+                                	}else{
+                                		$css = "default";
+                                	}
+                                	?>
+                                	<div class="timeline-item <?php echo $event['status']; ?>">
+                                        <div class="timeline-point timeline-point-default">
+                                            <i class="fa fa-check"></i>
+                                        </div>
+                                        <div class="timeline-event upgrade timeline-event-<?php echo $css; ?>">
+                                            <div class="timeline-heading">
+                                                <h4>{{ $description }}</h4>
                                             </div>
-                                            <div class="timeline-event upgrade timeline-event-<?php echo $css; ?>">
-                                                <div class="timeline-heading">
-                                                    <h4><?php echo $event['Description']; ?></h4>
-                                                </div>
-                                                <div class="timeline-body">
-                                                
-                                                	<p><?php echo isset($trackingStatus[$event['Status']])?$trackingStatus[$event['Status']]:$event['Status']; ?> <?php echo ($event['Location'])?"at ".$event['Location']:""; ?></p>
-                        
-                                                </div>
-                                                <div class="timeline-footer text-right">
-                                                    <?php echo date("d/m/Y H:i:s",strtotime($event['Datetime'])); ?>
-                                                </div>
+                                            <div class="timeline-body">
+                                            
+                                            	<p>{{ isset($trackingStatus[$event['status']])?$trackingStatus[$event['status']]:$event['status'] }} {{ ($event['location'])?"at ".$event['location']:"" }}</p>
+                    
+                                            </div>
+                                            <div class="timeline-footer text-right">
+                                            @if(isset($event['datetime']))
+                                                @if($event['datetime'] != "")
+                                                	{{ date("d/m/Y H:i:s",strtotime($event['datetime'])) }}
+                                            	@endif
+                                            @endif
                                             </div>
                                         </div>
-                                        <?php 
-                                        endforeach;
-                                        endif;
-                                        ?>
+                                    </div>
+                                    <?php 
+                                    endforeach;
+                                    endif;
+                                    ?>
                             	</div>
                 			</div>
                 		</div>
                 	</div>
                 </div>
+                @else
+                <div class="text-center small text-info">ไม่พบข้อมูล</div>
+                
                 @endif
                 </div>
                 <script type="text/javascript">

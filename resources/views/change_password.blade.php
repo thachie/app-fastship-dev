@@ -1,13 +1,15 @@
 @extends('layout')
 @section('content')
 <div class="conter-wrapper">
-	<!-- <div class="row">
-		<div class="col-md-6 col-md-offset-3">
-			<h2>เปลี่ยนรหัสผ่าน</h2>
-		</div>
-	</div> -->
 	<div class="row">
-	    <div class="col-md-6 col-md-offset-3">
+		
+		@include('left_account_menu')
+
+	    <div class="col-md-10">
+	    
+	    	<h2>{!! FT::translate('change_password.heading') !!}</h2>
+        	<hr />
+        
 	    	<form name="password_form" class="form-horizontal" method="post" action="{{url ('/customer/change_password')}}">
 	    		
 	    		{{ csrf_field() }}

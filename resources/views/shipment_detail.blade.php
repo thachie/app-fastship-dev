@@ -114,48 +114,39 @@
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-primary">
-                <div class="panel-heading">{!! FT::translate('shipment_detail.panel.heading1') !!}</div>
+                <div class="panel-heading">{!! FT::translate('shipment_detail.panel.heading1') !!}ข้อมูลผู้รับ</div>
                 <div class="panel-body ship-detail">
-                    <div class=" well" style="margin-bottom:0px;">
-                	<div class="col-md-5 col-xs-5 text-right">{!! FT::translate('label.fullname') !!}: </div>
-                    <div class="col-md-7 col-xs-7"><?php echo $ShipmentDetail['ReceiverDetail']['Firstname'];?> <?php echo $ShipmentDetail['ReceiverDetail']['Lastname'];?></div>
+                
+                	<h4>{{ $ShipmentDetail['ReceiverDetail']['Firstname'] }} {{ $ShipmentDetail['ReceiverDetail']['Lastname'] }}</h4>
+                	<div class="text-info"><i class="fa fa-phone"></i> <b>{{ $ShipmentDetail['ReceiverDetail']['PhoneNumber'] }}</b></div>
+                	<div class="text-dark"><i class="fa fa-envelope"></i> <b>{{ $ShipmentDetail['ReceiverDetail']['Email'] }}</b></div>
+                	<div class="text-secondary">
+                		<i class="fa fa-home"></i> 
+                		{{ $ShipmentDetail['ReceiverDetail']['AddressLine1'] }} {{ $ShipmentDetail['ReceiverDetail']['AddressLine2'] }}
+                    	{{ $ShipmentDetail['ReceiverDetail']['City'] }} {{ $ShipmentDetail['ReceiverDetail']['State'] }} 
+                    	{{ $ShipmentDetail['ReceiverDetail']['Postcode'] }} {{ $countries[$ShipmentDetail['ReceiverDetail']['Country']] }} 
+                	</div>
                     <div class="clearfix"></div>
-                    <div class="col-md-5 col-xs-5 text-right">{!! FT::translate('label.telephone') !!}: </div>
-                    <div class="col-md-7 col-xs-7"><?php echo $ShipmentDetail['ReceiverDetail']['PhoneNumber'];?></div>
-                    <div class="clearfix"></div>
-                    <div class="col-md-5 col-xs-5 text-right">{!! FT::translate('label.email') !!}: </div>
-                    <div class="col-md-7 col-xs-7"><?php echo $ShipmentDetail['ReceiverDetail']['Email'];?></div>
-                    <div class="clearfix"></div>
-                    <div class="col-md-5 col-xs-5 text-right">{!! FT::translate('label.address') !!}: </div>
-                    <div class="col-md-7 col-xs-7"><?php echo $ShipmentDetail['ReceiverDetail']['AddressLine1'];?><br /><?php echo $ShipmentDetail['ReceiverDetail']['AddressLine2'];?></div>
-                    <div class="clearfix"></div>
-                    <div class="col-md-5 col-xs-5 text-right">{!! FT::translate('label.city') !!}: </div>
-                    <div class="col-md-7 col-xs-7"><?php echo $ShipmentDetail['ReceiverDetail']['City'];?></div>
-                    <div class="clearfix"></div>
-                    <div class="col-md-5 col-xs-5 text-right">{!! FT::translate('label.state') !!}: </div>
-                    <div class="col-md-7 col-xs-7"><?php echo $ShipmentDetail['ReceiverDetail']['State'];?></div>
-                    <div class="clearfix"></div> 
-                    <div class="col-md-5 col-xs-5 text-right">{!! FT::translate('label.postcode') !!}: </div>
-                    <div class="col-md-7 col-xs-7"><?php echo $ShipmentDetail['ReceiverDetail']['Postcode'];?></div>
-                    <div class="clearfix"></div>  
-                    <div class="col-md-5 col-xs-5 text-right">{!! FT::translate('label.country') !!}: </div>
-                    <div class="col-md-7 col-xs-7"><?php echo $countries[$ShipmentDetail['ReceiverDetail']['Country']];?></div>
-                    <div class="clearfix"></div>   
-                    <?php if($ShipmentDetail['Remark'] != ""): ?>
-	                    <div class="col-md-5 col-xs-5 text-right">{!! FT::translate('label.remark') !!}: </div>
-	                    <div class="col-md-7 col-xs-7"><?php echo $ShipmentDetail['Remark'];?></div>
+                    
+                    @if($ShipmentDetail['Reference'] != "")
+	                    <div class="text-center">Reference: {{ $ShipmentDetail['Reference'] }}</div>
 	                    <div class="clearfix"></div>
-                    <?php endif; ?>
-                    <?php if($ShipmentDetail['Reference'] != ""): ?>
-	                    <div class="col-md-5 col-xs-5 text-right">{!! FT::translate('label.reference') !!}: </div>
-	                    <div class="col-md-7 col-xs-7"><?php echo $ShipmentDetail['Reference'];?></div>
+                    @endif
+                    
+                    @if(trim($ShipmentDetail['Remark']) != "")
+	                    <div class="text-center">{{ $ShipmentDetail['Remark'] }}</div>
 	                    <div class="clearfix"></div>
-                    <?php endif; ?>
-                    </div>
-                	<br />
-                	
-                	<h3>{!! FT::translate('shipment_detail.panel.heading2') !!}</h3>
-                    <table class="table table-hover">
+                    @endif
+
+
+                </div>
+            </div>
+            
+            <div class="panel panel-primary">
+                <div class="panel-heading">{!! FT::translate('shipment_detail.panel.heading2') !!}รายละเอียดพัสดุ</div>
+                <div class="panel-body ship-detail">
+                
+                	<table class="table table-hover small">
                         <thead>
                             <tr>
                                 <th scope="col">{!! FT::translate('label.declare_type') !!}</th>
@@ -164,42 +155,66 @@
                             </tr>
                         </thead>
                         <tbody id="product_table">
-                            <?php 
-                            if(sizeof($DeclareTypes) > 0):
-                            	if(is_array($DeclareTypes)):
-                                    foreach($DeclareTypes as $key => $Type):
-                                    	$dtype = (isset($declareTypes[$Type]))?$declareTypes[$Type]:$Type;
-                            
-                            ?>
-                                    <tr>
-                                        <td><?php echo $dtype; ?></td>
-                                        <td><?php echo isset($DeclareQtys[$key])?($DeclareQtys[$key]):"1"; ?></td>
-                                        <td><?php echo isset($DeclareValues[$key])?($DeclareValues[$key]):"-"; ?></td>
-                                    </tr>
-                            <?php 	
-                            		endforeach;
-                           		endif; 
-                           	endif;
-                           	?>
+                            @if(sizeof($DeclareTypes) > 0)
+                            @if(is_array($DeclareTypes))
+                            @foreach($DeclareTypes as $key => $Type)
+                            <tr>
+                                <td>{{ $Type }}</td>
+                                <td>{{ isset($DeclareQtys[$key])?($DeclareQtys[$key]):"1" }}</td>
+                                <td>{{ isset($DeclareValues[$key])?($DeclareValues[$key]):"-" }}</td>
+                            </tr>
+                            @endforeach
+                           	@endif
+                           	@endif
                             
                         </tbody>
                     </table>
-
-                    <div class="col-md-4 col-xs-4 text-center no-padding"> 
-                        <img src="../images/agent/<?php echo $ShipmentDetail['ShipmentDetail']['ShippingAgent'];?>.gif" style="max-width: 100px;"/>
+                    
+                </div>
+            </div>
+            
+            <div class="panel panel-primary">
+                <div class="panel-heading">-</div>
+                <div class="panel-body ship-detail">
+                
+                	<div class="col-md-3 col-xs-4 text-center no-padding"> 
+                        <img src="../images/agent/{{ $ShipmentDetail['ShipmentDetail']['ShippingAgent'] }}.gif" style="max-width: 100px;"/>
                     </div>
-                    <div class="col-md-8 col-xs-8"> 
+                    <div class="col-md-9 col-xs-8"> 
                         <table class="table-dimension col-md-12 small text-left">
                         <thead>
                             <tr>
+                            	<td></td>
                                 <td>{!! FT::translate('label.weight') !!}</td>
                                 <td class="hidden-xs">{!! FT::translate('label.dimension') !!}</td>
+                                <td>{!! FT::translate('label.weight') !!}</td>
                                 <td>{!! FT::translate('label.shipping') !!}</td>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><span class="sumresult"><?php echo number_format($ShipmentDetail['ShipmentDetail']['Weight'],0);?></span></td>
+                            	<td>สร้าง</td>
+                                <td><span class="sumresult"><?php echo number_format($ShipmentDetail['ShipmentDetail']['CustomerWeight'],0);?></span></td>
+                                <td class="hidden-xs">
+                                    <?php if($ShipmentDetail['ShipmentDetail']['CustomerWidth'] != ""): ?>
+                                    <span class="sumresult"><?php echo $ShipmentDetail['ShipmentDetail']['CustomerWidth']." × ".$ShipmentDetail['ShipmentDetail']['CustomerLength']." × ".$ShipmentDetail['ShipmentDetail']['CustomerHeight']; ?></span>
+                                    <?php else: ?>
+                                    <span class="sumresult">-</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td><span class="sumresult"><?php echo number_format($ShipmentDetail['ShipmentDetail']['CustomerWeight'],0);?></span></td>
+                                
+                                <td>
+                                <?php if($ShipmentDetail['ShipmentDetail']['ShippingAgent'] == "Quotation"): ?>
+                                	<span class="sumresult">TBC</span>
+                                <?php else: ?>
+                                	<span class="sumresult"><?php echo number_format($ShipmentDetail['ShipmentDetail']['CustomerRate'],0);?></span>
+                                <?php endif; ?>
+                                </td>
+                            </tr>
+                            <tr>
+                            	<td>ปรับปรุง</td>
+                                <td><span class="sumresult"><?php echo number_format($ShipmentDetail['ShipmentDetail']['ActualWeight'],0);?></span></td>
                                 <td class="hidden-xs">
                                     <?php if($ShipmentDetail['ShipmentDetail']['Width'] != ""): ?>
                                     <span class="sumresult"><?php echo $ShipmentDetail['ShipmentDetail']['Width']." × ".$ShipmentDetail['ShipmentDetail']['Length']." × ".$ShipmentDetail['ShipmentDetail']['Height']; ?></span>
@@ -207,6 +222,7 @@
                                     <span class="sumresult">-</span>
                                     <?php endif; ?>
                                 </td>
+                                <td><span class="sumresult"><?php echo number_format($ShipmentDetail['ShipmentDetail']['Weight'],0);?></span></td>
                                 <td>
                                 <?php if($ShipmentDetail['ShipmentDetail']['ShippingAgent'] == "Quotation"): ?>
                                 	<span class="sumresult">TBC</span>

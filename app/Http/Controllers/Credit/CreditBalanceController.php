@@ -28,6 +28,59 @@ class CreditBalanceController extends Controller
         }
     }
     
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        
+        if (session('customer.id') != null){
+            $customerId = session('customer.id');
+        }else{
+            return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+        }
+        
+        //
+        Fastship::getToken($customerId);
+        
+        //get customer
+        $customer = FS_Customer::get($customerId);
+
+        //get store credit
+        $storecredit = FS_CreditBalance::get();
+        
+        //get payment statement
+        $statements = FS_CreditBalance::get_statements();
+
+        //get credit card
+        $creditCards = FS_CreditCard::get_credit_cards();
+        
+        $paymentMapping = array(
+            "QR" => "ชำระเงินผ่าน QR Code",
+            "Credit_Card" => "ชำระเงินผ่าน Credit Card",
+            "Bank_Transfer" => "ชำระเงินโดยการโอนผ่านธนาคาร",
+            "Cash" => "ชำระเงินสด",
+            "Invoice" => "ชำระเงินแบบวางบิล",
+            "Store_Credit" => "รับเครดิตเงินคืน",
+            "Withdraw" => "ถอนเงิน",
+            "Use_Credit" => "ใช้เครดิตสะสม",
+        );
+        
+        $data = array(
+            'customer_data' => $customer,
+            'storecredit' => $storecredit,
+            'statements' => $statements,
+            'credit_cards' => $creditCards,
+            'payment_mapping' => $paymentMapping,
+        );
+        
+        return view('cust_balance',$data);
+        
+    }
+    
     public function prepareCredit($amount="")
     {
         if(session('customer.id') != null){
@@ -420,7 +473,7 @@ class CreditBalanceController extends Controller
             $customer = $this->getCustomerById($customerId);
             //alert('customer');alert($customer);
             if(empty($customer)){
-                return redirect('/myaccount')->with('msg','ไม่มีข้อมูลในระบบ');
+                return redirect('/customer_balance')->with('msg','ไม่มีข้อมูลในระบบ');
             }else{
                 //$customerId = $customer['CUST_ID'];
                 $customerName = $customer['Firstname'];
@@ -510,27 +563,27 @@ class CreditBalanceController extends Controller
                         	
                         	//$response = false;
                         	if($response === false){
-                        		return redirect('/myaccount')->with('msg','ทำรายการไม่สมบูรณ์ กรุณาทำรายการใหม่อีกครั้ง');
+                        		return redirect('/customer_balance')->with('msg','ทำรายการไม่สมบูรณ์ กรุณาทำรายการใหม่อีกครั้ง');
                         	}
                         	
                             //echo 'Success';
-                            return redirect('/myaccount')->with('msg','ทำรายการเพิ่มบัตรเรียบร้อยแล้ว')->with('msg-type','success');
+                            return redirect('/customer_balance')->with('msg','ทำรายการเพิ่มบัตรเรียบร้อยแล้ว')->with('msg-type','success');
                         }else{
                             //echo 'Fail';
-                            return redirect('/myaccount')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง2');
+                            return redirect('/customer_balance')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง2');
                         }
                     }else{
                         //echo 'Fail';
-                        return redirect('/myaccount')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง3');
+                        return redirect('/customer_balance')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง3');
                     }
                 }else{
                     //echo 'Fail';
-                    return redirect('/myaccount')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
+                    return redirect('/customer_balance')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
                 }
             }
         }else{
             //echo 'Fail';
-            return redirect('/myaccount')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
+            return redirect('/customer_balance')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
         }
     }
 
@@ -817,6 +870,84 @@ class CreditBalanceController extends Controller
         }
     }
 
+    public function withdraw(Request $request)
+    {
+        
+        if(session('customer.id') != null){
+            $customerId = session('customer.id');
+        }else{
+            return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+        }
+        
+        $this->validate($request, [
+            'amount' => 'required',
+        ]);
+        
+        $amount = $request->input('amount');
+        
+        //get token
+        Fastship::getToken($customerId);
+        
+        $balance = FS_CreditBalance::get();
+        
+        if($amount > $balance){
+            return redirect('/customer_balance')->with('msg','จำนวนเงินที่ต้องการถอน ' . $amount . ' บาท เกินจำนวนที่ถอนได้ (ยอดที่ถอนได้ ' . $balance . ' บาท)');
+        }
+        
+        //add customer credit
+        $params = array(
+            "Amount" => $amount,
+        );
+        $result = FS_CreditBalance::withdraw($params);
+        
+        if($result){
+            return redirect('/customer_balance')->with('msg','ทำรายการเรียบร้อย')->with('msg-type','success');
+        }else{
+            return redirect('/customer_balance')->with('msg','ทำรายการไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง');
+        }
+        
+
+    }
+    
+    public function updateRefund(Request $request)
+    {
+        
+        if (session('customer.id') != null){
+            $customerId = session('customer.id');
+        }else{
+            return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+        }
+        $this->validate($request, [
+            'refund_bank' => 'required',
+            'refund_account' => 'required',
+            'refund_name' => 'required',
+            'refund_branch' => 'required',
+        ]);
+        
+        $data=array();
+        $data['refund_bank'] = $request->input('refund_bank');
+        $data['refund_account'] = $request->input('refund_account');
+        $data['refund_name'] = $request->input('refund_name');
+        $data['refund_branch'] = $request->input('refund_branch');
+        
+        //update to API
+        Fastship::getToken($customerId);
+        $updateDetails = array(
+            'RefundBank' => $data['refund_bank'],
+            'RefundAccount' => $data['refund_account'],
+            'RefundName' => $data['refund_name'],
+            'RefundBranch' => $data['refund_branch'],
+        );
+        $updateCompleted = FS_Customer::update($updateDetails);
+        
+        if($updateCompleted){
+            return redirect('/customer_balance')->with('msg','ระบบได้ทำการอัปเดทข้อมูล เรียบร้อยแล้ว')->with('msg-type','success');
+        }else{
+            return redirect('/customer_balance')->with('msg','อัปเดทข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
+        }
+
+    }
+    
     public function payplusPay($token1,$token2,Request $request)
     {
 
@@ -1040,30 +1171,25 @@ class CreditBalanceController extends Controller
         $card_id = $request->input('card_id');
 
         $update = DB::table('omise_customer')
-            ->where('ID', $card_id)
-            ->update(
-                [
-                    'IS_ACTIVE' =>  0,
-                    'UPDATE_DATETIME' =>  $date_Time
-                ]
-            );
-        if($update){
-
-        	Fastship::getToken($customerId);
-        	         	
-        	//delete credit card
-        	$omise_data = DB::table('omise_customer')->where('ID', $card_id)->first();
-        	$response = FS_CreditCard::delete($omise_data->OMISE_ID);
-        	
-        	if($response === false){
-            	return redirect('/myaccount')->with('msg','ทำรายการไม่สมบูรณ์ กรุณาทำรายการใหม่อีกครั้ง');
-            }
-
-            return redirect('/myaccount')->with('msg','ทำรายการเรียบร้อย')->with('msg-type','success');
-            
-        }else{
-            return redirect('/myaccount')->with('msg','ไม่สามารถทำรายการได้ กรุณาทำรายการใหม่อีกครั้ง');
+        ->where('ID', $card_id)
+        ->update(
+            [
+                'IS_ACTIVE' =>  0,
+                'UPDATE_DATETIME' =>  $date_Time
+            ]
+        );
+        
+        Fastship::getToken($customerId);
+        
+        //delete credit card
+        $response = FS_CreditCard::delete($card_id);
+        
+        if($response === false){
+            return redirect('/customer_balance')->with('msg','ทำรายการไม่สมบูรณ์ กรุณาทำรายการใหม่อีกครั้ง');
         }
+        
+        return redirect('/customer_balance')->with('msg','ทำรายการเรียบร้อย')->with('msg-type','success');
+
     }
 
     public function preparePaymentSubmission($amount="")

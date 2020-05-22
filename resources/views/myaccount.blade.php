@@ -9,158 +9,129 @@ if($customer_data['latitude'] == ""){
 }
 ?>
 <div class="conter-wrapper">
-      
-	<div class="row">
-		<div class="col-md-10 col-md-offset-1">
-			<h2>{!! FT::translate('myaccount.heading') !!}</h2>
-		</div>
-	</div>  
-	<div class="row">
-	    <div class="col-md-5 col-md-offset-1">
-		    <div class="panel panel-primary">
-				<div class="panel-heading">{!! FT::translate('myaccount.panel.heading1') !!}</div>
-		        <div class="panel-body">
+    <div class="row">
+    
+    	@include('left_account_menu')
 
-	                <div class="<?php echo $addressDiv; ?> col-xs-12 no-padding" style="line-height: 30px;">
-	                
-		                <?php if(isset($customer_data['company']) && $customer_data['company']): ?>
-		                    
-		                    <div class="col-md-12"><h3><?php echo $customer_data['company']; ?></h3></div>
-		                    <div class="clearfix"></div>
-		                    
-		                    <?php if(isset($customer_data['taxid']) && $customer_data['taxid']): ?>
-			                    <div class="col-md-12"><h4>{!! FT::translate('label.taxid') !!}: <?php echo $customer_data['taxid']; ?></h4></div>
-		                    	<div class="clearfix"></div>
-	                    	<?php endif; ?>
-		                <?php endif; ?>
-		                
-						<div class="col-md-12">
-						<?php if($customer_data['taxid'] == ""): ?>
-							<h4><?php echo $customer_data['firstname']." ".$customer_data['lastname']; ?></h4>
-						<?php else: ?>
-							<?php echo $customer_data['firstname']." ".$customer_data['lastname']; ?>
-						<?php endif; ?>
-	                    </div>
-	                    <div class="clearfix"></div>
-	                    
-	                    <div class="col-md-12">
-	                    	<?php echo $customer_data['address1']; ?>
-	                    	<?php if(isset($customer_data['address2']) && $customer_data['address2']): ?>
-	                    		<?php echo " " . $customer_data['address2']; ?>
-	                    	<?php endif; ?>
-	                    	<?php echo " " . $customer_data['city'] . " " . $customer_data['state']; ?>
-	                    	<?php echo " " . $customer_data['postcode'] . " " . (($customer_data['country'])?$countries[$customer_data['country']]:""); ?>
-	                    </div>
-	                    <div class="clearfix"></div>
+        <div class="col-md-10">
+        	
+        	<h2>{!! FT::translate('myaccount.heading') !!}</h2>
+    		<hr />
+    	
+    	    <div class="panel panel-primary">
+    			<div class="panel-heading">{!! FT::translate('myaccount.panel.heading1') !!}</div>
+    	        <div class="panel-body">
+    
+                    <div class="<?php echo $addressDiv; ?> col-xs-12 no-padding" style="line-height: 30px;">
+                    
+    	                <?php if(isset($customer_data['company']) && $customer_data['company']): ?>
+    	                    
+    	                    <div class="col-md-12"><h3><?php echo $customer_data['company']; ?></h3></div>
+    	                    <div class="clearfix"></div>
+    	                    
+    	                    <?php if(isset($customer_data['taxid']) && $customer_data['taxid']): ?>
+    		                    <div class="col-md-12"><h4>{!! FT::translate('label.taxid') !!}: <?php echo $customer_data['taxid']; ?></h4></div>
+    	                    	<div class="clearfix"></div>
+                        	<?php endif; ?>
+    	                <?php endif; ?>
+    	                
+    					<div class="col-md-12">
+    					<?php if($customer_data['taxid'] == ""): ?>
+    						<h4><?php echo $customer_data['firstname']." ".$customer_data['lastname']; ?></h4>
+    					<?php else: ?>
+    						<?php echo $customer_data['firstname']." ".$customer_data['lastname']; ?>
+    					<?php endif; ?>
+                        </div>
+                        <div class="clearfix"></div>
+                        
+                        <div class="col-md-12">
+                        	<?php echo $customer_data['address1']; ?>
+                        	<?php if(isset($customer_data['address2']) && $customer_data['address2']): ?>
+                        		<?php echo " " . $customer_data['address2']; ?>
+                        	<?php endif; ?>
+                        	<?php echo " " . $customer_data['city'] . " " . $customer_data['state']; ?>
+                        	<?php echo " " . $customer_data['postcode'] . " " . (($customer_data['country'])?$countries[$customer_data['country']]:""); ?>
+                        </div>
+                        <div class="clearfix"></div>
+    
+    	                <div class="col-md-12">{!! FT::translate('label.email') !!}: <?php echo $customer_data['email']; ?></div>
+    	                <div class="clearfix"></div>
+    
+                        <div class="col-md-12">{!! FT::translate('label.telephone') !!}: <?php echo $customer_data['phonenumber']; ?></div>
+    	                <div class="clearfix"></div>
+    
+    	                
+                    </div>
+                    <?php if($customer_data['latitude'] != ""): ?>
+                    <div class="col-md-7 col-xs-12 no-padding">
+                    	<div class="col-md-12 col-xs-12" style="height: 240px;">
+    		                <div id="map" height="240px" width="480px"></div>
+    		               	<div id="message"></div>
+    		             </div>
+                    </div>
+                    <?php endif; ?>
 
-		                <div class="col-md-12">{!! FT::translate('label.email') !!}: <?php echo $customer_data['email']; ?></div>
-		                <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+    	            <br />
+    	            
+    	            <div class="col-md-12 text-center small"><a href="{{url ('/edit_customer')}}"><i class="fa fa-edit" title="แก้ไข"></i> {!! FT::translate('button.edit') !!}</a></div>
+                    <div class="clearfix"></div>
+    	            <br />
 
-	                    <div class="col-md-12">{!! FT::translate('label.telephone') !!}: <?php echo $customer_data['phonenumber']; ?></div>
-		                <div class="clearfix"></div>
+                </div>
+    		</div>
+    
+        	<div class="panel panel-primary" style="display: none;">
+    			<div class="panel-heading">เอกสารที่เกี่ยวข้อง</div>
+    		    <div class="panel-body">
+    
+    				<div class="col-md-8 col-md-offset-2 col-xs-12">
+    					<form id="payment_form" class="form-horizontal" method="post" action="{{url ('credit/create')}}" enctype="multipart/form-data">
+		
+                    		{{ csrf_field() }}
 
-		                
-	                </div>
-	                <?php if($customer_data['latitude'] != ""): ?>
-	                <div class="col-md-7 col-xs-12 no-padding">
-	                	<div class="col-md-12 col-xs-12" style="height: 240px;">
-			                <div id="map" height="240px" width="480px"></div>
-			               	<div id="message"></div>
-			             </div>
-	                </div>
-	                <?php endif; ?>
-	                
-	                <div class="col-xs-12 no-padding" style="line-height: 30px;">
-	               	 	<div class="col-md-12">{!! FT::translate('label.refund_account') !!}: <?php echo $customer_data['refund_bank']; ?> <?php echo $customer_data['refund_account']; ?></div>
-		                <div class="clearfix"></div>
-	                </div>
-	                <div class="clearfix"></div>
-		            <br />
-		            
-		            <div class="col-md-12 text-center"><a href="{{url ('/edit_customer')}}"><i class="fa fa-edit" title="แก้ไข"></i> {!! FT::translate('button.edit') !!}</a></div>
-	                <div class="clearfix"></div>
-		            <br />
-		                
-		                
-	            </div>
-			</div>
-	    </div>
+            				<label class="col-md-4 control-label" style="padding-top: 2px;">อัพโหลดเอกสาร</label>	
+            				<div class="col-md-8">
+            					<input type="file" class="choose-file" name="slip" required />
+            					<button type="submit" class="btn btn-info" style="vertical-align: top;">Upload</button>
+            				</div>
 
-	    <div class="col-md-5">
-	    	<div class="panel panel-primary">
-				<div class="panel-heading">{!! FT::translate('myaccount.panel.heading2') !!}</div>
-			    <div class="panel-body">
+                        </form>
+    				</div>
+    				<div class="clearfix"></div><br />
+    				
+    				<div class="col-md-12">
+ 
+    					<table class="table table-hover table-striped">
+                        <thead>
+                        	<tr>
+                        		<td class="hidden-xs" width="5%">ลำดับ</td>
+                        		<td>ชื่อเอกสาร</td>
+                        		<td class="hidden-xs" width="15%">สร้างวันที่</td>
+                        		<td width="20%"></td>
+                        	</tr>
+                        </thead>
+                        <tbody>
+                        	<tr>
+                        		<td class="hidden-xs" >1</td>
+                        		<td>สำเนาบัตรประชาชน</td>
+                        		<td class="hidden-xs">{{ date("d/m/Y") }}</td>
+                        		<td>
+                        		<button type="button" class="btn btn-success btn-sm"><i class="fa fa-download"></i> ดาวน์โหลด</button>
+                        		<button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> ลบ</button>
+                        		</td>
+                        	</tr>
+                        </tbody>
+                        </table>
+    				</div>
 
-						<div class="col-md-12">
-							<h3>{!! FT::translate('myaccount.panel.heading4') !!}</h3>
-							@if(sizeof($creditCards) > 0)
-							@foreach($creditCards as $card)
-							<div class="col-md-6">
-								<div class=" block-primary" style="position: relative;">
-									<span class="creditbar"></span>
-									<span class="close"><a href="javascript:deleteCreditCard('<?php echo $card->ID;?>');"><i class="fa fa-trash-o"></i></a></span>
-									<h5 class="accountno">XXXXX-XXX-<?php echo $card->OMISE_LASTDIGITS;?></h5>
-									<h6><?php echo $card->OMISE_CARDNAME;?></h6>
-									<p><?php echo $card->OMISE_BANK;?></p>
-								</div>
-							</div>
-							@endforeach
-							@endif
-						</div>
-	
-			    		<div class="col-md-12">
-				    		<h4>{!! FT::translate('myaccount.panel.heading3') !!}</h4>
-				    		<form id="checkout" name="creditcard_form"  class="form-horizontal" method="post" action="{{url ('/credit/add_creditcard')}}">	
-				    			<div id="token_errors"></div>
-								<input type="hidden" name="command" value="collect-card" />
-								<input type="hidden" name="back_url" value="" />
-								<input type="hidden" name="backToaddCredit" value="" />
-								<input type="hidden" name="omise_token">
-								<input type="hidden" id="card_number" name="card_number">
-								<input type="hidden" id="cvv_number" name="cvv_number">                        
-		        				{{ csrf_field() }} 
-				    			<div class="col-md-12">
-			                    	<label for="holder_name" class="col-12 control-label">{!! FT::translate('label.cardname') !!}</label>
-			                    	<input type="text" class="form-control required" name="holder_name" data-omise="holder_name" id="holder_name" required />
-			                    </div>
-				    			<div class="col-md-12">
-			                    	<label for="number" class="col-12 control-label">{!! FT::translate('label.cardnumber') !!}</label>
-			                    	<input type="text" class="form-control required" id="number" name="number" data-omise="number" value="" maxlength="16" required placeholder="Card Number">
-			                    </div>
-			                    <div class="col-md-4">
-			                    	<label for="expiration_month" class="col-12 control-label">{!! FT::translate('label.expire_date') !!}</label>
-			                    	<input type="text" name="expiration_month" data-omise="expiration_month" class="form-control required" maxlength="2" required placeholder="MM"/>
-			                    </div>
-			                    <div class="col-md-4">
-			                    	<label for="expiration_year" class="col-12 control-label">&nbsp;</label>
-			                    	<input type="text" name="expiration_year" data-omise="expiration_year" class="form-control required" maxlength="4" required placeholder="YYYY"/>
-			                    </div>
-			                    <div class="col-md-4">
-			                    	<label for="security_code" class="col-12 control-label">{!! FT::translate('label.cvv') !!}</label>
-			                    	<input type="text" id="security_code" name="security_code" data-omise="security_code"  class="form-control required" maxlength="4" required placeholder="CVV"/>
-			                    </div>
-			                    <div class="clearfix"></div>
-			                    <br />
-			                    
-			                    <div class="text-center ">
-			                    	<input id="create_token" name="create_token" type="submit" class="col-md-4 col-md-offset-4 btn btn-primary" value="{!! FT::translate('button.add_card') !!}" />
-			                    </div> 
-			                </form>
-				    	</div>
-
-			    </div>
-			</div>
-	    </div>
-	</div>
-	<div class="clearfix"></div>
-	<br />
+    		    </div>
+    		</div>
+        </div>
+    	<div class="clearfix"></div>
+    	<br />
+    </div>
 </div>
-
-<form id="delete_form" name="delete_form" method="post" action="{{url ('/credit/delete_creditcard')}}">	                        
-	{{ csrf_field() }}
-	<input type="hidden" name="card_id" />
-</form>
-	        				
 <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARGo6QU60StUz58XsOHjLs4Dg3UFllE4w&callback=initMap">
 </script>
@@ -267,6 +238,5 @@ if($customer_data['latitude'] == ""){
 	  return false;
 
 	});
-
 </script>
 @endsection

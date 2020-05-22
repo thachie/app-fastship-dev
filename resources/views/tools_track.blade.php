@@ -1,6 +1,5 @@
 @extends('layout')
 @section('content')
-
 <div class="conter-wrapper">
       
 <div class="row">

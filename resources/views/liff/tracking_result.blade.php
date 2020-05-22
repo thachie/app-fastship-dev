@@ -1,47 +1,64 @@
 @extends('liff/layout')
 @section('content')
-<div class="conter-wrapper">
+<div class="conter-wrapper" >
 
-	<div class="col col-12">
-		<h3 class="text-orange">ประวัติสถานะการส่งพัสดุ</h3>
-		<hr />
-	</div>
-	
-	<div class="col col-12">
-		<p>หมายเลขติดตามพัสดุ <span class="text-primary">{{ $tracking }}</span></p>
+	<div class="row">
+		<div class="col col-12">
+			<h3 class="text-orange">ประวัติสถานะการส่งพัสดุ</h3>
+			<hr />
+		</div>
+		<div class="col col-12">
+			<p>หมายเลขติดตามพัสดุ <span class="text-primary">{{ $tracking }}</span></p>
+		</div>
 	</div>
 	
     @if($trackingResult)
-    <div class="row">
-    	<div class="col col-12">
-    		@if(sizeof($trackingResult['Events'])>0)
-    		@php
-            	$descEvents = $trackingResult['Events'];
-            	krsort($descEvents);
+    	@if(sizeof($trackingResult)>0)
+    	@php
+            krsort($trackingResult);
+            $currentDate = "";
+        @endphp
+        @foreach($trackingResult as $event)
+        
+        	@php
+            $description = isset($event['description'])?$event['description']:$event['address'];
             @endphp
-            @foreach($descEvents as $event)
-            @if($event['Status'] == 1001)
-            	<h4 class="text-secondary"><i class="fa fa-edit"></i> {{ $event['Description'] }}</h4>
-            @elseif($event['Status'] == 1002)
-            	<h4 class="text-info"><i class="fa fa-plane"></i> {{ $event['Description'] }}</h4>
-            @elseif($event['Status'] == 1003)
-            	<h4 class="text-warning"><i class="fa fa-road"></i> {{ $event['Description'] }}</h4>
-            @elseif($event['Status'] == 1004)
-            	<h3 class="text-success"><i class="fa fa-smile-o"></i> {{ $event['Description'] }}</h3>
-            @elseif($event['Status'] == 1005 || $event['Status'] == 1006)
-            	<h3 class="text-danger"><i class="fa fa-smile-o"></i> {{ $event['Description'] }}</h3>
-            @else
-            	<h4><i class="fa fa-check"></i> {{ $event['Description'] }}</h4>
+            
+        	@if($currentDate != date("d/m/Y",strtotime($event['datetime'])))
+           	@php
+            	$currentDate = date("d/m/Y",strtotime($event['datetime']));
+            @endphp
+            <div class="row" style="margin-top:10px;margin-bottom:10px;">
+	            <div class=" col-xs-12 text-center">
+	            	<h6><span class="text-dark" style="padding: 5px 40px;background: #eaeaea;">{{ $currentDate }}</span></h6>
+		        </div>
+            </div>
             @endif
-        	<p class="text-secondary">
-        		<span class="badge bg-light text-dark" title="{{ date("H:i:s  d/m/Y",strtotime($event['Datetime'])) }}">{{ date("d/m/Y",strtotime($event['Datetime'])) }}</span>
-        		{{ $trackingStatus[$event['Status']] }} {{ ($event['Location'])?"at ".$event['Location']:"" }}
-        	</p>
-        	<hr />
-            @endforeach
-            @endif
-    	</div>
-	</div>
+            
+            <div class="row" style="margin:0px;">
+            	<div class="col-xs-2 text-right">{{ date("H:i",strtotime($event['datetime'])) }}</div>
+	            <div class="col-xs-10">
+		            @if($event['status'] == 1001)
+		            	<span class="text-secondary">{{ $description }}</span>
+		            @elseif($event['status'] == 1002)
+		            	<span class="text-info">{{ $description }}</span>
+		            @elseif($event['status'] == 1003)
+		            	<span class="text-warning">{{ $description }}</span>
+		            @elseif($event['status'] == 1004)
+		            	<span class="text-success"><i class="fa fa-check"></i> {{ $description }}</span>
+		            @elseif($event['status'] == 1005 || $event['status'] == 1006)
+		            	<span class="text-danger"><i class="fa fa-alert"></i> {{ $description }}</span>
+		            @else
+		            	<span class="text-dark">{{ $description }}</span>
+		            @endif
+		        	<p class="small">
+		        		{{ isset($trackingStatus[$event['status']])?$trackingStatus[$event['status']]:"" }} {{ ($event['location'])?"at ".$event['location']:"" }}
+		        	</p>
+	        	</div>
+        	</div>
+        	
+        @endforeach
+       	@endif
 	@else
 	<div class="row">
     	<div class="col col-12">

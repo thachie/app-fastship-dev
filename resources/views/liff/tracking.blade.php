@@ -1,6 +1,6 @@
 @extends('liff/layout')
 @section('content')
-<div class="conter-wrapper">
+<div class="conter-wrapper" style="display:inline;">
 
 	<div class="col col-12">
 		<h3 class="text-orange">ติดตามพัสดุ</h3>
