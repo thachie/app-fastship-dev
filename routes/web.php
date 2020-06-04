@@ -39,7 +39,7 @@ Route::get('email_paymentnotify/{token1?}/{token2?}', 'Credit\CreditBalanceContr
 
 //standalone track
 Route::get('track_st/{trackID?}', 'Tools\ToolsController@prepareStandaloneTrack');
-Route::get('track.fs/{trackID?}', 'Tools\ToolsController@prepareTrack');
+Route::get('track.fs/{trackID?}', 'Tools\ToolsController@prepareStandaloneTrack');
 
 //translate
 Route::get('locale/{locale?}', 'LanguageController@setLocale');
@@ -123,7 +123,7 @@ Route::group(['middleware' => 'loginsession'], function () {
 	Route::post('shipment/cancel', 'Shipment\ShipmentController@cancelShipment');
 	Route::match(['get', 'post'], 'create_shipment_data','Shipment\ShipmentController@createShipmentData');
 	Route::get('shipment_detail/{id?}', 'Shipment\ShipmentController@prepareShipmentDetail');
-	Route::get('shipment_channel', 'Shipment\ShipmentController@prepareShipmentChannel');
+	//Route::get('shipment_channel', 'Shipment\ShipmentController@prepareShipmentChannel');
 	Route::match(['get', 'post'],'shipment_list/{page?}', 'Shipment\ShipmentController@prepareShipmentList');
 	Route::get('tracking/{trackID?}', 'Shipment\ShipmentController@tracking');
 	Route::get('import_shipment', function(){ return view('import_shipment_upload'); });
@@ -168,7 +168,6 @@ Route::group(['middleware' => 'loginsession'], function () {
 	Route::post('pickup/create', 'Pickup\PickupController@createPickup');
 	Route::match(['get', 'post'],'pickup_detail/{id?}', 'Pickup\PickupController@preparePickupDetail');
 	Route::get('pickup_detail_print/{id?}', 'Pickup\PickupController@preparePickupDetailPrint');
-	Route::get('pickup_detail_print2/{id?}', 'Pickup\PickupController@preparePickupDetailPrint2');
 	Route::match(['get', 'post'],'pickup_list/{page?}', 'Pickup\PickupController@preparePickupList');
 	Route::post('pickup/cancel', 'Pickup\PickupController@cancelPickup');
 	Route::get('pickup_invoice_print/{id?}', 'Pickup\PickupController@preparePickupInvoicePrint');
@@ -197,7 +196,7 @@ Route::group(['middleware' => 'loginsession'], function () {
 	//Route::get('payment_submission/{amount}', 'Credit\CreditBalanceController@preparePaymentSubmission');
 
 	//tools
-	Route::get('track/{trackID?}', 'Tools\ToolsController@prepareTrack');
+	Route::get('track/{trackID?}', 'Tools\ToolsController@prepareStandaloneTrack');
 	Route::get('deminimis/{country?}', 'Tools\ToolsController@prepareDeMinimis');
 	Route::get('tariff_rates/{q?}', 'Shipment\TaxDutyController@prepareTariffRates');
 	Route::post('tariff/get_hscodes', 'Shipment\TaxDutyController@hscodes');
@@ -217,11 +216,6 @@ Route::group(['middleware' => 'loginsession'], function () {
 	Route::post('case/create', 'Customer\CustomerController@createCase');
 	Route::post('case/createreply', 'Customer\CustomerController@createCaseReply');
 	Route::post('case/get_ref', 'Customer\CustomerController@getCaseReferences');
-	
-	//error
-	Route::get('/error_page', function () {
-		return view('404'); 
-	});
 	
 });
 

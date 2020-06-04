@@ -666,7 +666,6 @@ class PickupController extends Controller
         }
     }
 
-    //public function preparePickupDetail($data)
     public function preparePickupDetail($pickupId=null)
     {
     	//check customer login
@@ -749,123 +748,6 @@ class PickupController extends Controller
         }
     }
     
-    //public function preparePickupDetail($data)
-    public function preparePickupDetailPrint1($pickupId=null)
-    {
-    
-    	//check customer login
-    	if (session('customer.id') != null){
-    		$customerId = session('customer.id');
-    	}else{
-    		return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
-    	}
-    	 
-    	$additionalBarcodeImage = "";
-    	
-    	if(isset($_REQUEST['debug'])){
-    	    $debug = 1;
-    	}else{
-    	    $debug = 0;
-    	}
-    	
-    	//265412
-    	if(!empty($pickupId)){
-    	    
-    		//get api token
-    		Fastship::getToken($customerId);
-    		//get pickup by pickup_id
-    		$response = FS_Pickup::get($pickupId);
-    		
-    		if($response === false){
-    			$pickupData = null;
-    			$status = 'nopickupData';
-    		}else{
-    			$status = '';
-    			$pickupData = $response;
-    			$shipmentIds = $response['ShipmentDetail']['ShipmentIds'];
-
-    			foreach ($shipmentIds as $key => $shipid) {
-    				//$shipment_data[$key] = FS_Shipment::get($shipid);
-    				$pickupData['ShipmentDetail']['ShipmentIds'][$key] = FS_Shipment::get($shipid);
-    				//$arr[$key]['Weight'] = $shipment_data[$key]['ShipmentDetail']['Weight'];
-    				//$arr[$key]['ShippingRate'] = $shipment_data[$key]['ShipmentDetail']['ShippingRate'];
-    				
-    				$barcode = new BarcodeGenerator();
-    				$barcode->setText($shipid);
-    				$barcode->setType(BarcodeGenerator::Code39);
-    				$barcode->setScale(2);
-    				$barcode->setThickness(40);
-    				$barcode->setFontSize(10);
-    				$code = $barcode->generate();
-    				$barcodeImage = '<img src="data:image/png;base64,'.$code.'" />';
-    				$pickupData['ShipmentDetail']['ShipmentIds'][$key]['barcode'] = $barcodeImage;
-    				
-    				
-    			}
-    			//alert($shipment_data);
-    			
-    			if($pickupData['PickupType'] == "Drop_AtSkybox"){
-    				$barcode = new BarcodeGenerator();
-    				$barcode->setText("F".$pickupId);
-    				$barcode->setType(BarcodeGenerator::Code39);
-    				$barcode->setScale(2);
-    				$barcode->setThickness(40);
-    				$barcode->setFontSize(10);
-    				$code = $barcode->generate();
-    				$additionalBarcodeImage = '<img src="data:image/png;base64,'.$code.'" />';
-    				$pickupData['ShipmentDetail']['ShipmentIds'][$key]['barcode'] = $barcodeImage;
-    			}
-    			
-    			if(in_array($pickupData['PickupType'],array("Pickup_AtHome","Pickup_AtHomeNextday","Pickup_AtHomeStandard","Pickup_AtHomeExpress","Pickup_ByKerry","Pickup_ByFlash","Pickup_BySpeedy"))){
-    			    $barcode = new BarcodeGenerator();
-    			    $barcode->setText("FAST000".$pickupId);
-    			    $barcode->setType(BarcodeGenerator::Code39);
-    			    $barcode->setScale(1);
-    			    $barcode->setThickness(40);
-    			    $barcode->setFontSize(10);
-    			    $code = $barcode->generate();
-    			    $additionalBarcodeImage = '<img src="data:image/png;base64,'.$code.'" />';
-    			    $pickupData['ShipmentDetail']['ShipmentIds'][$key]['barcode'] = $barcodeImage;
-    			}
-    			
-    			
-    		}
-    		
-    		
-    		
-    		$barcode = new BarcodeGenerator();
-    		$barcode->setText($pickupId);
-    		$barcode->setType(BarcodeGenerator::Code39);
-    		$barcode->setScale(2);
-    		$barcode->setThickness(40);
-    		$barcode->setFontSize(12);
-    		$code = $barcode->generate();
-    		$barcodeImage = '<img src="data:image/png;base64,'.$code.'" />';
-    
-            //declare type
-            $dTypes = DB::table('product_type')->where("IS_ACTIVE",1)->orderBy("TYPE_SORT")->orderBy("TYPE_NAME")->get();
-            $declareTypes = array();
-            if(sizeof($dTypes)>0){
-                foreach($dTypes as $dType){
-                    $declareTypes[$dType->TYPE_CODE] = $dType->TYPE_NAME;
-                }
-            }
-
-    		$data = array(
-    			'pickupID' => $pickupId,
-    			'pickup_data' => $pickupData,
-    			'status' => $status,
-    			'barcode' => $barcodeImage,
-                'additionalBarcodeImage' => $additionalBarcodeImage,
-                'declareTypes' => $declareTypes,
-    		);
-    		return view('pickup_detail_print',$data);
-    	}else{
-    		return 'Pickup id is null.';
-    	}
-    }
-    
-    //public function preparePickupDetail($data)
     public function preparePickupDetailPrint($pickupId=null)
     {
         
@@ -1093,24 +975,12 @@ class PickupController extends Controller
         }else{
             return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
         }
-        
-        Fastship::getToken($customerId);
-        
-        //call api
-        $pdfPath = FS_Pickup::getLabel($barcode);
 
-        $html = "";
-//         header('Content-Type: application/pdf');
-
-         $data = array(
-             'label' => $pdfPath,
-         );
-        
          return redirect('http://api.fastship.co/thaipost/label/'.$barcode);
-         
-        //return view('thaipost_label',$data);
+
     }
     
+    /* ajax */
     public function getCoupon(Request $request)
     {
         //check customer login
@@ -1141,6 +1011,7 @@ class PickupController extends Controller
         
     }
     
+    /* ajax */
     public function getPickupDate(Request $request)
     {
         //check customer login
@@ -1206,6 +1077,7 @@ class PickupController extends Controller
         
     }
     
+    /* ajax */
     public function getPickupTime(Request $request)
     {
         //check customer login
@@ -1292,6 +1164,7 @@ class PickupController extends Controller
         
     }
     
+    /* ajax */
     public function getPickupRemark(Request $request)
     {
         //check customer login
@@ -1550,64 +1423,7 @@ class PickupController extends Controller
     	exit();
     }
 
-
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-    
+    //calculate discount
     private function calculateDiscount($args){
         
         extract($args);

@@ -271,7 +271,8 @@
                 
                  @if($default['country'] == "CHN")
                 <div class="col-md-12 text-warning text-center" style="margin-top:20px; ">
-               		 {!! FT::translate('create_shipment.warning.china') !!}
+               		 {!! FT::translate('create_shipment.warning.china') !!}<br />
+               		 พัสดุที่ส่งไปประเทศจีนปลายทางเป็นบุคคล สามารถส่งได้ไม่เกิน 10 ชิ้น 10 กิโลกรัมต่อกล่อง
                 </div>
                 @endif
 
@@ -318,10 +319,10 @@
     
     	var _country = "{{ $default['country'] }}";
 
-if(_country  == "") return false; 
+		if(_country  == "") return false; 
 
     	$('#rec_state').autocomplete({
-            minLength: 1,
+            minLength: 3,
             source: function( request, response ) {
               $.ajax({
                 url: "{{ url('/address/states') }}",
@@ -367,10 +368,12 @@ if(_country  == "") return false;
 
     	var _country = "{{ $default['country'] }}";
     	var _state = $("#rec_state_code").val();
-if(_country  == "") return false; 
-if(_state == "") return false; 
+    	
+        if(_country  == "") return false; 
+        if(_state == "") return false; 
+        
     	$('#rec_city').autocomplete({
-            minLength: 1,
+            minLength: 3,
             source: function( request, response ) {
               $.ajax({
                 url: "{{ url('/address/cities') }}",
@@ -413,7 +416,7 @@ if(_state == "") return false;
 
     	
     	$(elem).autocomplete({
-            minLength: "2",
+            minLength: 4,
             source: function( request, response ) {
               $.ajax({
             	url: "{{ url('/shipment/declarations') }}",
@@ -457,8 +460,12 @@ if(_state == "") return false;
                         "<td><span class='glyphicon glyphicon-minus-sign text-danger' onclick='rmv("+table_size+")'></span></td>"+
                     "</tr>";
         $( "#product_table" ).append(row);
-        $("input[name=category["+table_size+"]]").keyup(validateDeclare);
+        $("#category-"+table_size).keyup(validateDeclare);
+
+        autocompleteDeclare($("#row"+table_size+" input.category"));
+
     }
+    
     function rmv(id){
         $( "#row"+id ).remove();
     }
@@ -566,7 +573,7 @@ if(_state == "") return false;
 		var id = $(this).attr("id");
 		var val = $(this).val();
 		var values = val.split(" ");
-		var censors = ["gun","explosive","bomb","sex","fuck","porn","weapon","alcohol","chemical","ash","gift","food","souvenir","medicine","cosmetics","present"];
+		var censors = ["gun","explosive","bomb","sex","fuck","porn","weapon","alcohol","chemical","ash","gift","food","souvenir","medicine","cosmetics","present","food","diet"];
 
 		$('#'+id+"-error").html("");
 		values.forEach(function(term){

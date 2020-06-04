@@ -27,7 +27,7 @@
     	$stepStatus2 = "active";
     	$stepStatus3 = "disabled";
     	$stepStatus4 = "disabled";
-    }else if($ShipmentDetail['Status'] == "ReadyToShip"){
+    }else if($ShipmentDetail['Status'] == "ReadyToShip" || $ShipmentDetail['Status'] == "Verify"){
     	$ShipmentStatus = FT::translate('status.shipment.status17');
     	$stepStatus1 = "complete";
     	$stepStatus2 = "complete";
@@ -174,67 +174,105 @@
             </div>
             
             <div class="panel panel-primary">
-                <div class="panel-heading">-</div>
+                <div class="panel-heading">ข้อมูลพัสดุ</div>
                 <div class="panel-body ship-detail">
                 
-                	<div class="col-md-3 col-xs-4 text-center no-padding"> 
+                	<div class="col-md-12 col-xs-12 text-center no-padding"> 
                         <img src="../images/agent/{{ $ShipmentDetail['ShipmentDetail']['ShippingAgent'] }}.gif" style="max-width: 100px;"/>
                     </div>
-                    <div class="col-md-9 col-xs-8"> 
-                        <table class="table-dimension col-md-12 small text-left">
-                        <thead>
-                            <tr>
-                            	<td></td>
-                                <td>{!! FT::translate('label.weight') !!}</td>
-                                <td class="hidden-xs">{!! FT::translate('label.dimension') !!}</td>
-                                <td>{!! FT::translate('label.weight') !!}</td>
-                                <td>{!! FT::translate('label.shipping') !!}</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                            	<td>สร้าง</td>
-                                <td><span class="sumresult"><?php echo number_format($ShipmentDetail['ShipmentDetail']['CustomerWeight'],0);?></span></td>
-                                <td class="hidden-xs">
-                                    <?php if($ShipmentDetail['ShipmentDetail']['CustomerWidth'] != ""): ?>
-                                    <span class="sumresult"><?php echo $ShipmentDetail['ShipmentDetail']['CustomerWidth']." × ".$ShipmentDetail['ShipmentDetail']['CustomerLength']." × ".$ShipmentDetail['ShipmentDetail']['CustomerHeight']; ?></span>
-                                    <?php else: ?>
-                                    <span class="sumresult">-</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td><span class="sumresult"><?php echo number_format($ShipmentDetail['ShipmentDetail']['CustomerWeight'],0);?></span></td>
-                                
-                                <td>
-                                <?php if($ShipmentDetail['ShipmentDetail']['ShippingAgent'] == "Quotation"): ?>
-                                	<span class="sumresult">TBC</span>
-                                <?php else: ?>
-                                	<span class="sumresult"><?php echo number_format($ShipmentDetail['ShipmentDetail']['CustomerRate'],0);?></span>
-                                <?php endif; ?>
-                                </td>
-                            </tr>
-                            <tr>
-                            	<td>ปรับปรุง</td>
-                                <td><span class="sumresult"><?php echo number_format($ShipmentDetail['ShipmentDetail']['ActualWeight'],0);?></span></td>
-                                <td class="hidden-xs">
-                                    <?php if($ShipmentDetail['ShipmentDetail']['Width'] != ""): ?>
-                                    <span class="sumresult"><?php echo $ShipmentDetail['ShipmentDetail']['Width']." × ".$ShipmentDetail['ShipmentDetail']['Length']." × ".$ShipmentDetail['ShipmentDetail']['Height']; ?></span>
-                                    <?php else: ?>
-                                    <span class="sumresult">-</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td><span class="sumresult"><?php echo number_format($ShipmentDetail['ShipmentDetail']['Weight'],0);?></span></td>
-                                <td>
-                                <?php if($ShipmentDetail['ShipmentDetail']['ShippingAgent'] == "Quotation"): ?>
-                                	<span class="sumresult">TBC</span>
-                                <?php else: ?>
-                                	<span class="sumresult"><?php echo number_format($ShipmentDetail['ShipmentDetail']['ShippingRate'],0);?></span>
-                                <?php endif; ?>
-                                </td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div>
+                    <br /><hr /><br />
                     
+
+                    <h5 style="border-bottom: 1px solid #eee;">น้ำหนักที่กรอก</h5>
+                    <div class="col-md-6 col-xs-8 text-right sumresult">
+                    	ลูกค้ากรอก (กรัม)
+                    </div>
+                    <div class="col-md-6 col-xs-4 text-right text-info sumresult">
+                    	{{ number_format($ShipmentDetail['ShipmentDetail']['CustomerWeight'],0) }}
+                    </div>
+                    <div style="clear: both;"></div>
+                    <div class="col-md-6 col-xs-8 text-right sumresult">
+                    	หลังตรวจสอบ (กรัม)
+                    </div>
+                    <div class="col-md-6 col-xs-4 text-right text-primary sumresult">
+                    @if(!in_array($ShipmentDetail['Status'],array("Pending","Created","Verify")))
+                    	{{ number_format($ShipmentDetail['ShipmentDetail']['ActualWeight'],0) }}
+                    @else
+                    	-
+                    @endif
+                    </div>
+                    <div style="clear: both;"></div>
+                    
+                    <h5 style="border-bottom: 1px solid #eee;">ขนาดที่กรอก</h5>
+                    <div class="col-md-6 col-xs-8 text-right sumresult">
+                    	ลูกค้ากรอก (ซม.)
+                    </div>
+                    <div class="col-md-6 col-xs-4 text-right text-primary sumresult">
+                    @if($ShipmentDetail['ShipmentDetail']['CustomerWidth'] != "")
+                    	{{ $ShipmentDetail['ShipmentDetail']['CustomerWidth']."×".$ShipmentDetail['ShipmentDetail']['CustomerLength']."×".$ShipmentDetail['ShipmentDetail']['CustomerHeight'] }}
+                    @else
+                    	-
+                    @endif
+                    </div>
+                    <div style="clear: both;"></div>
+                    <div class="col-md-6 col-xs-8 text-right">
+                    	น้ำหนักปริมาตร (กรัม)
+                    </div>
+                    <div class="col-md-6 col-xs-4 text-right">
+                    @if($ShipmentDetail['ShipmentDetail']['CustomerWidth'] != "")
+                    	{{ number_format($ShipmentDetail['ShipmentDetail']['CustomerWidth']*$ShipmentDetail['ShipmentDetail']['CustomerLength']*$ShipmentDetail['ShipmentDetail']['CustomerHeight']/5,0) }}
+                    @else
+                    	-
+                    @endif
+                    </div>
+                    <div style="clear: both;"></div>
+                    <div class="col-md-6 col-xs-8 text-right sumresult">
+                    	หลังตรวจสอบ (ซม.)
+                    </div>
+                    <div class="col-md-6 col-xs-4 text-right text-primary sumresult">
+                    @if(!in_array($ShipmentDetail['Status'],array("Pending","Created","Verify")))
+                        @if($ShipmentDetail['ShipmentDetail']['Width'] != "")
+                        	{{ $ShipmentDetail['ShipmentDetail']['Width']."×".$ShipmentDetail['ShipmentDetail']['Length']."×".$ShipmentDetail['ShipmentDetail']['Height'] }}
+                        @else
+                        	-
+                        @endif
+                    @else
+                    	-
+                    @endif
+                    </div>
+                    <div style="clear: both;"></div>
+                    <div class="col-md-6 col-xs-8 text-right">
+                    	น้ำหนักปริมาตร (กรัม)
+                    </div>
+                    <div class="col-md-6 col-xs-4 text-right">
+                    @if(!in_array($ShipmentDetail['Status'],array("Pending","Created","Verify")))
+                    	{{ number_format($ShipmentDetail['ShipmentDetail']['Width']*$ShipmentDetail['ShipmentDetail']['Length']*$ShipmentDetail['ShipmentDetail']['Height']/5,0) }}
+                    @else
+                    	-
+                    @endif
+                    </div>
+                    <div style="clear: both;"></div>
+                    
+                    <h5 style="border-bottom: 1px solid #eee;">ค่าส่ง</h5>
+                    <div class="col-md-6 col-xs-8 text-right sumresult">
+                    	ลูกค้าสร้างมา (บาท)
+                    </div> 
+                    <div class="col-md-6 col-xs-4 text-right text-info sumresult">
+                    	{{ number_format($ShipmentDetail['ShipmentDetail']['CustomerRate'],0) }}
+                    </div>
+                    <div style="clear: both;"></div>
+                    <div class="col-md-6 col-xs-8 text-right sumresult">
+                    	หลังตรวจสอบ (บาท)
+                    </div>
+                    <div class="col-md-6 col-xs-4 text-right text-primary sumresult">
+                    @if(!in_array($ShipmentDetail['Status'],array("Pending","Created","Verify")))
+                    	{{ number_format($ShipmentDetail['ShipmentDetail']['ShippingRate'],0) }}
+                    @else
+                    	-
+                    @endif
+                    </div>
+                    <div style="clear: both;"></div>
+
                 </div>
             </div>
 

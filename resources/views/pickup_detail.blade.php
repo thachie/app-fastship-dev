@@ -307,16 +307,13 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                         </tr>
                         </thead>
                         <tbody>
-                        
-                       
-                        <?php 
-                        if(sizeof($pickup_data['ShipmentDetail']['ShipmentIds']) > 0): 
-                        foreach($pickup_data['ShipmentDetail']['ShipmentIds'] as $data):
-                        ?>
+
+                        @if(sizeof($pickup_data['ShipmentDetail']['ShipmentIds']) > 0)
+                        @foreach($pickup_data['ShipmentDetail']['ShipmentIds'] as $data)
                         <tr>
                         	<td>
-                            	<a href="/shipment_detail/<?php echo $data['ID'];?>" target="_blank"><i class="fa fa-search"></i></a>
-                            	<a href="/shipment_detail/<?php echo $data['ID'];?>" target="_blank"><?php echo $data['ID'];?></a>
+                            	<a href="/shipment_detail/{{ $data['ID'] }}" target="_blank"><i class="fa fa-search"></i></a>
+                            	<a href="/shipment_detail/{{ $data['ID'] }}" target="_blank">{{ $data['ID'] }}</a>
                         	</td>
                         	<?php if($data['ReceiverDetail']['Firstname'] != ""): ?>
                         	<td class="hidden-xs"><?php echo $data['ReceiverDetail']['Firstname'];?> <?php echo $data['ReceiverDetail']['Lastname'];?></td>
@@ -329,10 +326,8 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                         		<a href="{{ url('/shipment/clone/?shipment_id='.$data['ID']) }}"><button type="button" class="btn btn-xs btn-secondary">clone</button></a>
                         	</td>
                         </tr>
-                        <?php 
-                        endforeach;
-		                endif;
-		                ?> 
+                        @endforeach
+		                @endif
 		                	<tr>
 		                		<td class="hidden-xs"></td>
                         		<td colspan="2"><div class="text-right">ค่าส่งพัสดุ ({{ $pickup_data['ShipmentDetail']['TotalWeight'] }} กรัม)</div></td>
@@ -453,7 +448,7 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                     	</div>
                     	<div class="clearfix"></div><br />
 
-                    	@if(sizeof($trackings) > 0)
+                    	@if(isset($trackings) && sizeof($trackings) > 0)
                         	@foreach($trackings as $tracking)
                             	@if(isset($tracking['TrackingCode']))
                             		@if($pickup_data['PickupType'] == "Pickup_ByKerry" || $pickup_data['PickupType'] == "Pickup_ByKerryBulk")
@@ -462,12 +457,14 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                                 	@if($pickup_data['PickupType'] != "Pickup_BySkootar")
                                 	<table class="table table-stripe table-hover small">
                                         <tbody>
+                                        @if(sizeof($tracking['Events']) > 0)
                                         @foreach($tracking['Events'] as $event)
                                         <tr>
                                         	<td width="25%">{{ isset($event['Datetime'])?$event['Datetime']:"" }}</td>
                                         	<td style="text-align:left;">{{ isset($event['Description'])?$event['Description']:"" }} <span class="text-info"><b>{{ isset($event['Location'])?$event['Location']:"" }}</b></span></td>
                                         </tr>
                                         @endforeach
+                                        @endif
             			                </tbody>
                                     </table>
                                     @endif
@@ -494,7 +491,7 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                         	</tr>
                         </thead>
                         <tbody>
-                        @if(sizeof($statements) > 0)
+                        @if(isset($statements) && sizeof($statements) > 0)
                         @foreach($statements as $statement)
                         	<tr>
                         		<td>{{ $statement['CreateDate'] }}</td>

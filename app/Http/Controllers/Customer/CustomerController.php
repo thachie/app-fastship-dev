@@ -586,7 +586,7 @@ class CustomerController extends Controller
 	        'NoStatuses' => array("Cancelled","New","Pickup","Received","Unpaid","Verified"),
 	        //'CreateDateSince' => date("Y-m-01 00:00:00"),
 	        //'CreateDateTo' => date('Y-m-t 23:59:59',strtotime(date("Y-m-01"))),
-	        'Limit' => 10,
+	        //'Limit' => 10,
 	    );
 	    $currentMonthResponse = FS_Pickup::search($searchDetails);
 	    $currentMonthSale = 0;
@@ -719,7 +719,7 @@ class CustomerController extends Controller
 	        "Withdraw" => "ถอนเงิน",
 	        "Use_Credit" => "ใช้เครดิตสะสม",
 	    );
-	    
+
 	    $data = array(
 	        'customer_data' => $customer_data,
 	        'transactions' => array(),
@@ -843,47 +843,6 @@ class CustomerController extends Controller
 	    );
 	    
 	    return view('add_channel_ebay',$data);
-	}
-	
-	//Prepare for check rate page
-	public function preparePromotion()
-	{
-
-		if (session('customer.id') != null){
-			$customerId = session('customer.id');
-		}else{
-			return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
-		}
-
-
-		Fastship::getToken($customerId);
-		$customerObj = FS_Customer::get($customerId);
-		
-		$customer_data = array();
-		$customer_data['ID'] = $customerObj['ID'];
-		$customer_data['firstname'] = $customerObj['Firstname'];
-		$customer_data['lastname'] = $customerObj['Lastname'];
-		$customer_data['phonenumber'] = $customerObj['PhoneNumber'];
-		$customer_data['email'] = $customerObj['Email'];
-		$customer_data['company'] = $customerObj['Company'];
-		$customer_data['taxid'] = $customerObj['TaxId'];
-		$customer_data['address1'] = $customerObj['AddressLine1'];
-		$customer_data['address2'] = $customerObj['AddressLine2'];
-		$customer_data['city'] = $customerObj['City'];
-		$customer_data['state'] = $customerObj['State'];
-		$customer_data['postcode'] = $customerObj['Postcode'];
-		$customer_data['country'] = $customerObj['Country'];
-		$customer_data['group'] = $customerObj['Group'];
-		$customer_data['refcode'] = $customerObj['ReferCode'];
-		$customer_data['latitude'] = $customerObj['Latitude'];
-		$customer_data['longitude'] = $customerObj['Longitude'];
-		
-
-		$data = array(
-				"customer_data" => $customer_data,
-		);
-
-		return view('promotion',$data);
 	}
 
 	public function prepareLoginWithCode($ref="",Request $request)
@@ -1165,19 +1124,6 @@ class CustomerController extends Controller
 	    }else{
 	        return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
 	    }
-	    
-	    //get shipment sent
-// 	    Fastship::getToken($customerId);
-// 	    $searchDetails = array(
-// 	        "NoStatuses" => array('New','Pending','Delivered'),
-// 	        //"NoStatuses" => array('Unpaid','Pending','Imported','Cancelled','15','16','17','25'),
-// 	    );
-// 	    $response = FS_Shipment::fullsearch($searchDetails);
-// 	    if(isset($response['data'])){
-// 	        $shipments = $response['data'];
-// 	    }else{
-// 	        $shipments = array();
-// 	    }
 
 	    //get 
 	    $data = array(
@@ -1187,8 +1133,7 @@ class CustomerController extends Controller
 	    
 	    return view('create_case',$data);
 	}
-	
-	
+
 	//Update Customer Info
 	public function update(Request $request)
 	{
@@ -1245,28 +1190,28 @@ class CustomerController extends Controller
 		
 		if($updateCompleted){
 		    
-    		//update to db
-    		$update = DB::table('customer')
-    		->where('CUST_ID', $customerId)
-    		->update(
-				[
-					'CUST_FIRSTNAME' => $data['firstname'],
-					'CUST_LASTNAME' => $data['lastname'],
-					'CUST_TEL' => $data['telephone'],
-					'CUST_COMPANY' => $data['company'],
-					'CUST_TAXID' => $data['taxid'],
-					'CUST_ADDR1' => $data['address1'],
-					'CUST_ADDR2' => $data['address2'],
-					'CUST_CITY' => $data['city'],
-					'CUST_STATE' => $data['state'],
-					'CUST_POSTCODE' => $data['postcode'],
-					'CUST_LATITUDE' => $data['latitude'],
-					'CUST_LONGITUDE' => $data['longitude'],
-					'UPDATE_DATETIME' =>  date('Y-m-d H:i:s')
-				]
-			);
+//     		//update to db
+//     		$update = DB::table('customer')
+//     		->where('CUST_ID', $customerId)
+//     		->update(
+// 				[
+// 					'CUST_FIRSTNAME' => $data['firstname'],
+// 					'CUST_LASTNAME' => $data['lastname'],
+// 					'CUST_TEL' => $data['telephone'],
+// 					'CUST_COMPANY' => $data['company'],
+// 					'CUST_TAXID' => $data['taxid'],
+// 					'CUST_ADDR1' => $data['address1'],
+// 					'CUST_ADDR2' => $data['address2'],
+// 					'CUST_CITY' => $data['city'],
+// 					'CUST_STATE' => $data['state'],
+// 					'CUST_POSTCODE' => $data['postcode'],
+// 					'CUST_LATITUDE' => $data['latitude'],
+// 					'CUST_LONGITUDE' => $data['longitude'],
+// 					'UPDATE_DATETIME' =>  date('Y-m-d H:i:s')
+// 				]
+// 			);
     		
-    		if($update){
+//     		if($update){
 
     		    $customerObj = FS_Customer::get($customerId);
     		    if(isset($customerObj['ZohoContactId']) && $customerObj['ZohoContactId'] != ""){
@@ -1302,9 +1247,9 @@ class CustomerController extends Controller
     			}else{
     				return redirect('/myaccount')->with('msg','ระบบได้ทำการอัปเดทข้อมูล เรียบร้อยแล้ว')->with('msg-type','success');
     			}
-    		}else{
-    			return redirect('/edit_customer')->with('msg','อัปเดทข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง2');
-    		}
+//     		}else{
+//     			return redirect('/edit_customer')->with('msg','อัปเดทข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง2');
+//     		}
 		}else{
 		    return redirect('/edit_customer')->with('msg','อัปเดทข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง1');
 		}
@@ -1387,7 +1332,7 @@ class CustomerController extends Controller
 		Fastship::getToken();
 		
 		$customerId = FS_Customer::checkEmail(strtolower($email));
-		//$customerObj = DB::table('customer')->whereRaw('LOWER(CUST_EMAIL) = ?', strtolower($email))->where("IS_ACTIVE",1)->first();
+
 		if($customerId < 0){
 		    return redirect('/forget_password')->with('msg','ไม่พบอีเมล์ในระบบ กรุณาลองใหม่อีกครั้ง');
 		}
@@ -1404,26 +1349,7 @@ class CustomerController extends Controller
 			    'Password' => $randomPassword,
 			);
 			$updateCompleted = FS_Customer::changePassword($updateDetails);
-				
-			// ###### send email #####
-// 			$createDetails = array(
-// 				"Email" => $email,
-// 				"Password" => $randomPassword,
-// 				"Firstname" => $customerObj->CUST_FIRSTNAME,
-// 			);
-// 			$email_data = array(
-// 				'email' => $email,
-// 				'customerData' => $createDetails,
-// 			);
-				
-// 			Mail::send('email/reset_password',$email_data,function($message) use ($email_data){
-// 				$message->to($email_data['email']);
-// 				$message->bcc(['thachie@tuff.co.th']);
-// 				$message->from('cs@fastship.co', 'FastShip');
-// 				$message->subject('FastShip - รหัสของคุณถูกรีเซตแล้ว ('. $email_data['email'] .")");
-// 			});		
-			// ###### send email #####
-		
+
 			// ##### call notify #####
 			$token = md5("fastship".$customerId);
 			$requestArray = array(
@@ -1437,7 +1363,6 @@ class CustomerController extends Controller
 			return redirect('/login')->with('msg','ระบบได้ทำการรีเซตรหัสผ่าน เรียบร้อยแล้ว')->with('msg-type','success');
 		
 		}else{
-		
 			return redirect('/forget_password')->with('msg','อีเมล์ไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
 		}
 
@@ -1470,41 +1395,6 @@ class CustomerController extends Controller
 	    
 	}
 	
-	//Prepare for check rate page
-	public function testRegsiterEmail()
-	{
-	
-		if (session('customer.id') != null){
-			$customerId = session('customer.id');
-		}else{
-			return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
-		}
-	
-		Fastship::getToken($customerId);
-		$customerObj = FS_Customer::get($customerId);
-		
-		//$customerObj = DB::table('customer')->where("CUST_ID",$customerId)->where("IS_ACTIVE",1)->first();
-	
-		$customer_data = array();
-		$customer_data['Firstname'] = $customerObj['Firstname'];
-		$customer_data['Lastname'] = $customerObj['Lastnames'];
-		$customer_data['PhoneNumber'] = $customerObj['PhoneNumber'];
-		$customer_data['Email'] = $customerObj['Email'];
-		
-		$customer_data['Password'] = "abc123";
-		$customer_data['ReferCode'] = $customerObj['ReferCode'];
-		$customer_data['Group'] = $customerObj['Group'];
-
-	
-		
-		//alert($creditCards);
-		$data = array(
-			'customerData' => $customer_data,
-		);
-	
-		return view('email/register',$data);
-	}
-	
 	//Bulk Regenerate New Password
 	public function regenPass($id)
 	{
@@ -1525,7 +1415,6 @@ class CustomerController extends Controller
 
 	}
 
-	
 	//Add Case
 	public function createCase(Request $request) //post
 	{
@@ -1788,7 +1677,7 @@ class CustomerController extends Controller
 
 	}
 	
-	//Get rate (ajax)
+	//Get case ref (ajax)
 	public function getCaseReferences(Request $request)
 	{
 	    //check customer login

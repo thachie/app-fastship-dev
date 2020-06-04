@@ -287,6 +287,43 @@
 							</a>
 						</div>
 						
+						<hr />
+						
+						<div class="row hidden-print">
+						@if($pickup_data['PickupType'] == "Pickup_ByKerry")
+							<h4>ขั้นตอนการปริ้นใบปะหน้าสำหรับเข้ารับโดย Kerry</h4>
+							<div>1.	หลังจากชำระเงินเรียบร้อยแล้ว กดปุ่ม "พิมพ์ใบปะหน้า"</div>
+							<div><img src="{{ url('images/help/kerry_help1.jpg') }}" /></div>
+							<div class="text-center">ในกรณีที่ท่านออกจากหน้านี้ไปแล้ว ให้ไปที่ เมนู “ใบรับพัสดุ” > เลือกรายการที่ต้องการปริ้น > พิมพ์ใบปะหน้า</div>
+							<br />
+							
+							<div>2.	นำใบปะหน้าที่มีโลโก้ Kerry ติดลงบนกล่องพัสดุ และแพ็คกล่องให้เรียบร้อย</div>
+							<div><img src="{{ url('images/help/kerry_help2.jpg') }}" /></div>
+							<br />
+							<div class="text-center">สอบถามรายละเอียดเพิ่มเติม Line: @fastship.co</div>
+						@elseif($pickup_data['PickupType'] == "Pickup_ByKerryBulk")
+							<h4>ขั้นตอนการปริ้นใบปะหน้าสำหรับเข้ารับโดย Kerry</h4>
+							<div>1.	หลังจากชำระเงินเรียบร้อยแล้ว กดปุ่ม "พิมพ์ใบปะหน้า"</div>
+							<div><img src="{{ url('images/help/kerry_help1.jpg') }}" /></div>
+							<div class="text-center">ในกรณีที่ท่านออกจากหน้านี้ไปแล้ว ให้ไปที่ เมนู “ใบรับพัสดุ” > เลือกรายการที่ต้องการปริ้น > พิมพ์ใบปะหน้า</div>
+							<br />
+							
+							<div>2.	หลังจากปริ้นจะได้รับใบปะหน้า 2 แบบ</div>
+							<div class="text-center" style="width: 48%;display: inline-block;">
+								<img src="{{ url('images/help/kerry_help2.jpg') }}" /><br /> แบบที่ 1 ใบปะหน้าพัสดุ สำหรับติดกล่องใหญ่
+							</div>
+							<div class="text-center" style="width: 48%;display: inline-block">
+								<img src="{{ url('images/help/kerry_help3.jpg') }}" /><br /> แบบที่ 2 ใบปะหน้าพัสดุ สำหรับติดกล่องเล็ก แต่ละกล่อง
+							</div>
+							<br /><br />
+							
+							<div>3.	หลังจากติดใบเรียบร้อยแล้ว ให้นำกล่องทั้งหมด(ที่ติดใบปะหน้าแบบที่ 2) รวมใส่กล่องใหญ่ 1 กล่อง และทำการแพ็คให้เรียบร้อย เมื่อแพ็คเรียบร้อยแล้วให้นำใบปะหน้าที่มีโลโก้ Kerry ติดลงบนกล่องใหญ่</div>
+							<br />
+							
+							<div class="text-center">สอบถามรายละเอียดเพิ่มเติม Line: @fastship.co</div>
+						@endif
+						</div>
+						
 					</div>
 				</div>
 			</div>
