@@ -135,8 +135,10 @@
                         </table>
                         <div class="row detailpro">
                             <div class="col-md-6 pull-right text-right"><a href="javascript:add();"><i class="fa fa-plus-circle green"></i> {!! FT::translate('create_shipment.add_declare') !!}</a></div>
+                        	<div id="declare_value_error" class="col-md-12 text-danger text-center small"></div>
+                        	
                         </div>
-                        
+
                         <?php if(false): ?>
                         <label class="col-md-5 control-label label-top">{!! FT::translate('create_shipment.duty_responsibility') !!}: </label>
                         <div class="col-md-7">
@@ -248,7 +250,7 @@
                             <div class="gray tiny text-right col-md-2 no-padding"><span id="city-count">0</span>/50</div>
                         </div>
                         <div class="form-group col-md-6">
-                            <input name="postcode" type="text" placeholder="Postcode" class="form-control required input-count" maxlength="10" value="<?php echo $default['receiver']['postcode']; ?>" />
+                            <input id="rec_postcode" name="postcode" type="text" placeholder="Postcode" class="form-control required input-count" maxlength="10" value="<?php echo $default['receiver']['postcode']; ?>" />
                         	<div class="red tiny text-left col-md-10 no-padding"><span id="postcode-error" class="error-msg"></span></div> 
                             <div class="gray tiny text-right col-md-2 no-padding"><span id="postcode-count">0</span>/10</div>
                         </div>
@@ -269,6 +271,8 @@
                     </div>
                 </div>
                 
+                <div id="address_error" class="text-danger"></div>
+                
                  @if($default['country'] == "CHN")
                 <div class="col-md-12 text-warning text-center" style="margin-top:20px; ">
                		 {!! FT::translate('create_shipment.warning.china') !!}<br />
@@ -281,13 +285,16 @@
                 	{!! FT::translate('create_shipment.warning.aramex_passport') !!}
                 </div>
                 <div class="col-md-12 text-warning text-center" style="margin-top:20px; ">
-                       	กรุณาแนบสำเนาบัตรประชาชนมาพร้อมกับกล่องพัสดุ หรือส่งอีเมล์เข้ามาที่ <a href="mailto:cs@fastship.co">cs@fastship.co</a>
+                       กรุณาแนบสำเนาบัตรประชาชนมาพร้อมกับกล่องพัสดุ หรือส่งอีเมล์เข้ามาที่ <a href="mailto:cs@fastship.co">cs@fastship.co</a>
                 </div>
                 @endif
 
             </div>
         </div>
-        <div class="text-center btn-create"><button type="submit" name="submit" class="btn btn-lg btn-primary minus-margin">{!! FT::translate('button.create_shipment') !!}</button></div>
+        <div class="text-center btn-create">
+        	<button type="submit" name="submit" class="btn btn-lg btn-primary minus-margin">{!! FT::translate('button.create_shipment') !!}</button>
+        	<span id="loading" style="display: none;"><img src="{{ url('/images/loading.gif') }}" style="width:40px;" /></span>
+        </div>
     	<div class="clearfix"></div>
     </form>
 
@@ -414,7 +421,6 @@
 
     function autocompleteDeclare(elem){
 
-    	
     	$(elem).autocomplete({
             minLength: 4,
             source: function( request, response ) {
@@ -487,8 +493,10 @@
 
 	$("#shipment_form").submit( function() {
 
-		var validate = true;
+		$("#loading").show();
 		
+		var validate = true;
+
 		$("#shipment_form .required").each(validateRequired);
 		$("#shipment_form input").each(validateOptional);
 		$("#shipment_form .category").each(validateDeclare);
@@ -500,7 +508,22 @@
 			}
 		});
 
-		if(!validate) return false;
+		var validAddress = validateAddress();
+		if(!validAddress){
+			validate = false;
+		}
+
+		var validValue = validateDeclareValue();
+		if(!validValue){
+			validate = false;
+		}
+		
+		if(!validate) {
+
+			$("#loading").hide();
+			return false;
+			
+		}
 
 		$("#shipment_form [name=submit]").attr("disabled",true);
 
@@ -586,16 +609,60 @@
 			}
 		});
 
-// 		if(val == ""){
-// 			$(this).addClass("error");
-// 			$('#'+nm+"-error").text("{!! FT::translate('error.required') !!}");
-// 		}else if(!validateEnglish.test(val)){
-// 			$(this).addClass("error");
-// 			$('#'+nm+"-error").text("{!! FT::translate('error.english_only') !!}");
-// 		}else{
-// 			$('#'+nm+"-error").text("");
-// 			$(this).removeClass("error");
-// 		}
+	}
+
+	function validateDeclareValue(){
+
+
+		var totalValue = 0;
+		$(".declare-value").each(function(){
+			totalValue += parseInt($(this).val());
+		});
+
+		if("{{ $default['agent'] }}" == "UPS" || "{{ $default['agent'] }}" == "SF" || 
+		   "{{ $default['agent'] }}" == "Aramex" || "{{ $default['agent'] }}" == "FS"){
+			if(totalValue > 50000){
+				$("#declare_value_error").html("ท่านระบุมูลค่าสินค้าเกินที่กำหนด (50,000 บาท)<br />โปรดติดต่อเจ้าหน้าที่ผ่านทาง Line: @fastship.co เพื่อสอบถามรายละเอียดเพิ่มเติม");
+				return false;
+				
+			}else{
+				return true;
+			}
+		}else{
+			if(totalValue > 5000){
+				$("#declare_value_error").html("ท่านระบุมูลค่าสินค้าเกินที่กำหนด (5,000 บาท)<br />โปรดติดต่อเจ้าหน้าที่ผ่านทาง Line: @fastship.co เพื่อสอบถามรายละเอียดเพิ่มเติม");
+				return false;
+				
+			}else{
+				return true;
+			}
+		}
+
+	}
+
+	function validateAddress(){
+		
+		$.post("{{url ('shipment/validate_address')}}",
+			{
+				_token: $("[name=_token]").val(),
+				city: $("#rec_city").val(),
+				state: $("#rec_state").val(),
+				postcode: $("#rec_postcode").val(),
+				country: '{{ $default['country'] }}',
+			},function(data){
+
+				console.log(data);
+				
+				if(data.statusCode != 1){
+					console.log(data.statusDescription);
+					$("#address_error").text(data.statusDescription);
+					return false;
+				}else{
+					$("#address_error").text("");
+					return true;
+				}
+				
+			},"json");
 	}
 	
 	function inputCount() {

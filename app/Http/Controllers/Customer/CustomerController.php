@@ -583,7 +583,10 @@ class CustomerController extends Controller
 
 	    //prepare current month
 	    $searchDetails = array(
-	        'NoStatuses' => array("Cancelled","New","Pickup","Received","Unpaid","Verified"),
+	        //'NoStatuses' => array("Cancelled","New","Pickup","Received","Unpaid","Verified"),
+	        'Status' => "Sent",
+	        'CreateDateSince' => date("Y-m-01 00:00:00"),
+	        'CreateDateTo' => date('Y-m-t 23:59:59'),
 	        //'CreateDateSince' => date("Y-m-01 00:00:00"),
 	        //'CreateDateTo' => date('Y-m-t 23:59:59',strtotime(date("Y-m-01"))),
 	        //'Limit' => 10,
@@ -605,7 +608,8 @@ class CustomerController extends Controller
 	    
 	    //prepare previous month
 	    $searchDetails = array(
-	        'NoStatuses' => array("Cancelled"),
+	        //'NoStatuses' => array("Cancelled"),
+	        'Status' => "Sent",
 	        'CreateDateSince' => date("Y-m-01 00:00:00",strtotime(date('Y-m-01')." -1 month")),
 	        'CreateDateTo' => date('Y-m-t 23:59:59',strtotime(date("Y-m-01")." -1 month")),
 	    );
@@ -624,7 +628,8 @@ class CustomerController extends Controller
 
 	    //prepare two month ago
 	    $searchDetails = array(
-	        'NoStatuses' => array("Cancelled"),
+	        //'NoStatuses' => array("Cancelled"),
+	        'Status' => "Sent",
 	        'CreateDateSince' => date("Y-m-01 00:00:00",strtotime(date('Y-m-01')." -2 month")),
 	        'CreateDateTo' => date('Y-m-t 23:59:59',strtotime(date("Y-m-01")." -2 month")),
 	    );

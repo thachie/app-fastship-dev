@@ -134,6 +134,7 @@ Route::group(['middleware' => 'loginsession'], function () {
 	Route::post('shipment/get_fba_addresses', 'Shipment\ShipmentController@getFbaAddresses');
 	Route::get('import_sook', 'Shipment\ShipmentController@prepareShipmentThaitradeImport');
 	Route::post('shipment/cancel_sook', 'Shipment\ShipmentController@sookCancelOrder');
+	Route::post('shipment/validate_address', 'Shipment\ShipmentController@validateAddress');
 	
 	//Shipment Advance Actions
 	Route::post('shipment/export', 'Shipment\ShipmentController@exportShipment');

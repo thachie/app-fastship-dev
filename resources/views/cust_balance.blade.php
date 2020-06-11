@@ -51,7 +51,7 @@
                         		<td>ประเภท | รายละเอียด</td>
                         		<td class="hidden-xs">หมายเลขอ้างอิง</td>
                         		<td>จำนวน (บาท)</td>
-                        		<td>{!! FT::translate('label.status') !!}</td>
+                        		<td class="hidden-xs">{!! FT::translate('label.status') !!}</td>
                         	</tr>
                         </thead>
                         <tbody>
@@ -81,7 +81,7 @@
                         			<span class="text-success">+{{ $statement['Amount'] }}</span>
                         		@endif
                         		</td>
-                        		<td>{{ $statement['Status'] }}</td>
+                        		<td class="hidden-xs">{{ $statement['Status'] }}</td>
                         	</tr>
                        	@endforeach
                        	@else

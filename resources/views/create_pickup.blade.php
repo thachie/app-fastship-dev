@@ -142,7 +142,7 @@ foreach($shipment_data as $data){
 
                         <fieldset>
 
-							@if(!$isBangkok)
+							
 							
                             @if(isset($rates['Pickup_ByKerryBulk']))
                             <label for="pick-kerrybulk">
@@ -196,7 +196,7 @@ foreach($shipment_data as $data){
                             <input onchange="selectPickup(this.value);" class="selector" type="radio" name="agent" id="pick-kerry" value="Pickup_ByKerry" checked="checked" />
                             @endif
                             
-                            @endif
+           
                             
                             @if(isset($rates['Pickup_ByFlash']))
                             <label for="pick-flash">
@@ -591,8 +591,12 @@ foreach($shipment_data as $data){
 			            <div><label><input type="checkbox" name="condition2" id="condition2" onclick="acceptTerm()" /> {!! FT::translate('create_pickup.agreement_intro') !!} <a href="https://fastship.co/announcement/" target="_blank">ข้อตกลงและเงื่อนไขพิเศษเนื่องในสถานการณ์ COVID-19</a></label></div>
 			            <br />
 			               
-			            <div><button type="submit" id="submit" name="submit" class="btn btn-lg btn-primary" >{!! FT::translate('button.confirm') !!}</button></div>
+			            <div>
+			            	<button type="submit" id="submit" name="submit" class="btn btn-lg btn-primary" >{!! FT::translate('button.confirm') !!}</button>
+			            	<span id="loading" style="display: none;"><img src="{{ url('/images/loading.gif') }}" style="width:40px;" /></span>
+			            </div>
 			            <div id="error_text" class="text-left red col-xs-6 col-xs-offset-3"></div>
+			            
 			        </div>
                 </div>    
         </div>
@@ -1026,6 +1030,8 @@ foreach($shipment_data as $data){
             
             $("#pickup_form").on("submit",function(){
 
+            	$("#loading").show();
+            	
             	var valid = true;
 
             	var error = "";
@@ -1036,6 +1042,8 @@ foreach($shipment_data as $data){
 
             	if(payment.startsWith("Credit_Card")){
 					if(!confirm("ยืนยันการตัดบัตรเครดิต ยอดชำระ " + amount + " บาท")){
+
+						$("#loading").hide();
 						return false;
 					}
             	}
@@ -1060,6 +1068,7 @@ foreach($shipment_data as $data){
             			
             		}else if( agent == "Pickup_ByKerry" || agent == "Pickup_ByKerryBulk" ){
 
+            			/*
             			if(isBangkok == true){
                 			console.log('is bkk');
                 			valid = false;
@@ -1071,6 +1080,7 @@ foreach($shipment_data as $data){
             			}else{
             				$("#pickup_form input[name='postcode']").css("border","1px solid #cacaca");
             			}
+            			*/
             		}
             		
             		if($("#pickup_form input[name='payment_method']").val() == ""){
@@ -1135,6 +1145,7 @@ foreach($shipment_data as $data){
             	
                 if(valid == false) {
 
+                	$("#loading").hide();
                     $("#error_text").html("{!! FT::translate('error.required') !!}<br />" + error);
                     return false;
                 }

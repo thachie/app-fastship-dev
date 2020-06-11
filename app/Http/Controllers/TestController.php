@@ -613,6 +613,27 @@ class TestController extends Controller {
 	public function testAny(){
 
 
+	    // ##### call address validate #####
+	    $city = "ny";
+	    $state = "ny";
+	    $postcode = "33124";
+	    $country = "US";
+
+	    $requestArray = array(
+	        'city' => $city,
+	        'state' => $state,
+	        'postcode' => $postcode,
+	        'country' => $country,
+	    );
+	    print_r($requestArray);
+	    $url = "https://admin.fastship.co/api/ups/address_validate.php";
+	    $res = call_api($url,$requestArray);
+	    print_r($res);
+	    // ##### call address validate #####
+	    
+	    
+	    exit();
+	    
 	    $file = fopen(public_path('liff_log.txt'),"r");
 	    
 	    while(! feof($file))

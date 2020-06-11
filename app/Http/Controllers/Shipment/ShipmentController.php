@@ -184,6 +184,67 @@ class ShipmentController extends Controller
         exit();
     }
     
+    //Validate address (ajax)
+    public function validateAddress(Request $request)
+    {
+        //check customer login
+        if (session('customer.id') != null){
+            $customerId = session('customer.id');
+        }else{
+            exit();
+        }
+        
+        //check parameter
+        if ( !empty($request->input('city')) && !empty($request->input('state')) && !empty($request->input('country'))){
+            $city = $request->input('city');
+            $state = $request->input('state');
+            $postcode = $request->input('postcode');
+            $country = $request->input('country');
+            
+            Fastship::getToken($customerId);
+            
+            $countryObj = FS_Address::get_country($country);
+            if(isset($countryObj['CNTRY_CODE2ISO'])){
+                $countryCode = $countryObj['CNTRY_CODE2ISO'];
+            }else{
+                $countryCode = $country;
+            }
+            
+            $states = FS_Address::get_states_query($countryCode,$state);
+            if(isset($states[0]['stateCode'])){
+                $stateCode = $states[0]['stateCode'];
+            }else{
+                $stateCode = $state;
+            }
+            
+        }else{
+            exit();
+        }
+
+        
+        try{
+            // ##### call address validate #####
+            $requestArray = array(
+                'city' => $city,
+                'state' => $stateCode,
+                'postcode' => $postcode,
+                'country' => $countryCode,
+            );
+            //print_r($requestArray);
+            $url = "https://admin.fastship.co/api/ups/address_validate.php";
+            $res = call_api($url,$requestArray);
+            //print_r($res);
+            // ##### call address validate #####
+            
+        }catch (Exception $e){
+            echo false;
+        }
+
+        echo $res;
+
+        exit();
+    }
+    
     //Get fba address (ajax)
     public function getFbaAddresses(Request $request)
     {
