@@ -115,7 +115,7 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
 	    		@if(sizeof($pickup_data['ShipmentDetail']['ShipmentIds']) > 0) 
                 @foreach($pickup_data['ShipmentDetail']['ShipmentIds'] as $data)
 	    			@if(isset($data) && isset($labels[$data['ID']]) && isset($labels[$data['ID']]['barcode']))
-                    <a href="https://app.fastship.co/thaipost/label/{{ $labels[$data['ID']]['barcode'] }}" target="_blank"><button type="button" class="btn btn-lg btn-primary"><i class="fa fa-print"></i> {!! FT::translate('pickup_detail.print_label') !!} {{ $data['ID'] }}</button></a>
+                    <a href="https://app.fastship.co/thaipost/label/{{ $labels[$data['ID']]['barcode'] }}" target="_blank" style="display: inline-block;margin: 10px auto; "><button type="button" class="btn btn-lg btn-primary"><i class="fa fa-print"></i> {!! FT::translate('pickup_detail.print_label') !!} {{ $data['ID'] }}</button></a>
                 	@endif
                 @endforeach
                 @endif
@@ -177,7 +177,7 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
 	    		@if(sizeof($pickup_data['ShipmentDetail']['ShipmentIds']) > 0) 
                 @foreach($pickup_data['ShipmentDetail']['ShipmentIds'] as $data)
 	    			@if(isset($data) && isset($labels[$data['ID']]) && isset($labels[$data['ID']]['barcode']))
-                    <a href="https://app.fastship.co/thaipost/label/{{ $labels[$data['ID']]['barcode'] }}" target="_blank"><button type="button" class="btn btn-lg btn-primary"><i class="fa fa-print"></i> {!! FT::translate('pickup_detail.print_label') !!} {{ $data['ID'] }}</button></a>
+                    <a href="https://app.fastship.co/thaipost/label/{{ $labels[$data['ID']]['barcode'] }}" target="_blank" style="display: inline-block;margin: 10px auto; "><button type="button" class="btn btn-lg btn-primary"><i class="fa fa-print"></i> {!! FT::translate('pickup_detail.print_label') !!} {{ $data['ID'] }}</button></a>
                 	@endif
                 @endforeach
                 @endif
@@ -447,17 +447,26 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                     		<h3>{{ $pickup_data['PickupCost'] }}.-</h3>
                     	</div>
                     	<div class="clearfix"></div><br />
-
                     	@if(isset($trackings) && sizeof($trackings) > 0)
                         	@foreach($trackings as $tracking)
                             	@if(isset($tracking['TrackingCode']))
                             		@if($pickup_data['PickupType'] == "Pickup_ByKerry" || $pickup_data['PickupType'] == "Pickup_ByKerryBulk")
                                 	<h4>{{ $tracking['TrackingCode'] }}</h4>
                                 	@endif
-                                	@if($pickup_data['PickupType'] != "Pickup_BySkootar")
+                                	@if($pickup_data['PickupType'] == "Drop_AtThaiPost")
+                                	<h5 class="" style="padding: 5px;background: #eee;">
+                                    	<strong>{{ $tracking['TrackingCode'] }}</strong> ({{ $tracking['ShipmentId'] }})
+                                    	<span class="pull-right">
+                                    		<span id="loading{{ $tracking['TrackingCode'] }}" style="display: none;height: 20px;"><img src="{{ url('/images/loading.gif') }}" style="width: 20px;"/></span>
+                                    		<button class="btn btn-xs btn-info" onclick="trackThaipost('{{ $tracking['TrackingCode']  }}')"><i class="fa fa-search"></i> ตรวจสอบสถานะ</button>
+                                    	</span>
+                                	</h5>
+                                	<div id="thaipost_tracking{{ $tracking['TrackingCode'] }}"></div>
+                                	@endif
+                                	@if($pickup_data['PickupType'] != "Pickup_BySkootar" && $pickup_data['PickupType'] != "Drop_AtThaiPost")
                                 	<table class="table table-stripe table-hover small">
                                         <tbody>
-                                        @if(sizeof($tracking['Events']) > 0)
+                                        @if(isset($tracking['Events']) && sizeof($tracking['Events']) > 0)
                                         @foreach($tracking['Events'] as $event)
                                         <tr>
                                         	<td width="25%">{{ isset($event['Datetime'])?$event['Datetime']:"" }}</td>
@@ -469,12 +478,12 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
                                     </table>
                                     @endif
                                     @if($tracking['Url'])
-                                    <span class="text-dark small">Tracking URL: <a href="{{ $tracking['Url'] }}" target="_blank">{{ $tracking['Url'] }}</a></span>
+                                    <div class="text-dark small">Tracking URL: <a href="{{ $tracking['Url'] }}" target="_blank">{{ $tracking['Url'] }}</a></div>
+                                	<br />
                                 	@endif
                                 @endif
                             @endforeach
                         @endif
-
                 	</div>
                 </div>
 
@@ -733,6 +742,96 @@ $isSeperateLabel = ($pickup_data['PickupType'] == "Drop_AtThaiPost" || $pickup_d
     </div>
 
 <script>
+
+    function trackThaipost(_barcode){
+
+    	$("#loading" + _barcode).css("display","inline-block");
+    	
+    	$.post('{{url ("pickup/track_thaipost")}}',
+    	{
+    		_token: $("[name=_token]").val(),
+    		barcode: _barcode,
+    	},function(data){
+    
+    		console.log(data);
+
+    		
+    		
+    		if (!$.trim(data)){ 
+				$("#thaipost_tracking" + _barcode).html("ไม่พบข้อมูล");
+    		}else{
+    			
+    			var content = "";
+    			content += '<table class="table table-stripe table-hover small"><tbody>';
+				$.each(data['Events'], function(index,history) {
+					console.log(history);
+					content += '<tr>';
+					content += '<td width="25%">' + history['Datetime'] + '</td>';
+					content += '<td style="text-align:left;">' + history['Description'] + ' <span class="text-info"><b>' + history['Location'] + '</b></span></td>';
+					content += '</tr>';
+				});
+    			content += '</tbody></table>';
+
+    			$("#thaipost_tracking" + _barcode).html(content);
+    		}
+    		/* 
+    		
+            
+            @if(isset($tracking['Events']) && sizeof($tracking['Events']) > 0)
+            @foreach($tracking['Events'] as $event)
+            <tr>
+            	<td width="25%">{{ isset($event['Datetime'])?$event['Datetime']:"" }}</td>
+            	<td style="text-align:left;">{{ isset($event['Description'])?$event['Description']:"" }} <span class="text-info"><b>{{ isset($event['Location'])?$event['Location']:"" }}</b></span></td>
+            </tr>
+            @endforeach
+            @endif
+            
+        */
+    		$("#loading" + _barcode).hide();
+    		
+    	},"json");
+    }
+    Number.prototype.format = function(n, x) {
+        var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+        return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+    };
+    $(document).ready(function() {
+    
+    	$("#weight").focus();
+    
+    	@if(session('shipment.weight') !== null)
+    		
+    		$("#weight").val("{{ session('shipment.weight') }}");
+    
+    		@if(session('shipment.width') > 0)
+    
+    			$("#box").attr('checked', true);
+    			showdimension();
+    		    
+    			$("#width").val("{{ session('shipment.width') }}");
+    			$("#height").val("{{ session('shipment.height') }}");
+    			$("#length").val("{{ session('shipment.length') }}");
+    			
+    			var volWeight = $("#width").val()*$("#height").val()*$("#length").val()/5;
+    	        $("#volumnWeight").text(volWeight.toFixed(0));
+    	        
+    		@else
+    			$("#parcel").attr('checked', true);
+    			hidedimension();
+    		@endif
+    	
+    		$("#country").val("{{ session('shipment.country') }}");
+    
+    		calculateRate();
+    		
+    	@endif
+    
+    	var isMac = navigator.platform.toUpperCase().indexOf('MAC')>=0;
+    	if (isMac) {
+    	    $('.mac-margin-left').css('margin-left','140px');
+    	}
+    	
+    });
 
     function cancelPickup(pick_id){
 

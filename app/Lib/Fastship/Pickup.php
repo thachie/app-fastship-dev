@@ -248,5 +248,27 @@ class FS_Pickup extends FS_ApiResource
             return $response;
         }
     }
+    
+    
+    /**
+     * @param array|null $params
+     * @param string|null $apiToken
+     *
+     * @return Fastship_Get_Pickup_Rates Get the rates for a Pickup.
+     */
+    public static function track_thaipost($barcode,$params = null, $apiToken = null)
+    {
+        
+        $requestor = new FS_ApiRequestor($apiToken);
+        $url = "thaipost/track/" . $barcode;
+        
+        list($response, $rcode) = $requestor->request('get', $url, $params);
+        
+        if($rcode != 200){
+            return false;
+        }else{
+            return $response;
+        }
+    }
 
 }

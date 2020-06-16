@@ -177,6 +177,7 @@ Route::group(['middleware' => 'loginsession'], function () {
 	Route::post('pickup/get_time', 'Pickup\PickupController@getPickupTime');
 	Route::post('pickup/get_date', 'Pickup\PickupController@getPickupDate');
 	Route::post('pickup/get_remark', 'Pickup\PickupController@getPickupRemark');
+	Route::post('pickup/track_thaipost', 'Pickup\PickupController@trackThaipost');
 
 	//Feature Prepaid System
 	Route::get('pickup_detail_payment/{id?}', 'Pickup\PickupController@preparePickupDetailPayment');

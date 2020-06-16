@@ -729,7 +729,7 @@ class PickupController extends Controller
             
             //get trackings
             $trackings = FS_Pickup::track($pickupId);
-            
+
             //alert($pickupData);
             $data = array(
                 'pickupID' => $pickupId, 
@@ -1207,6 +1207,25 @@ class PickupController extends Controller
 
         echo json_encode($remark);
 
+    }
+    
+    /* ajax */
+    public function trackThaipost(Request $request)
+    {
+        //check customer login
+        if (session('customer.id') != null){
+            $customerId = session('customer.id');
+        }else{
+            return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+        }
+        
+        $barcode = $request->get("barcode");
+        
+        Fastship::getToken($customerId);
+        $result = FS_Pickup::track_thaipost($barcode);
+ 
+        echo json_encode($result);
+        
     }
     
     public function preparePickupInvoicePrint($pickupId=null)
