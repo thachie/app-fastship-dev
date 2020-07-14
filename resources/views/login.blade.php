@@ -129,7 +129,7 @@
                         @endif
                         
                         <h2>{!! FT::translate('login.heading1') !!}</h2>
-                        <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653844645&redirect_uri=https%3A%2F%2Fapp.fastship.co%2Fliff%2Floginline&state={{ uniqid() }}&scope=openid%20profile">
+                        <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653844645&redirect_uri=https%3A%2F%2Fapp.fastship.co%2Fliff%2Floginline&state={{ uniqid() }}&bot_prompt=aggressive&scope=openid%20profile">
                     		<img src="{{ url('images/line_login.png') }}" style="max-height: 60px;"/>
                     	</a>
                     	

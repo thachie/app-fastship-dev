@@ -773,10 +773,29 @@ class CreditBalanceController extends Controller
                     "Status"=>1,
                     "Card"=>$card,
                     "ActualPayment"=> "Credit_Card",
+                    "PaidDate" => date("Y-m-d H:i:s"),
+                    "IsPaid" => 1,
                 );
                 $updateStatus = FS_Pickup::updateStatus($params);
                 usleep(10);
-                //echo "successful";
+                
+                // ##### call notify #####
+                $token = md5("fastship".$pickupId);
+                $requestArray = array(
+                    'id' => $pickupId,
+                    'token' => $token,
+                );
+                
+                $url = "https://admin.fastship.co/notify/pickup_paid";
+                call_api($url,$requestArray);
+                $url = "https://admin.fastship.co/notify/pickingup";
+                call_api($url,$requestArray);
+                if($pickupId > 325135){
+                    $url = "https://admin.fastship.co/notify/create_tracking";
+                    call_api($url,$requestArray);
+                }
+                // ##### call notify #####
+                
                 return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำการตัดเงินบัตรเครดิตและสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');
 
             }else{

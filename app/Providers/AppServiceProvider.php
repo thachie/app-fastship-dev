@@ -6,7 +6,6 @@ use App\Lib\Fastship\FS_Address;
 use App\Lib\Fastship\Fastship;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
-use App\Lib\TrafficTracker\TrafficTracker;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -69,16 +68,6 @@ class AppServiceProvider extends ServiceProvider
             view()->share('view_name', $view_name);
         });
             
-            /*
-             $trafficTracker = new TrafficTracker(
-             'localhost',
-             'root',
-             '59lAdf91XTaU',
-             'fastship_app',
-             'ttcpc',
-             60
-             );
-             */
             
     }
     

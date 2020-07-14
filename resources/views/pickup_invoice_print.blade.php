@@ -209,7 +209,7 @@
 												?>
 												</td>
 												<td class="hidden-480 text-left"><?php echo $data['ReceiverDetail']['Firstname'];?> <?php echo $data['ReceiverDetail']['Lastname'];?><br />
-														ประเทศ <?php echo $countries[$data['ReceiverDetail']['Country']];?></td>
+														ประเทศ <?php echo isset($countries[$data['ReceiverDetail']['Country']])?$countries[$data['ReceiverDetail']['Country']]:$data['ReceiverDetail']['Country'];?></td>
 				                            	<td class="hidden-480"><?php echo $displayAgent; ?></td>
 				                            	<td class="text-right"><?php echo number_format($data['ShipmentDetail']['ShippingRate'],0); ?></td>
 				                            </tr>
@@ -245,7 +245,7 @@
 								</div>
 								<div class="row" style="margin-top: 50px;">
 									<div class="col-md-12 col-print-12 text-right">
-										ชำระเงินเรียบร้อยแล้ว ผ่านทาง : <?php echo $paymentMethod[$pickup_data['PaymentMethod']];?>
+										ชำระเงินเรียบร้อยแล้ว ผ่านทาง : <?php echo isset($paymentMethod[$pickup_data['PaymentMethod']])?$paymentMethod[$pickup_data['PaymentMethod']]:$pickup_data['PaymentMethod'];?>
 									</div>
 								</div>
 								<div class="row" style="margin-top: 50px;">

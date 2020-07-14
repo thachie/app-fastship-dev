@@ -209,6 +209,7 @@ Route::group(['middleware' => 'loginsession'], function () {
 	//Route::get('channel_list2', 'Customer\CustomerController@prepareChannelList2');
 	Route::get('add_channel', 'Customer\CustomerController@prepareAddChannel');
 	Route::get('add_channel_ebay/{site}', 'Customer\CustomerController@prepareAddChannelEbay');
+	Route::get('add_channel_etsy', 'Customer\CustomerController@prepareAddChannelEtsy');
 
 	//case
 	Route::get('case_list', 'Customer\CustomerController@prepareCaseList');
@@ -227,6 +228,7 @@ Route::match(['GET', 'POST'], 'shipment/create_etsy/{command?}', 'Shipment\EtsyC
 Route::match(['GET', 'POST'], 'shipment/create_etsytest', function(){ return view('etsy_create_completed_test'); });
 Route::match(['GET', 'POST'], 'shipment/etsy/{id?}', 'Shipment\EtsyController@prepareCreateShipmentEtsyDetail');
 Route::post('shipment/etsy-delete', 'Shipment\EtsyController@deleteEtsyOrder');
+Route::get('etsy/get_token', 'Shipment\EtsyController@getToken');
 
 //Test
 Route::get('testSendRegisterEmail', 'TestController@testSendRegisterEmail');

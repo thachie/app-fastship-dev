@@ -571,10 +571,15 @@ class PickupController extends Controller
                     'id' => $pickupId,
                     'token' => $token,
                 );
+                
                 $url = "https://admin.fastship.co/notify/pickup_paid";
                 call_api($url,$requestArray);
                 $url = "https://admin.fastship.co/notify/pickingup";
                 call_api($url,$requestArray);
+                if($pickupId > 325135){
+                    $url = "https://admin.fastship.co/notify/create_tracking";
+                    call_api($url,$requestArray);
+                }
                 // ##### call notify #####
                 
                 return redirect('pickup_detail/'.$pickupId)->with('msg','ระบบได้ทำสร้างใบรับพัสดุ เรียบร้อยแล้ว')->with('msg-type','success');

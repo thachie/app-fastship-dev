@@ -184,67 +184,6 @@ class ShipmentController extends Controller
         exit();
     }
     
-    //Validate address (ajax)
-    public function validateAddress(Request $request)
-    {
-        //check customer login
-        if (session('customer.id') != null){
-            $customerId = session('customer.id');
-        }else{
-            exit();
-        }
-        
-        //check parameter
-        if ( !empty($request->input('city')) && !empty($request->input('state')) && !empty($request->input('country'))){
-            $city = $request->input('city');
-            $state = $request->input('state');
-            $postcode = $request->input('postcode');
-            $country = $request->input('country');
-            
-            Fastship::getToken($customerId);
-            
-            $countryObj = FS_Address::get_country($country);
-            if(isset($countryObj['CNTRY_CODE2ISO'])){
-                $countryCode = $countryObj['CNTRY_CODE2ISO'];
-            }else{
-                $countryCode = $country;
-            }
-            
-            $states = FS_Address::get_states_query($countryCode,$state);
-            if(isset($states[0]['stateCode'])){
-                $stateCode = $states[0]['stateCode'];
-            }else{
-                $stateCode = $state;
-            }
-            
-        }else{
-            exit();
-        }
-
-        
-        try{
-            // ##### call address validate #####
-            $requestArray = array(
-                'city' => $city,
-                'state' => $stateCode,
-                'postcode' => $postcode,
-                'country' => $countryCode,
-            );
-            //print_r($requestArray);
-            $url = "https://admin.fastship.co/api/ups/address_validate.php";
-            $res = call_api($url,$requestArray);
-            //print_r($res);
-            // ##### call address validate #####
-            
-        }catch (Exception $e){
-            echo false;
-        }
-
-        echo $res;
-
-        exit();
-    }
-    
     //Get fba address (ajax)
     public function getFbaAddresses(Request $request)
     {
@@ -592,7 +531,7 @@ class ShipmentController extends Controller
         
         //prepare request data
         $searchDetails = array(
-            "NoStatuses" => array('Pending','Imported','Cancelled'),
+            "NoStatuses" => array('Pending','Imported'),
             'Limit' => $limit,
             'Page' => $page,
         );
@@ -798,7 +737,7 @@ class ShipmentController extends Controller
                     'Firstname' => $data['Sender_Firstname'],
                     'Lastname' => $data['Sender_Lastname'],
                     'PhoneNumber' => $data['Sender_PhoneNumber'],
-                    'Email' => $data['Sender_Email'],
+                    'Email' => str_replace(" ","",$data['Sender_Email']),
                     'Company' => $data['Sender_Company'],
                     'AddressLine1' => $data['Sender_AddressLine1'],
                     'AddressLine2' => $data['Sender_AddressLine2'],
@@ -811,7 +750,7 @@ class ShipmentController extends Controller
                     'Firstname' => $data['Receiver_Firstname'],
                     'Lastname' => $data['Receiver_Lastname'],
                     'PhoneNumber' => $data['Receiver_PhoneNumber'],
-                    'Email' => $data['Receiver_Email'],
+                    'Email' => str_replace(" ","",$data['Receiver_Email']),
                     'Company' => $data['Receiver_Company'],
                     'AddressLine1' => $data['Receiver_AddressLine1'],
                     'AddressLine2' => $data['Receiver_AddressLine2'],
@@ -1235,6 +1174,10 @@ class ShipmentController extends Controller
         Fastship::getToken($customerId);
         $ShipmentDetail = FS_Shipment::get($id);
         
+        if($id == 1529158015){
+            //print_r($ShipmentDetail); exit();
+        }
+        
         //static variable
         $trackingStatus = array(
         	"pre_transit" => "Pre-Transit",
@@ -1268,13 +1211,13 @@ class ShipmentController extends Controller
         }
         
         //declare type
-        $dTypes = DB::table('product_type')->where("IS_ACTIVE",1)->orderBy("TYPE_SORT")->orderBy("TYPE_NAME")->get();
+        /*$dTypes = DB::table('product_type')->where("IS_ACTIVE",1)->orderBy("TYPE_SORT")->orderBy("TYPE_NAME")->get();
         $declareTypes = array();
         if(sizeof($dTypes)>0){
         	foreach($dTypes as $dType){
         		$declareTypes[$dType->TYPE_CODE] = $dType->TYPE_NAME . " (" . $dType->TYPE_NAME_TH . ")";
         	}
-        }
+        }*/
 
         //cases
         $cases = FS_Customer::getCasesByRef($id);
@@ -1284,7 +1227,7 @@ class ShipmentController extends Controller
             'amounts' => null,
         	'tracking_data' => $tracking_data,
         	'trackingStatus' => $trackingStatus,
-        	'declareTypes' => $declareTypes,
+        	//'declareTypes' => $declareTypes,
             'cases' => $cases,
          );
         return view('shipment_detail',$data);
@@ -2320,6 +2263,67 @@ class ShipmentController extends Controller
         $declares = FS_Shipment::get_declarations($term);
         
         return response()->json(['declares'=>$declares]);
+    }
+    
+    //Validate address (ajax)
+    public function validateAddress(Request $request)
+    {
+        //check customer login
+        if (session('customer.id') != null){
+            $customerId = session('customer.id');
+        }else{
+            exit();
+        }
+        
+        //check parameter
+        if ( !empty($request->input('city')) && !empty($request->input('state')) && !empty($request->input('country'))){
+            $city = $request->input('city');
+            $state = $request->input('state');
+            $postcode = $request->input('postcode');
+            $country = $request->input('country');
+            
+            Fastship::getToken($customerId);
+            
+            $countryObj = FS_Address::get_country($country);
+            if(isset($countryObj['CNTRY_CODE2ISO'])){
+                $countryCode = $countryObj['CNTRY_CODE2ISO'];
+            }else{
+                $countryCode = $country;
+            }
+            
+            $states = FS_Address::get_states_query($countryCode,$state);
+            if(isset($states[0]['stateCode'])){
+                $stateCode = $states[0]['stateCode'];
+            }else{
+                $stateCode = $state;
+            }
+            
+        }else{
+            exit();
+        }
+        
+        
+        try{
+            // ##### call address validate #####
+            $requestArray = array(
+                'city' => $city,
+                'state' => $stateCode,
+                'postcode' => $postcode,
+                'country' => $countryCode,
+            );
+            //print_r($requestArray);
+            $url = "https://admin.fastship.co/api/ups/address_validate.php";
+            $res = call_api($url,$requestArray);
+            //print_r($res);
+            // ##### call address validate #####
+            
+        }catch (Exception $e){
+            echo false;
+        }
+        
+        echo $res;
+        
+        exit();
     }
 
     private function checkEnglishOnly($str){

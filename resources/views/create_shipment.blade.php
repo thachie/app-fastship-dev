@@ -165,6 +165,11 @@
                         <?php endif; ?>
 
                         <div class="well small" style="background: #fefefe;border: 1px solid #fdd;box-shadow: 0 0 0;">
+                        
+                        	<h5 class="text-center red">
+                        		{!! FT::translate('create_shipment.prohibited_item.alert') !!}
+                        	</h5>
+                        	
                         	<h5><b>{!! FT::translate('create_shipment.prohibited_item') !!}</b></h5>
                         	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item1') !!}</div>
                         	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item2') !!}</div>
@@ -186,6 +191,7 @@
                         	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item18') !!}</div>
                         	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item19') !!}</div>
                         	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item20') !!}</div>
+                        	<div><i class="fa fa-info-circle red"></i> {!! FT::translate('create_shipment.prohibited_item.item21') !!}</div>
                         	<div class="text-center"><a href="http://fastship.co/helps/prohibited-items/" target="_blank"><button class="btn btn-link btn-sm">{!! FT::translate('create_pickup.text.more_detail') !!}</button></a></div>
                         	<div class="clearfix"></div>
                         </div>
@@ -285,8 +291,20 @@
                 	{!! FT::translate('create_shipment.warning.aramex_passport') !!}
                 </div>
                 <div class="col-md-12 text-warning text-center" style="margin-top:20px; ">
-                       กรุณาแนบสำเนาบัตรประชาชนมาพร้อมกับกล่องพัสดุ หรือส่งอีเมล์เข้ามาที่ <a href="mailto:cs@fastship.co">cs@fastship.co</a>
+                       	กรุณาแนบสำเนาบัตรประชาชนมาพร้อมกับกล่องพัสดุ หรือส่งอีเมล์เข้ามาที่ <a href="mailto:cs@fastship.co">cs@fastship.co</a>
                 </div>
+                @endif
+                
+                @if($default['country'] == "KOR" )
+               	<div class="col-md-12 text-warning text-center" style="margin-top:20px; ">
+               		<a href="https://fastship.co/helps/korea/" target="_blank" style="text-decoration: none;"><button class="btn btn-info btn-xs" type="button"><i class="fa fa-info-circle"></i> รายละเอียดและข้อควรรู้ในการส่งพัสดุไปประเทศเกาหลีใต้</button></a>
+               	</div>
+                @endif
+                
+                @if($default['country'] == "TWN" )
+                <div class="col-md-12 text-warning text-center" style="margin-top:20px; ">
+               		<a href="https://fastship.co/helps/taiwan/" target="_blank" style="text-decoration: none;"><button class="btn btn-info btn-xs" type="button"><i class="fa fa-info-circle"></i> รายละเอียดและข้อควรรู้ในการส่งพัสดุไปประเทศไต้หวัน</button></a>
+               	</div>
                 @endif
 
             </div>
@@ -329,7 +347,7 @@
 		if(_country  == "") return false; 
 
     	$('#rec_state').autocomplete({
-            minLength: 3,
+            minLength: 2,
             source: function( request, response ) {
               $.ajax({
                 url: "{{ url('/address/states') }}",
@@ -380,7 +398,7 @@
         if(_state == "") return false; 
         
     	$('#rec_city').autocomplete({
-            minLength: 3,
+            minLength: 2,
             source: function( request, response ) {
               $.ajax({
                 url: "{{ url('/address/cities') }}",
@@ -422,7 +440,7 @@
     function autocompleteDeclare(elem){
 
     	$(elem).autocomplete({
-            minLength: 4,
+            minLength: 3,
             source: function( request, response ) {
               $.ajax({
             	url: "{{ url('/shipment/declarations') }}",
@@ -508,10 +526,10 @@
 			}
 		});
 
-		var validAddress = validateAddress();
-		if(!validAddress){
-			validate = false;
-		}
+// 		var validAddress = validateAddress();
+// 		if(!validAddress){
+// 			validate = false;
+// 		}
 
 		var validValue = validateDeclareValue();
 		if(!validValue){
@@ -621,19 +639,22 @@
 
 		if("{{ $default['agent'] }}" == "UPS" || "{{ $default['agent'] }}" == "SF" || 
 		   "{{ $default['agent'] }}" == "Aramex" || "{{ $default['agent'] }}" == "FS"){
-			if(totalValue > 50000){
-				$("#declare_value_error").html("ท่านระบุมูลค่าสินค้าเกินที่กำหนด (50,000 บาท)<br />โปรดติดต่อเจ้าหน้าที่ผ่านทาง Line: @fastship.co เพื่อสอบถามรายละเอียดเพิ่มเติม");
+			if(totalValue > 30000){
+				$("#declare_value_error").html("ท่านระบุมูลค่าสินค้าเกินที่กำหนด (30,000 บาท)<br />โปรดติดต่อเจ้าหน้าที่ผ่านทาง Line: @fastship.co เพื่อสอบถามรายละเอียดเพิ่มเติม");
 				return false;
-				
+			}else if(totalValue > 10000){
+				$("#declare_value_error").html("ในกรณีพัสดุเสียหาย หรือสูญหาย รับประกันสูงสุด 3000 บาท");
+				return true;
 			}else{
+				$("#declare_value_error").html("");
 				return true;
 			}
 		}else{
-			if(totalValue > 5000){
-				$("#declare_value_error").html("ท่านระบุมูลค่าสินค้าเกินที่กำหนด (5,000 บาท)<br />โปรดติดต่อเจ้าหน้าที่ผ่านทาง Line: @fastship.co เพื่อสอบถามรายละเอียดเพิ่มเติม");
+			if(totalValue > 3000){
+				$("#declare_value_error").html("ท่านระบุมูลค่าสินค้าเกินที่กำหนด (3,000 บาท)<br />โปรดติดต่อเจ้าหน้าที่ผ่านทาง Line: @fastship.co เพื่อสอบถามรายละเอียดเพิ่มเติม");
 				return false;
-				
 			}else{
+				$("#declare_value_error").html("");
 				return true;
 			}
 		}
@@ -663,6 +684,7 @@
 				}
 				
 			},"json");
+		
 	}
 	
 	function inputCount() {

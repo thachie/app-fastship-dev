@@ -25,29 +25,30 @@ class EtsyController extends Controller
     
     public function addChannel(Request $request){
     
-        //         if (session('customer.id') != null){
-        //             $customerId = session('customer.id');
-        //         }else{
-        //             return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
-        //         }
-        $customerId = 69;
-    	
-    	if($request->has('command')){
-    	    $command = $request->input('command');
-    	}else{
-    	    $command = "add";
-    	}
-    
-    	if($request->has('channel')){
-    		$channel = $request->input('channel');
-    		$request->session()->put('etsy.channel', $channel);
-    		$request->session()->put('etsy.command', $command);
-    	}else{
-    	    return redirect('channel_list')->with('msg','ไม่พบบัญชี etsy');
-    	}
-    	//$url = "https://auth.etsy.com/oauth2/authorize?client_id=TUFFComp-CloudCom-PRD-1ab9522e2-1a463403&response_type=code&redirect_uri=TUFF_Company-TUFFComp-CloudC-qjqlrnfod&scope=https://api.etsy.com/oauth/api_scope https://api.etsy.com/oauth/api_scope/sell.marketing.readonly https://api.etsy.com/oauth/api_scope/sell.marketing https://api.etsy.com/oauth/api_scope/sell.inventory.readonly https://api.etsy.com/oauth/api_scope/sell.inventory https://api.etsy.com/oauth/api_scope/sell.account.readonly https://api.etsy.com/oauth/api_scope/sell.account https://api.etsy.com/oauth/api_scope/sell.fulfillment.readonly https://api.etsy.com/oauth/api_scope/sell.fulfillment https://api.etsy.com/oauth/api_scope/sell.analytics.readonly https://api.etsy.com/oauth/api_scope/sell.finances https://api.etsy.com/oauth/api_scope/sell.payment.dispute https://api.etsy.com/oauth/api_scope/commerce.identity.readonly";
-    	$url = "";exit();
-    	return redirect($url);
+        if (session('customer.id') != null){
+            $customerId = session('customer.id');
+        }else{
+            return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+        }
+        
+        print_r($request->all());
+        
+        $token = $request->input("token");
+        $secret = $request->input("secret");
+        $userId = $request->input("user_id");
+        $shops = $request->input("shop");
+        exit();
+
+        Fastship::getToken($customerId);
+        $params = array(
+            "CustomerID" => $customerId,
+            "ChannelType" => "ETSY",
+            "UserId" => $userId,
+            "Shops" => $shops,
+            "Token" => $token,
+        );
+        FS_Customer::addChannel($params);
+        
     }
     
     /***etsy Process ******/
@@ -362,6 +363,60 @@ class EtsyController extends Controller
         $jsonDecode = json_decode($Response, true);
         
         return redirect('shipment/create_etsy?account='.$account);
+    }
+    
+    public function getToken(Request $request){
+        
+        //get params
+        $request_token_secret = session('request_secret');
+        $request_token = $request->get('oauth_token');
+        $verifier = $request->get('oauth_verifier');
+        
+        // ##### get etsy token #####
+        $requestArray = array(
+            "request_token_secret" => $request_token_secret,
+            "request_token" => $request_token,
+            "verifier" => $verifier,
+        );
+        $url = "https://admin.fastship.co/api_marketplace/etsy_api/get_token.php";
+        $response = call_api($url,$requestArray);
+        // ##### get etsy login url #####
+
+        print_r($response);
+        
+        $token = "";
+        $secret = "";
+        $shops = array();
+        if($response != ""){
+            
+            $res = json_decode($response,true);
+            
+            $token = $res['oauth_token'];
+            $secret = $res['oauth_token_secret'];
+            
+            // ##### get etsy shops #####
+            $requestArray = array(
+                "token" => $token,
+                "secret" => $secret,
+            );
+            $url = "https://admin.fastship.co/api_marketplace/etsy_api/get_shops.php";
+            $response = call_api($url,$requestArray);
+            
+            $res = json_decode($response,true);
+            
+            $shops = $res['results'];
+            // ##### get etsy shops #####
+            
+        }
+
+        $data = array(
+            "shops" => $shops,
+            "token" => $token,
+            "secret" => $secret,
+        );
+        
+        return view('add_channel_etsyshop',$data);
+        
     }
     
 }

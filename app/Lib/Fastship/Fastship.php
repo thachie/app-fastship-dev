@@ -69,11 +69,11 @@ abstract class Fastship
     	if(isset($data->data)){
     	   $msg = $data->data;
     	}else{
-    	   $msg = "Fail";
+    	    $msg = "Fail: " . $rcode;
     	}
 
     	if($rcode != 200){
-    		throw new FS_Error($msg);
+    	    throw new FS_Error($msg,$rcode);
     	}else{
     		self::$apiToken = $msg;
     		self::$customerId = $customerId;

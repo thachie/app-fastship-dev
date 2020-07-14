@@ -168,6 +168,14 @@ class CustomerController extends Controller
 				$request->session()->put('customer.id', $customerId);
 				$request->session()->put('customer.name', $customerObj['Firstname']);
 				$request->session()->put('customer.line', $customerObj['LineId']);
+				if($customerObj['IsBigfish']){
+				    $vip = "super-vip";
+				}else if($customerObj['IsFeatured']){
+				    $vip = "vip";
+				}else{
+				    $vip = "";
+				}
+				$request->session()->put('customer.vip', $vip);
 
 				//get shipment in cart
 				$searchDetails = array("Status" => "Pending");
@@ -850,6 +858,36 @@ class CustomerController extends Controller
 	    return view('add_channel_ebay',$data);
 	}
 
+	//Prepare for check rate page
+	public function prepareAddChannelEtsy()
+	{
+	    
+	    if (session('customer.id') != null){
+	        $customerId = session('customer.id');
+	    }else{
+	        return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+	    }
+
+	    // ##### get etsy login url #####
+	    $callback = "https://app.fastship.co/etsy/get_token";
+	    $requestArray = array(
+	        "callback" => $callback,
+	    );
+	    $url = "https://admin.fastship.co/api_marketplace/etsy_api/authen.php";
+	    $response = call_api($url,$requestArray);
+	    $res = json_decode($response,true);
+	    // ##### get etsy login url #####
+	    
+	    //set request secret
+	    session()->put('request_secret', $res['request_secret']);
+	    
+	    $data = array(
+	        "url" => $res['login_url'],
+	    );
+	    
+	    return view('add_channel_etsy',$data);
+	}
+	
 	public function prepareLoginWithCode($ref="",Request $request)
 	{
 	    
@@ -1661,6 +1699,14 @@ class CustomerController extends Controller
 	    $request->session()->put('customer.id', $checkLineId);
 	    $request->session()->put('customer.name', $customer['Firstname']);
 	    $request->session()->put('customer.line', $customer['LineId']);
+	    if($customer['IsBigfish']){
+	        $vip = "super-vip";
+	    }else if($customer['IsFeatured']){
+	        $vip = "vip";
+	    }else{
+	        $vip = "";
+	    }
+	    $request->session()->put('customer.vip', $vip);
 	    
 	    //get shipment in cart
 	    $searchDetails = array("Status" => "Pending");

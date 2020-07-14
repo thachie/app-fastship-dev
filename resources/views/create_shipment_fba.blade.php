@@ -151,7 +151,7 @@
                 </div>
             	<div class="panel-body row-no-padding">
 
-    				<div class="col-md-5 col-xs-12 well">
+    				<div class="col-md-4 col-xs-12 well">
             			<div class="form-group">
                             <label class="col-md-5 control-label" style="margin-top: 0;">FBA Shipment ID</label>
                             <div class="col-md-7">
@@ -159,32 +159,32 @@
                             </div>
             			</div>
             			<div class="form-group">
-                            <label class="col-md-5 control-label" style="margin-top: 0;">Box Weight (gram)</label>
-                            <div class="col-md-6">
+                            <label class="col-md-5 control-label" style="margin-top: 0;">Box Weight (g.)</label>
+                            <div class="col-md-7">
                             	<input type="number" name="weight[1]" id="weight1" placeholder="" title="Weight" class="form-control required" value="{{ old('weight','') }}" onchange="calculateRate(1);" required/>
                             </div>
             			</div>
             			<div class="form-group">
                             <label class="col-md-5 control-label" style="margin-top: 0;">Width (cm)</label>
-                            <div class="col-md-4">
+                            <div class="col-md-7">
                             	<input type="number" name="width[1]" id="width1" placeholder="" title="Width" class="form-control required" value="{{ old('width','') }}" onchange="calculateRate(1);" required/>
                             </div>
             			</div>
             			<div class="form-group">
                             <label class="col-md-5 control-label" style="margin-top: 0;">Height (cm)</label>
-                            <div class="col-md-4">
+                            <div class="col-md-7">
                             	<input type="number" name="height[1]" id="height1" placeholder="" title="Height" class="form-control required" value="{{ old('height','') }}" onchange="calculateRate(1);" required/>
                             </div>
             			</div>
             			<div class="form-group">
                             <label class="col-md-5 control-label" style="margin-top: 0;">Length (cm)</label>
-                            <div class="col-md-4">
+                            <div class="col-md-7">
                             	<input type="number" name="length[1]" id="length1" placeholder="" title="Length" class="form-control required" value="{{ old('length','') }}" onchange="calculateRate(1);" required/>
                             </div>
             			</div>
             		</div>
             			
-            		<div class="col-md-7 col-xs-12">	
+            		<div class="col-md-8 col-xs-12">	
             				<div class="form-group">
                 				<div class="col-md-7">Product Description</div>
                 				<div class="col-md-2 text-center">Qty.</div>
@@ -474,7 +474,7 @@ function addBox(){
 	content += '</div>';
 	content += '<div class="panel-body row-no-padding">';
 
-	content += '<div class="col-md-5 col-xs-12 well">';
+	content += '<div class="col-md-4 col-xs-12 well">';
 	content += '<div class="form-group">';
 	content += '	<label class="col-md-5 control-label" style="margin-top: 0;">FBA Shipment ID</label>';
 	content += '    <div class="col-md-7">';
@@ -482,48 +482,34 @@ function addBox(){
 	content += '    </div>';
 	content += '</div>';
 	content += '<div class="form-group">';
-	content += '    <label class="col-md-5 control-label" style="margin-top: 0;">Box Weight (gram)</label>';
-	content += '    <div class="col-md-6">';
+	content += '    <label class="col-md-5 control-label" style="margin-top: 0;">Box Weight (g.)</label>';
+	content += '    <div class="col-md-7">';
 	content += '    	<input type="number" name="weight[' + num + ']" id="weight' + num + '" placeholder="" title="Weight" class="form-control required weight" value="" onchange="calculateRate('+num+');" required/>';
 	content += '    </div>';
 	//content += '    <div class="col-md-1 text-left small"><label style="margin-top: 10px;">gram</label></div>';
 	content += '</div>';
-// 	content += '<div class="form-group">';
-// 	content += '    <label class="col-md-4 control-label" style="margin-top: 0;">Dimension</label>';
-// 	content += '    <div class="col-md-2">';
-// 	content += '    	<input type="number" name="width[' + num + ']" id="width' + num + '" placeholder="" title="" class="form-control required" value="" onchange="calculateRate(' + num + ');" required/>';
-// 	content += '    </div>';
-// 	content += '    <div class="col-md-2">';
-// 	content += '     	<input type="number" name="height[' + num + ']" id="height' + num + '" placeholder="" title="" class="form-control required" value="" onchange="calculateRate(' + num + ');" required/>';
-// 	content += '    </div>';
-// 	content += '    <div class="col-md-2">';
-// 	content += '    	<input type="number" name="length[' + num + ']" id="length' + num + '" placeholder="" title="" class="form-control required" value="" onchange="calculateRate(' + num + ');" required/>';
-// 	content += '    </div>';
-// 	content += '    <div class="col-md-1 text-left small"><label style="margin-top: 10px;">cm.</label></div>';
-// 	content += '</div>';
-	
 
 	content += '<div class="form-group">';
 	content += '	<label class="col-md-5 control-label" style="margin-top: 0;">Width (cm)</label>';
-	content += '	<div class="col-md-4">';
+	content += '	<div class="col-md-7">';
 	content += '		<input type="number" name="width[' + num + ']" id="width' + num + '" placeholder="" title="Width" class="form-control required" onchange="calculateRate(' + num + ');" required/>';
 	content += '	</div>';
 	content += '</div>';
 	content += '<div class="form-group">';
 	content += '	<label class="col-md-5 control-label" style="margin-top: 0;">Height (cm)</label>';
-	content += '	<div class="col-md-4">';
+	content += '	<div class="col-md-7">';
 	content += '		<input type="number" name="height[' + num + ']" id="height' + num + '" placeholder="" title="Height" class="form-control required" onchange="calculateRate(' + num + ');" required/>';
 	content += '	</div>';
 	content += '</div>';
 	content += '<div class="form-group">';
 	content += '	<label class="col-md-5 control-label" style="margin-top: 0;">Length (cm)</label>';
-	content += '	<div class="col-md-4">';
+	content += '	<div class="col-md-7">';
 	content += '		<input type="number" name="length[' + num + ']" id="length' + num + '" placeholder="" title="Length" class="form-control required" onchange="calculateRate(' + num + ');" required/>';
 	content += '	</div>';
 	content += '</div>';
 	content += '</div>';
 	
-	content += '<div class="col-md-7 col-xs-12">';
+	content += '<div class="col-md-8 col-xs-12">';
 	content += '	<div class="form-group">';
 	content += '		<div class="col-md-7">Product Description</div>';
 	content += '		<div class="col-md-2 text-center">Qty.</div>';
@@ -615,6 +601,9 @@ function copyBox(stand){
 }
 function removeBox(box){
 
+	$("#box"+box).remove();
+	
+	/*
 	var content = "";
 	content += '<div class="row undo">';
 	content += '<div class="col-md-12 text-center text-info small">Box#'+box+' removed <a href="javascript:undoBox('+box+');">undo</a></div>';
@@ -625,6 +614,7 @@ function removeBox(box){
 	$("#agent_rate"+box).val(0);
 	//$("#box"+box).remove();
 	//$("#sum_box"+box).remove();
+	*/
 	
 	addSumBox();
 	

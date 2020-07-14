@@ -61,11 +61,11 @@
                         		<td>{{ $statement['CreateDate'] }}</td>
                         		<td>
                         		@if($statement['Amount'] < 0)
-                        			<i class="fa fa-money text-info"></i> 
+                        			<i class=" fa fa-minus-circle small text-danger"></i>
                         		@else
-                        			<i class="fa fa-plus-circle text-success"></i>
+                        			<i class=" fa fa-plus-circle text-success"></i>
                         		@endif
-                        		
+
                     			{{ isset($payment_mapping[$statement['Payment']]) ? $payment_mapping[$statement['Payment']]:$statement['Payment'] }}
                     			
                     			@if( in_array($statement['Payment'],array("QR","Credit_Card","Bank_Transfer","Cash","Invoice")) )

@@ -102,14 +102,15 @@
                     <div class="panel-heading">{!! FT::translate('shipment_rate.panel.heading2') !!}</div>
                     <div class="panel-body" id="result-panel">
                         <h4 class="text-center">{!! FT::translate('shipment_rate.warning.required') !!}</h4> 
-                        <img class="img-fade col-md-3 col-sm-6" src="images/agent/UPS.gif">
-                        <img class="img-fade col-md-3 col-sm-6" src="images/agent/DHL.gif">
-                        <img class="img-fade col-md-3 col-sm-6" src="images/agent/SF.gif">
+<!--                         <img class="img-fade col-md-3 col-sm-6" src="images/agent/UPS.gif"> -->
+                        <img class="img-fade col-md-3 col-sm-6" src="images/agent/FS.gif">
                         <img class="img-fade col-md-3 col-sm-6" src="images/agent/Aramex.gif">
+                        <img class="img-fade col-md-3 col-sm-6" src="images/agent/SF.gif">
+                        <img class="img-fade col-md-3 col-sm-6" src="images/agent/Thaipost_Ems.gif">
                         <img class="img-fade col-md-3 col-sm-6" src="images/agent/GM_Packet_Plus.gif">
+                        <img class="img-fade col-md-3 col-sm-6" src="images/agent/Ecom_PD.gif">
                         <img class="img-fade col-md-3 col-sm-6" src="images/agent/USPS.gif">
-                        <img class="img-fade col-md-3 col-sm-6" src="images/agent/FedEx_SmartPost.gif"> 
-                        <img class="img-fade col-md-3 col-sm-6" src="images/agent/GM_Packet_Economy.gif">
+                        <img class="img-fade col-md-3 col-sm-6" src="images/agent/FedEx_SmartPost.gif">
                     </div>
                 </div>
             </div>
@@ -253,6 +254,8 @@
                     	   _displayAgent = "ThailandPost ePACKET";
                        }else if(_displayAgent == "FS MASK"){
                     	   _displayAgent = "Fastship for Mask";
+                       }else if(_displayAgent == "FS Linex"){
+                    	   _displayAgent = "Fastship Express";
                        }else if(_displayAgent == "Thaipost Logis"){
                     	   _displayAgent = "LogisPost";
                        }
