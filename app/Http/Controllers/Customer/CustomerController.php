@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use App\Lib\Encryption;
 use App\Lib\Fastship\FS_CreditBalance;
 use App\Lib\Fastship\Fastship;
@@ -15,7 +16,7 @@ use App\Lib\Fastship\FS_Pickup;
 use App\Lib\Fastship\FS_Customer;
 use App\Lib\Thaitrade\ThaitradeManager;
 use App\Lib\Zoho\ZohoApiV2;
-use Illuminate\Support\Facades\Mail;
+use Cloudinary;
 use Exception;
 
 class CustomerController extends Controller
@@ -1296,6 +1297,73 @@ class CustomerController extends Controller
 		}else{
 		    return redirect('/edit_customer')->with('msg','อัปเดทข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง1');
 		}
+	}
+	
+	//Update Customer Info
+	public function upload(Request $request)
+	{
+	    
+	    if (session('customer.id') != null){
+	        $customerId = session('customer.id');
+	    }else{
+	        return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
+	    }
+	    $this->validate($request, [
+	        'document' => 'required|mimes:jpeg,png,jpg,gif,svg,pdf|max:2048',
+	    ]);
+
+	    if ($request->hasFile('document')) {
+	        $document = $request->file('document');
+	    }else{
+	        return redirect('/myaccount')->with('msg','อัปเดทข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
+	    }
+
+	    $filename = "public/mytmp/" . date("Ymd") . "/" . $customerId . ".png";
+	    Storage::put($filename,base64_decode($document));
+	    $destinationPath = Storage::url($filename);
+
+	    $imagePath = $destinationPath . $customerId;
+
+	    //Cloudinary
+	    Cloudinary::config(array(
+	        'cloud_name' => 'fastship',
+	        'api_key' => '992523878738143',
+	        'api_secret' => 'gDOELsknsI41cNpLoQLm6saBdz8'
+	    ));
+
+	    //cloud path
+	    $cloudinaryPath = "http://res.cloudinary.com/fastship/image/upload/v1/";
+
+	    $publicPath = "customer/" . $customerId . "_" . date("YmdHi");
+	    $default_upload_options = array(
+	        'tags' => 'customer',
+	        'format' => 'png',
+	        'public_id' => $publicPath,
+	        'type' => 'private',
+	    );
+	    
+	    # Same image, uploaded with a public_id
+	    $uploaded = \Cloudinary\Uploader::upload(
+	        $imagePath,
+	        $default_upload_options
+	    );
+
+	    print_r($document); exit();
+	    
+	    //update to API
+	    Fastship::getToken($customerId);
+	    $params = array(
+	        'File' => $document,
+	    );
+
+	    $updateCompleted = FS_Customer::upload($params);
+	    
+	    if($updateCompleted){
+	        return redirect('/myaccount')->with('msg','ระบบได้ทำการอัปเดทข้อมูล เรียบร้อยแล้ว')->with('msg-type','success');
+	    }else{
+	        return redirect('/myaccount')->with('msg','อัปเดทข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
+	    }
+	    
 	}
 
 	//Change Password by Customer

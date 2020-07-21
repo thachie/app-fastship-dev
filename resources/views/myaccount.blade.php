@@ -81,24 +81,24 @@ if($customer_data['latitude'] == ""){
                 </div>
     		</div>
     
-        	<div class="panel panel-primary" style="display: none;">
+        	<div class="panel panel-primary">
     			<div class="panel-heading">เอกสารที่เกี่ยวข้อง</div>
     		    <div class="panel-body">
     
     				<div class="col-md-8 col-md-offset-2 col-xs-12">
-    					<form id="payment_form" class="form-horizontal" method="post" action="{{url ('credit/create')}}" enctype="multipart/form-data">
+    					<form id="upload_form" class="form-horizontal" method="post" action="{{url ('customer/upload')}}" enctype="multipart/form-data">
 		
                     		{{ csrf_field() }}
 
             				<label class="col-md-4 control-label" style="padding-top: 2px;">อัพโหลดเอกสาร</label>	
             				<div class="col-md-8">
-            					<input type="file" class="choose-file" name="slip" required />
+            					<input type="file" class="choose-file" name="document" required />
             					<button type="submit" class="btn btn-info" style="vertical-align: top;">Upload</button>
             				</div>
 
                         </form>
     				</div>
-    				<div class="clearfix"></div><br />
+    				<div class="clearfix"></div>
     				
     				<div class="col-md-12">
  
@@ -142,9 +142,9 @@ if($customer_data['latitude'] == ""){
 
     function initMap() {
         
-    	<?php if($customer_data['latitude'] == ""): ?>
+    	@if($customer_data['latitude'] == "")
     	return false;
-    	<?php else: ?>
+    	@else
     	
         infowindow = new google.maps.InfoWindow({
           content: document.getElementById('message')
@@ -170,73 +170,8 @@ if($customer_data['latitude'] == ""){
             position: save_pos,
             map: map
         });
-        <?php endif; ?>
+        @endif
       }
 
-    function deleteCreditCard(id){
-		$("#delete_form input[name=card_id]").val(id);
-		$("#delete_form").submit();
-    }
-    
-</script>
-<script src="https://cdn.omise.co/omise.js"></script>
-<script>
-  Omise.setPublicKey("pkey_57wb6hkyv6qi2e4ft0k");
-  $("#checkout").submit(function () {
-
-	  var form = $(this);
-	  //alert($("#number").val());
-	  //alert($("#security_code").val());
-	  document.getElementById('card_number').value = $("#number").val();
-	  document.getElementById('cvv_number').value = $("#security_code").val();
-	  // Disable the submit button to avoid repeated click.
-	  form.find("input[type=submit]").prop("disabled", true);
-	  //form.find("button[type=submit]").prop("disabled", true);
-
-	  // Serialize the form fields into a valid card object.
-	  var card = {
-	    "name": form.find("[data-omise=holder_name]").val(),
-	    "number": form.find("[data-omise=number]").val(),
-	    "expiration_month": form.find("[data-omise=expiration_month]").val(),
-	    "expiration_year": form.find("[data-omise=expiration_year]").val(),
-	    "security_code": form.find("[data-omise=security_code]").val()
-	  };
-
-	  // Send a request to create a token then trigger the callback function once
-	  // a response is received from Omise.
-	  //
-	  // Note that the response could be an error and this needs to be handled within
-	  // the callback.
-	  Omise.createToken("card", card, function (statusCode, response) {
-
-	    //if (response.object == "error" || !response.card.security_code_check) {
-	    if (response.object == "error" ) {
-	      // Display an error message.
-	      var message_text = "SET YOUR SECURITY CODE CHECK FAILED MESSAGE";
-	      if(response.object == "error") {
-	        message_text = response.message;
-	      }
-	      $("#token_errors").html(message_text);
-
-	      // Re-enable the submit button.
-	      form.find("input[type=submit]").prop("disabled", false);
-	      //form.find("button[type=submit]").prop("disabled", false);
-	    } else {
-	      // Then fill the omise_token.
-	      form.find("[name=omise_token]").val(response.id);
-
-	      // Remove card number from form before submiting to server.
-	      form.find("[data-omise=number]").val("");
-	      form.find("[data-omise=security_code]").val("");
-
-	      // submit token to server.
-	      form.get(0).submit();
-	    };
-	  });
-
-	  // Prevent the form from being submitted;
-	  return false;
-
-	});
 </script>
 @endsection

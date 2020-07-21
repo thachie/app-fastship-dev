@@ -108,10 +108,12 @@ Route::group(['middleware' => 'loginsession'], function () {
 	Route::get('account_overview', 'Customer\CustomerController@prepareAccountOverview');
 	Route::get('edit_customer', 'Customer\CustomerController@prepareEditCustomer');
 	Route::post('customer/edit', 'Customer\CustomerController@update');
+	Route::post('customer/upload', 'Customer\CustomerController@upload');
 	Route::get('change_password', function () {  return view('change_password'); });
 	Route::post('customer/change_password', 'Customer\CustomerController@changePassword');
 	Route::post('customer/remove-channel', 'Customer\CustomerController@removeChannel');
 	Route::get('liff/connectline', 'Customer\CustomerController@connectLine');
+	
 	//Add new creditcard
 	Route::match(['get', 'post'], 'new_creditcard/{pickupId?}','Customer\CustomerController@prepareAddNewCreditCard');
 

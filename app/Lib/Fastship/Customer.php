@@ -257,6 +257,28 @@ class FS_Customer extends FS_ApiResource
      * @param array|null $params
      * @param string|null $apiToken
      *
+     * @return Fastship_Customer Update a Customer.
+     */
+    public static function upload($params = null, $apiToken = null)
+    {
+        
+        $requestor = new FS_ApiRequestor($apiToken);
+        $url = "customer/upload";
+        
+        list($response, $rcode) = $requestor->request('post', $url, $params);
+        
+        //print_r($response);
+        if($rcode != 200){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
+    /**
+     * @param array|null $params
+     * @param string|null $apiToken
+     *
      * @return Fastship_Customer Update a Customer Password.
      */
     public static function changePassword($params = null, $apiToken = null)
