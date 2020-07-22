@@ -37,7 +37,7 @@ foreach($shipment_data as $data){
     	</div>
 	</div>	    
         
-    <form id="pickup_form" class="form-horizontal" method="post" action="{{url ('pickup/create')}}">
+    <form id="pickup_form" class="form-horizontal" enctype="multipart/form-data" method="post" action="{{url ('pickup/create')}}">
 	    {{ csrf_field() }}
 	    
         <div class="row">
@@ -586,7 +586,16 @@ foreach($shipment_data as $data){
                     <div class="text-center text-danger">{!! $oversizeNote !!}</div><br />
                     @endif
                     
+                    <div class="panel">
+                        <div class="panel-heading">หลักฐานยืนยันตัวตน</div>
+                        <div class="panel-body">
+                        	<p>กรุณาอัพโหลดไฟล์บัตรประชาชนเพื่อให้ทาง Fastship.co ตรวจสอบตัวตนผู้ส่ง</p>
+                        	<div><input type="file" name="file" class="form-control" /></div>
+                    	</div>
+                    </div>
+                    
                     <div class="text-center btn-create">
+                    
 			            <div><label><input type="checkbox" name="condition" id="condition" onclick="acceptTerm()" /> {!! FT::translate('create_pickup.agreement_intro') !!} <a href="http://fastship.co/helps/terms-conditions/" target="_blank">{!! FT::translate('create_pickup.agreement_link') !!}</a></label></div>
 			            <div><label><input type="checkbox" name="condition2" id="condition2" onclick="acceptTerm()" /> {!! FT::translate('create_pickup.agreement_intro') !!} <a href="https://fastship.co/announcement/" target="_blank">ข้อตกลงและเงื่อนไขพิเศษเนื่องในสถานการณ์ COVID-19</a></label></div>
 			            <br />

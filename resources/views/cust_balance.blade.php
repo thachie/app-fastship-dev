@@ -61,7 +61,7 @@
                         		<td>{{ $statement['CreateDate'] }}</td>
                         		<td>
                         		@if($statement['Amount'] < 0)
-                        			<i class=" fa fa-minus-circle small text-danger"></i>
+                        			<i class=" fa fa-shopping-cart small text-danger"></i>
                         		@else
                         			<i class=" fa fa-plus-circle text-success"></i>
                         		@endif

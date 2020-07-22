@@ -296,6 +296,7 @@ class PickupController extends Controller
             $Card = "";
             $PaymentMethod = $PaymentMethod;
         }
+        
         //get api token
         Fastship::getToken($customerId);
         
@@ -317,6 +318,7 @@ class PickupController extends Controller
             $data['longitude'] = "";
             $data['PickupDate'] = "";
             $data['PickupTime'] = "";
+            
             
         }else{
             
@@ -340,7 +342,7 @@ class PickupController extends Controller
         }
 
         $shipmentIds = $request->input('shipment_id');
-        
+
         if($request->input('agent') == 'Drop_AtThaiPost'){
             if( empty($data['firstname']) || empty($data['phonenumber']) || empty($data['address1']) ||
                 empty($data['city']) || empty($data['state']) || empty($data['postcode'])){
@@ -433,7 +435,8 @@ class PickupController extends Controller
         );
         $data['discount'] = $this->calculateDiscount($args);
         $data['coupon_code'] = strtoupper($request->input('coupon_code'));
-
+        
+        
         //prepare request data
         $createDetails = array(
             'ShipmentDetail' => array(
@@ -472,78 +475,28 @@ class PickupController extends Controller
         if($response === false){
             return redirect('create_pickup')->with('msg','สร้างใบรับพัสดุไม่สำเร็จ');
         }else{
+            
+            //upload file
+            //file upload
+            if($request->has("file")){
+                $params = array(
+                    "File" => $request->input('file'),
+                );
+                FS_Customer::upload($params);
+                
+            }
+            
 
         	$request->session()->put('pending.shipment', 0);
         	 
             $pickupId = $response;
 
             //pickup and shipments data
-            $shipment_data = array();
-            $pickupObj = FS_Pickup::get($pickupId);
-            foreach ($pickupObj['ShipmentDetail']['ShipmentIds'] as $shipmentId) {
-                $shipment_data[] = FS_Shipment::get($shipmentId);
-            }
-
-            // ### send email ###
-            /*
-            $toName = $customerObj['Firstname'] . ' ' . $customerObj['Lastname'];
-            $eMail = $customerObj['Email'];
-            
-            $data = array(
-            	'pickupId' => $pickupId,
-            	'email' => $eMail,
-                'pickupData' => $pickupObj,
-            	'shipmentData' => $shipment_data,
-            );
-
-            Mail::send('email/new_order',$data,function($message) use ($data){
-            	$message->to($data['email']);
-            	$message->bcc(['thachie@tuff.co.th','oak@tuff.co.th']);
-            	$message->from('cs@fastship.co', 'FastShip');
-            	$message->subject('FastShip - ใบรับพัสดุหมายเลข '. $data['pickupId'] ." ถูกสร้างแล้ว");
-            });
-            
-            $customer = FS_Customer::get($customerId);
-            if($customer['LineId'] != null && $customer['LineId'] != ""){
-                
-                $unpaid = FS_Pickup::getUnpaid($pickupId);
-                
-                //payment notify link
-                $converter = new Encryption;
-                $code1 = $converter->encode_short($pickupId);
-                $code2 = $converter->encode_short($customerId);
-                $notifyPaymentUrl = "https://app.fastship.co/kbank/qr/".$code1."/".$code2;
-                
-                $text = "แจ้งชำระค่ะ #".$pickupId;
-                $arrayPostData['to'] = $customer['LineId'];
-                $args = array(
-                    "pickupId" => $pickupId,
-                    "shipping" => $unpaid['TotalShippingRate'],
-                    "pickcost" => $unpaid['PickupCost'],
-                    "additioncost" => $unpaid['AdditionCost'],
-                    "discount" => $unpaid['Discount'],
-                    "packcost" => $unpaid['PackingCost'],
-                    "insurance" => $unpaid['Insurance'],
-                    "total" => $unpaid['Amount'],
-                    "paid" => $unpaid['Paid'],
-                    "unpaid" => $unpaid['Unpaid'],
-                    "paymentNotifyUrl" => $notifyPaymentUrl,
-                );
-                $arrayPostData['messages'][0] = LineManager::getFormatFlexMessage(LineManager::jsonPayment($args),$text);
-                
-                $result = LineManager::pushMessage($arrayPostData);
-                
-                $lineNotify = "กรุณาชำระเงิน ใบรับพัสดุหมายเลข " . $pickupId . " ยอดชำระ " . $unpaid['Unpaid'] . " บาท ผ่านทางลิ้งก์ \n" . $notifyPaymentUrl . "\n\n วิธีการชำระเงินผ่าน QR: https://fastship.co/helps/payment-2";
-
-                //reply to Line
-                $arrayPostData['to'] = $customer['LineId'];
-                $arrayPostData['messages'][0]['type'] = "text";
-                $arrayPostData['messages'][0]['text'] = $lineNotify;
-                
-                $result = LineManager::pushMessage($arrayPostData);
-
-            }*/
-            // ####
+//             $shipment_data = array();
+//             $pickupObj = FS_Pickup::get($pickupId);
+//             foreach ($pickupObj['ShipmentDetail']['ShipmentIds'] as $shipmentId) {
+//                 $shipment_data[] = FS_Shipment::get($shipmentId);
+//             }
 
             // ##### call notify #####
             $token = md5("fastship".$pickupId);
