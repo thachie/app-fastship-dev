@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -177,6 +178,13 @@ class CustomerController extends Controller
 				    $vip = "";
 				}
 				$request->session()->put('customer.vip', $vip);
+				if($customerObj['IsApproved'] == 0){
+				    $customerApproved = FS_Customer::getApproved($customerId);
+				    $approved = ($customerApproved['ApprovedStatus'] == "Approved" || $customerApproved['ApprovedStatus'] == "Pending")?1:0;
+				}else{
+				    $approved = $customerObj['IsApproved'];
+				} 
+				$request->session()->put('customer.approved', $approved);
 
 				//get shipment in cart
 				$searchDetails = array("Status" => "Pending");
@@ -484,12 +492,30 @@ class CustomerController extends Controller
 		}else{
 			$creditCards = array();
 		}
+
+		$customerApproved = FS_Customer::getApproved($customerId);
 		
+		if(isset($customerApproved)){
+		    
+    		//Attachment
+    		Cloudinary::config(array(
+    		    'cloud_name' => 'fastship',
+    		    'api_key' => '992523878738143',
+    		    'api_secret' => 'gDOELsknsI41cNpLoQLm6saBdz8'
+    		));
+    
+    		$attachment = Cloudinary::private_download_url($customerApproved['File'],"png");
+    		
+		}else{
+		    $attachment = "";
+		}
 		$data = array(
 			'customer_data' => $customer_data,
 			'transactions' => array(),
 			'creditCards' => $creditCards,
 			'channels' => array(),
+		    'attachment' => $attachment,
+		    'approval' => $customerApproved,
 		);
 
 		return view('myaccount',$data);
@@ -1313,16 +1339,24 @@ class CustomerController extends Controller
 	    ]);
 
 	    if ($request->hasFile('document')) {
-	        $document = $request->file('document');
+	        $image = $request->file('document');
 	    }else{
 	        return redirect('/myaccount')->with('msg','อัปเดทข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
 	    }
 
-	    $filename = "public/mytmp/" . date("Ymd") . "/" . $customerId . ".png";
-	    Storage::put($filename,base64_decode($document));
-	    $destinationPath = Storage::url($filename);
-
-	    $imagePath = $destinationPath . $customerId;
+	    $name = $customerId.'_'.time().'.'. strtolower($image->getClientOriginalExtension());
+	    $path = "customer/".$customerId."/";
+	    
+	    //Check if the directory with the name already exists
+	    if (!is_dir( storage_path("app/public/" . $path) )) {
+	        //Create our directory if it does not exist
+	        File::makeDirectory( storage_path("app/public/" . $path) , $mode = 0777, true, true);
+	    }
+	    
+	    $destinationPath = storage_path("app/public/" . $path);
+	    $image->move($destinationPath, $name);
+	    
+	    $imagePath = $destinationPath . $name;
 
 	    //Cloudinary
 	    Cloudinary::config(array(
@@ -1331,13 +1365,10 @@ class CustomerController extends Controller
 	        'api_secret' => 'gDOELsknsI41cNpLoQLm6saBdz8'
 	    ));
 
-	    //cloud path
-	    $cloudinaryPath = "http://res.cloudinary.com/fastship/image/upload/v1/";
-
 	    $publicPath = "customer/" . $customerId . "_" . date("YmdHi");
 	    $default_upload_options = array(
 	        'tags' => 'customer',
-	        'format' => 'png',
+	        //'format' => 'png', 
 	        'public_id' => $publicPath,
 	        'type' => 'private',
 	    );
@@ -1348,12 +1379,10 @@ class CustomerController extends Controller
 	        $default_upload_options
 	    );
 
-	    print_r($document); exit();
-	    
 	    //update to API
 	    Fastship::getToken($customerId);
 	    $params = array(
-	        'File' => $document,
+	        'File' => $publicPath,
 	    );
 
 	    $updateCompleted = FS_Customer::upload($params);
@@ -1775,6 +1804,15 @@ class CustomerController extends Controller
 	        $vip = "";
 	    }
 	    $request->session()->put('customer.vip', $vip);
+	    if($customer['IsApproved'] == 0){
+	        $customerApproved = FS_Customer::getApproved($checkLineId);
+	        $approved = ($customerApproved['ApprovedStatus'] == "Approved" || $customerApproved['ApprovedStatus'] == "Pending")?1:0;
+	    }else{
+	        $approved = $customer['IsApproved'];
+	    }
+	    $request->session()->put('customer.approved', $approved);
+	    
+	    
 	    
 	    //get shipment in cart
 	    $searchDetails = array("Status" => "Pending");

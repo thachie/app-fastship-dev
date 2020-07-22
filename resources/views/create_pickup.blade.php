@@ -586,13 +586,17 @@ foreach($shipment_data as $data){
                     <div class="text-center text-danger">{!! $oversizeNote !!}</div><br />
                     @endif
                     
+                    @if(session('customer.id') == 5223 || session('customer.id') == 43037)
+                    @if(session('customer.approved') != 1)
                     <div class="panel">
                         <div class="panel-heading">หลักฐานยืนยันตัวตน</div>
                         <div class="panel-body">
                         	<p>กรุณาอัพโหลดไฟล์บัตรประชาชนเพื่อให้ทาง Fastship.co ตรวจสอบตัวตนผู้ส่ง</p>
-                        	<div><input type="file" name="file" class="form-control" /></div>
+                        	<div><input type="file" name="document" class="form-control" /></div>
                     	</div>
                     </div>
+                    @endif
+                    @endif
                     
                     <div class="text-center btn-create">
                     

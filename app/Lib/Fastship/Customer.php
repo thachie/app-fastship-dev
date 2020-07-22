@@ -279,6 +279,29 @@ class FS_Customer extends FS_ApiResource
      * @param array|null $params
      * @param string|null $apiToken
      *
+     * @return Fastship_Customer Update a Customer.
+     */
+    public static function getApproved($id, $apiToken = null)
+    {
+
+        $requestor = new FS_ApiRequestor($apiToken);
+        $url = "customer/approved/" . $id;
+
+        list($response, $rcode) = $requestor->request('get', $url);
+        
+        //print_r($response);
+        if($rcode != 200){
+            return false;
+        }else{
+            return $response;
+        }
+        
+    }
+    
+    /**
+     * @param array|null $params
+     * @param string|null $apiToken
+     *
      * @return Fastship_Customer Update a Customer Password.
      */
     public static function changePassword($params = null, $apiToken = null)

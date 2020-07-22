@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Pickup;
 
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Controller;
 use App\Lib\Fastship\FS_CreditBalance;
 use App\Lib\Fastship\Fastship;
@@ -14,6 +15,7 @@ use Mail;
 use Session;
 use CodeItNow\BarcodeBundle\Utils\BarcodeGenerator;
 use PDF;
+use Cloudinary;
 use App\Lib\Encryption;
 use App\Lib\Line\LineManager;
 
@@ -478,12 +480,59 @@ class PickupController extends Controller
             
             //upload file
             //file upload
-            if($request->has("file")){
-                $params = array(
-                    "File" => $request->input('file'),
-                );
-                FS_Customer::upload($params);
+            if($request->hasFile("document")){
                 
+                $image = $request->file('document');
+
+                $name = $customerId.'_'.time().'.'. strtolower($image->getClientOriginalExtension());
+                $path = "customer/".$customerId."/";
+                
+                //Check if the directory with the name already exists
+                if (!is_dir( storage_path("app/public/" . $path) )) {
+                    //Create our directory if it does not exist
+                    File::makeDirectory( storage_path("app/public/" . $path) , $mode = 0777, true, true);
+                }
+                
+                $destinationPath = storage_path("app/public/" . $path);
+                $image->move($destinationPath, $name);
+                
+                $imagePath = $destinationPath . $name;
+                
+                //Cloudinary
+                Cloudinary::config(array(
+                    'cloud_name' => 'fastship',
+                    'api_key' => '992523878738143',
+                    'api_secret' => 'gDOELsknsI41cNpLoQLm6saBdz8'
+                ));
+
+                $publicPath = "customer/" . $customerId . "_" . date("YmdHi");
+                $default_upload_options = array(
+                    'tags' => 'customer',
+                    //'format' => 'png',
+                    'public_id' => $publicPath,
+                    'type' => 'private',
+                );
+                
+                # Same image, uploaded with a public_id
+                $uploaded = \Cloudinary\Uploader::upload(
+                    $imagePath,
+                    $default_upload_options
+                    );
+                
+                //update to API
+                Fastship::getToken($customerId);
+                $params = array(
+                    'File' => $publicPath,
+                );
+                
+                $updateCompleted = FS_Customer::upload($params);
+                
+//                 if($updateCompleted){
+//                     return redirect('/myaccount')->with('msg','ระบบได้ทำการอัปเดทข้อมูล เรียบร้อยแล้ว')->with('msg-type','success');
+//                 }else{
+//                     return redirect('/myaccount')->with('msg','อัปเดทข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
+//                 }
+ 
             }
             
 

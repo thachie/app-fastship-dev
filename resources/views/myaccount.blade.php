@@ -81,11 +81,30 @@ if($customer_data['latitude'] == ""){
                 </div>
     		</div>
     
+    		@if(session('customer.id') == 5223 || session('customer.id') == 43037)
         	<div class="panel panel-primary">
-    			<div class="panel-heading">เอกสารที่เกี่ยวข้อง</div>
+    			<div class="panel-heading">เอกสาร - สำเนาบัตรประชาชน</div>
     		    <div class="panel-body">
     
     				<div class="col-md-8 col-md-offset-2 col-xs-12">
+    				
+    					<h3 class="text-center"><span class="text-dark">สถานะการตรวจสอบ:</span> 
+    					@if($approval['ApprovedStatus'] == "Pending")
+    					<span class="text-info">กำลังตรวจสอบ</span>
+    					@elseif($approval['ApprovedStatus'] == "Rejected")
+    					<span class="text-danger">ไม่ผ่าน</span>
+    					@elseif($approval['ApprovedStatus'] == "Approved")
+    					<span class="text-success">อนุมัติแล้ว</span>
+    					@else
+    					<span class="text-secondary">ต้องการเอกสารเพิ่มเติม</span>
+    					@endif
+    					</h3>
+    					@if( $attachment != "" )
+    					<div class="well text-center" style="width: 80%;margin: 0 auto 20px;">
+    						<img src="{{ $attachment }}" style="max-width: 100%;"/>
+    					</div>
+    					@endif
+    					
     					<form id="upload_form" class="form-horizontal" method="post" action="{{url ('customer/upload')}}" enctype="multipart/form-data">
 		
                     		{{ csrf_field() }}
@@ -95,41 +114,21 @@ if($customer_data['latitude'] == ""){
             					<input type="file" class="choose-file" name="document" required />
             					<button type="submit" class="btn btn-info" style="vertical-align: top;">Upload</button>
             				</div>
+            				<div class="clearfix"></div>
+            				<p class="small text-center text-secondary">jpeg,png,jpg,gif,svg,pdf / 2 MB</p>
+            				<p class="small text-center text-info">กรณีที่เคยอัพโหลดแล้ว ไฟล์ใหม่จะถูกทับไฟล์เก่าทันที</p>
 
                         </form>
     				</div>
     				<div class="clearfix"></div>
-    				
-    				<div class="col-md-12">
- 
-    					<table class="table table-hover table-striped">
-                        <thead>
-                        	<tr>
-                        		<td class="hidden-xs" width="5%">ลำดับ</td>
-                        		<td>ชื่อเอกสาร</td>
-                        		<td class="hidden-xs" width="15%">สร้างวันที่</td>
-                        		<td width="20%"></td>
-                        	</tr>
-                        </thead>
-                        <tbody>
-                        	<tr>
-                        		<td class="hidden-xs" >1</td>
-                        		<td>สำเนาบัตรประชาชน</td>
-                        		<td class="hidden-xs">{{ date("d/m/Y") }}</td>
-                        		<td>
-                        		<button type="button" class="btn btn-success btn-sm"><i class="fa fa-download"></i> ดาวน์โหลด</button>
-                        		<button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> ลบ</button>
-                        		</td>
-                        	</tr>
-                        </tbody>
-                        </table>
-    				</div>
 
     		    </div>
     		</div>
         </div>
     	<div class="clearfix"></div>
     	<br />
+    	@endif
+    	
     </div>
 </div>
 <script async defer
