@@ -1334,9 +1334,14 @@ class CustomerController extends Controller
 	    }else{
 	        return redirect('/')->with('msg','คุณยังไม่ได้เข้าระบบ กรุณาเข้าสู่ระบบเพื่อใช้งาน');
 	    }
-	    $this->validate($request, [
-	        'document' => 'required|mimes:jpeg,png,jpg,gif,svg,pdf|max:2048',
-	    ]);
+	    
+	    try{
+    	    $this->validate($request, [
+    	        'document' => 'required|mimes:jpeg,png,jpg,gif,svg,pdf|max:2048',
+    	    ]);
+	    }catch(Exception $e){
+	        return redirect('/myaccount')->with('msg','อัปเดทข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
+	    }
 
 	    if ($request->hasFile('document')) {
 	        $image = $request->file('document');

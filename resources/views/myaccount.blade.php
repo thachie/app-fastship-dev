@@ -81,7 +81,7 @@ if($customer_data['latitude'] == ""){
                 </div>
     		</div>
     
-    		@if(session('customer.id') == 5223 || session('customer.id') == 43037)
+    		@if(session('customer.id') == 5223 || session('customer.id') == 43037 || (session('customer.id') >= 48828 && session('customer.id') % 2 == 1))
         	<div class="panel panel-primary">
     			<div class="panel-heading">เอกสาร - สำเนาบัตรประชาชน</div>
     		    <div class="panel-body">
@@ -99,12 +99,8 @@ if($customer_data['latitude'] == ""){
     					<span class="text-secondary">ต้องการเอกสารเพิ่มเติม</span>
     					@endif
     					</h3>
-    					@if( $attachment != "" )
-    					<div class="well text-center" style="width: 80%;margin: 0 auto 20px;">
-    						<img src="{{ $attachment }}" style="max-width: 100%;"/>
-    					</div>
-    					@endif
-    					
+
+						@if($approval['ApprovedStatus'] != "Pending" && $approval['ApprovedStatus'] != "Approved" )
     					<form id="upload_form" class="form-horizontal" method="post" action="{{url ('customer/upload')}}" enctype="multipart/form-data">
 		
                     		{{ csrf_field() }}
@@ -116,9 +112,26 @@ if($customer_data['latitude'] == ""){
             				</div>
             				<div class="clearfix"></div>
             				<p class="small text-center text-secondary">jpeg,png,jpg,gif,svg,pdf / 2 MB</p>
-            				<p class="small text-center text-info">กรณีที่เคยอัพโหลดแล้ว ไฟล์ใหม่จะถูกทับไฟล์เก่าทันที</p>
 
                         </form>
+                        
+                        <div class="well">
+                        <ul>
+                        	<li>เอกสารจะต้องเป็นเอกสารที่ออกโดยราชการ และต้องแสดงข้อมูลต่อไปนี้<br />
+                            - ชื่อ <br />
+                            - วัน เดือน ปีเกิด<br />
+                            - ที่อยู่</li>
+                            <li>ชื่อบนบัตรจะต้องตรงกับ ชื่อเจ้าของบัญชีที่สมัครกับ Fastship </li>
+                            <li>เอกสารต้องถูกต้องสมบูรณ์ เอกสารที่หมดอายุจะไม่สามารถใช้ในขั้นตอนการยืนยันนี้ได้</li>
+                        </ul>
+                        <br />
+                        <p>*ระบบยืนยันตัวตนดังกล่าว เป็นไปตามมาตรป้องกันและปราบปรามยาเสพติด และของผิดกฎหมายอื่นๆ <br />
+                        	ซึ่งมีสาระสำคัญกำหนดให้ผู้ประกอบกิจการขนส่งสินค้าหรือพัสดุภัณฑ์ เป็นสถานประกอบการที่อยู่ภายใต้บังคับ<br />
+                        	ของมาตรการป้องกันและปราบปรามการกระทำความผิดเกี่ยวกับยาเสพติดในสถานประกอบการ และต้องให้ความร่วมมือดำเนินการ
+                        	โดยผู้ใช้บริการจะต้องแสดงหลักฐานประจำตัว อาทิ บัตรประจำตัวประชาชนของผู้ฝากส่ง</p>
+                        </div>
+                        @endif
+                        
     				</div>
     				<div class="clearfix"></div>
 

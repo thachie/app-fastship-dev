@@ -228,7 +228,7 @@
 												<li><a href="{{url ('/customer/logout')}}"><i class="fa fa-power-off"></i> {!! FT::translate('menu.logout') !!}</a></li>
 											</ul>
 										</li>
-										
+
 										<li style="border:none;">
             								@if(session('lang') != null && session('lang') == "en")
                     							<a href="{{ url('/locale/th') }}">ภาษาไทย</a>
